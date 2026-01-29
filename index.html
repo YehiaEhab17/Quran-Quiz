@@ -11,9 +11,9 @@
     <h1>Welcome to the Quran Quiz</h1>
     <p>Test your knowledge about the Quran with our interactive quiz!</p>
 
-    <form id="selection-form">
+    <form id="selection-form" autocomplete="off">
       <datalist id="surah-names"></datalist>
-      <div>
+      <div class="inputs-grid">
         <label>
           Starting Surah:
           <input
@@ -21,9 +21,11 @@
             id="start-surah"
             name="start-surah"
             list="surah-names"
+            autocomplete="off"
             required
           />
         </label>
+
         <label>
           Starting Ayah:
           <input
@@ -32,12 +34,12 @@
             name="start-ayah"
             min="1"
             max="3"
+            autocomplete="off"
             required
+            disabled
           />
         </label>
-      </div>
-      <br />
-      <div>
+
         <label>
           Ending Surah:
           <input
@@ -45,9 +47,11 @@
             id="end-surah"
             name="end-surah"
             list="surah-names"
+            autocomplete="off"
             required
           />
         </label>
+
         <label>
           Ending Ayah:
           <input
@@ -56,7 +60,9 @@
             name="end-ayah"
             min="1"
             max="3"
+            autocomplete="off"
             required
+            disabled
           />
         </label>
       </div>
@@ -64,7 +70,6 @@
       <button type="submit">Start Quiz</button>
     </form>
 
-    <p class="css-working">css-working</p>
     <script type="module" src="dist/script.js"></script>
   </body>
 </html>

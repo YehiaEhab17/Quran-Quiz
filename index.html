@@ -4,18 +4,67 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="images/favicon.png" type="image/png" />
-    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="css/main.css" />
     <title>Quran Quiz</title>
   </head>
   <body>
     <h1>Welcome to the Quran Quiz</h1>
     <p>Test your knowledge about the Quran with our interactive quiz!</p>
 
-    <form action="quiz.html" method="post">
+    <form id="selection-form">
+      <datalist id="surah-names"></datalist>
+      <div>
+        <label>
+          Starting Surah:
+          <input
+            type="text"
+            id="start-surah"
+            name="start-surah"
+            list="surah-names"
+            required
+          />
+        </label>
+        <label>
+          Starting Ayah:
+          <input
+            type="number"
+            id="start-ayah"
+            name="start-ayah"
+            min="1"
+            max="3"
+            required
+          />
+        </label>
+      </div>
+      <br />
+      <div>
+        <label>
+          Ending Surah:
+          <input
+            type="text"
+            id="end-surah"
+            name="end-surah"
+            list="surah-names"
+            required
+          />
+        </label>
+        <label>
+          Ending Ayah:
+          <input
+            type="number"
+            id="end-ayah"
+            name="end-ayah"
+            min="1"
+            max="3"
+            required
+          />
+        </label>
+      </div>
+      <br />
       <button type="submit">Start Quiz</button>
     </form>
 
     <p class="css-working">css-working</p>
-    <script src="script.js"></script>
+    <script type="module" src="dist/script.js"></script>
   </body>
 </html>

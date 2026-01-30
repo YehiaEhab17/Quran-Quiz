@@ -205,10 +205,7 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-# Node stuff you don't need
 node_modules/
-package-lock.json
-package.json
-
-# TypeScript build output (JS files)
-tsconfig.json
+dist/
+AGENTS.md
+todo.txt

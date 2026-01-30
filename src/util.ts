@@ -1,4 +1,4 @@
-import { Surah, Ayah } from "./interface.js";
+import { Surah, Ayah } from "./types.js";
 
 export function findSurah(
   input: string,

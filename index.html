@@ -26,6 +26,7 @@
             required
             autofocus
           />
+          <span id="start-surah-error" class="error-message"></span>
         </label>
 
         <label>
@@ -40,6 +41,7 @@
             required
             disabled
           />
+          <span id="start-ayah-error" class="error-message"></span>
         </label>
 
         <label>
@@ -53,6 +55,7 @@
             data-number="1"
             required
           />
+          <span id="end-surah-error" class="error-message"></span>
         </label>
 
         <label>
@@ -67,12 +70,14 @@
             required
             disabled
           />
+          <span id="end-ayah-error" class="error-message"></span>
         </label>
       </div>
       <br />
       <button type="submit">Start Quiz</button>
     </form>
 
+    <div id="quiz-output" class="quran"></div>
     <script type="module" src="dist/script.js"></script>
   </body>
 </html>

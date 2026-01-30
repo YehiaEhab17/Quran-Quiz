@@ -1,12 +1,6 @@
 import { testGlobalIDMapping } from "./tests.js";
-import { Ayah, Surah } from "./interface.js";
-import {
-  findSurah,
-  populateDatalist,
-  getRukuWithinRange,
-  getGlobalID,
-  getRukuStartingAyah,
-} from "./util.js";
+import { Ayah, Surah, SurahAyahInputPair } from "./types.js";
+import { getRukuWithinRange, getRukuStartingAyah } from "./util.js";
 
 // --- DOM ELEMENTS ---
 const startSurahInput = document.getElementById("start-surah") as HTMLInputElement;
@@ -16,10 +10,7 @@ const endAyahInput = document.getElementById("end-ayah") as HTMLInputElement;
 const userInput = document.getElementById("selection-form") as HTMLFormElement;
 const surahDatalist = document.getElementById("surah-names") as HTMLDataListElement;
 
-const dependencyMap = new Map<HTMLInputElement, HTMLInputElement>([
-  [startSurahInput, startAyahInput],
-  [endSurahInput, endAyahInput],
-]);
+const quizOutput = document.getElementById("quiz-output") as HTMLElement;
 
 // --- DATA VARIABLES ---
 let suwar: Surah[] = [];
@@ -46,88 +37,48 @@ async function init() {
 }
 
 function setUpEventListeners() {
-  dependencyMap.forEach((dependant, input) => {
-    input.addEventListener("focus", () => {
-      input.select();
-      populateDatalist("", suwar, true, surahDatalist);
-    });
+  const startPair = new SurahAyahInputPair(
+    startSurahInput,
+    startAyahInput,
+    suwar,
+    surahDatalist,
+  );
 
-    input.addEventListener("blur", () => {
-      const surah = findSurah(input.value, suwar);
-      if (surah.length === 0) {
-        input.value = "";
-        dependant.disabled = true;
-      } else {
-        input.value = surah[0].display;
-        input.dataset.number = surah[0].number.toString();
-        dependant.disabled = false;
-        dependant.max = surah[0].length.toString();
+  const endPair = new SurahAyahInputPair(
+    endSurahInput,
+    endAyahInput,
+    suwar,
+    surahDatalist,
+  );
 
-        if (parseInt(dependant.value) > surah[0].length) {
-          dependant.value = surah[0].length.toString();
-        }
-        console.log(dependant.max);
-        console.log(input.name, surah);
-      }
-    });
-
-    input.addEventListener("input", () => {
-      const query = input.value.trim().toLowerCase();
-      populateDatalist(query, suwar, false, surahDatalist);
-    });
-
-    dependant.addEventListener("input", () => {
-      const val = parseInt(dependant.value);
-      const max = parseInt(dependant.max);
-
-      if (isNaN(val)) return;
-
-      if (val > max) dependant.value = max.toString();
-      if (val < 1) dependant.value = "1";
-    });
-
-    dependant.addEventListener("keydown", (e) => {
-      // Only allow digits 0-9
-      if (!/[0-9]/.test(e.key)) {
-        e.preventDefault();
-      }
-    });
-
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-      }
-    });
-  });
-
-  userInput.addEventListener("submit", function (event) {
+  userInput.addEventListener("submit", (event) => {
     event.preventDefault();
-    start();
+    start(startPair, endPair);
   });
 }
 
-function start() {
-  const startAyah = getGlobalID(
-    parseInt(startSurahInput.dataset.number!),
-    parseInt(startAyahInput.value),
-    suwar,
-  );
-  const endAyah = getGlobalID(
-    parseInt(endSurahInput.dataset.number!),
-    parseInt(endAyahInput.value),
-    suwar,
-  );
-  const ruku = getRukuWithinRange(startAyah, endAyah, ayaat);
+function start(startPair: SurahAyahInputPair, endPair: SurahAyahInputPair) {
+  const startAyah = startPair.getGlobalAyahID();
+  const endAyah = endPair.getGlobalAyahID();
 
+  if (!startAyah || !endAyah) {
+    console.error("Invalid start or end ayah.");
+    return;
+  }
+
+  const ruku = getRukuWithinRange(startAyah, endAyah, ayaat);
   const ayah = getRukuStartingAyah(ruku, ayaat);
 
   if (!ayah) {
     console.error(`No starting ayah found for Ruku ${ruku}.`);
     return;
   }
+
   console.log(
-    `Quiz will in range ayah ${startAyah} to ayah ${endAyah}, within Ruku ${ruku} at ayah ${ayah.id}.`,
+    `Quiz will in range ayah ${startAyah} to ayah ${endAyah}, within Ruku ${ruku} at ayah ${ayah.id} in surah ${ayah.surah} ${ayah.ayah}.`,
   );
+
+  quizOutput.textContent = ayah.text;
 }
 
 init();

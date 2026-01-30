@@ -27,6 +27,7 @@ async function buildRukuIndex() {
           id: ayah.ruku,
           surah: surah.number,
           ayah: ayah.numberInSurah,
+          text: ayah.text,
         });
         currentRuku = ayah.ruku;
       }

@@ -11,6 +11,14 @@ input[type="number"] {
   appearance: textfield;
 }
 
+@font-face {
+  font-family: "KFGQPC-Uthmanic";
+  src: url("/fonts/KFGQPC Uthmanic Script HAFS Regular.otf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
 .inputs-grid {
   max-width: 30%;
   display: grid;
@@ -26,4 +34,34 @@ input[type="number"] {
 #start-ayah,
 #end-ayah {
   width: 14ch;
+}
+
+.error-message {
+  min-height: 1.5em;
+  color: red;
+  font-size: 0.875rem;
+  visibility: hidden;
+}
+
+.error-message.visible {
+  visibility: visible;
+}
+
+#quiz-output {
+  margin-top: 1rem;
+  min-height: 2.5rem;
+  max-width: 50%;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.quran {
+  font-family: "KFGQPC-Uthmanic", serif;
+  direction: rtl;
+  text-align: right;
+  line-height: 2.2;
+  font-size: 1.4rem;
 }

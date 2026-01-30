@@ -64,6 +64,10 @@ export function getGlobalID(
   return ayahCount + ayahNumber;
 }
 
-export function getRukuStartingAyah(rukuNumber: number, ayaat: Ayah[]): Ayah {
-  return ayaat.find((ayah) => ayah.ruku === rukuNumber)!;
+export function getRukuStartingAyah(
+  rukuNumber: number,
+  ayaat: Ayah[],
+): Ayah | undefined {
+  const startingAyah = ayaat.find((ayah) => ayah.ruku === rukuNumber);
+  return startingAyah;
 }

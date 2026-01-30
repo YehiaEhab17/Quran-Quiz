@@ -1,6 +1,7 @@
 import { getGlobalID } from "./util.js";
+import { Surah, Ayah } from "./interface.js";
 
-export function testGlobalIDMapping(suwar: any[], ayaat: any[]) {
+export function testGlobalIDMapping(suwar: Surah[], ayaat: Ayah[]) {
   let totalTests = 0;
   let passedTests = 0;
   let ayahCounter = 0; // This will track our position in the flat ayaat array

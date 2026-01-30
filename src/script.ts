@@ -35,6 +35,9 @@ async function init() {
   suwar = await suwarResp.json();
   ayaat = await ayaatResp.json();
 
+  console.log("Data loaded successfully.");
+
+  // Run tests in development environment
   if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
     test();
   }
@@ -83,9 +86,15 @@ function setUpEventListeners() {
       if (val < 1) dependant.value = "1";
     });
 
-    dependant.addEventListener("keypress", (e) => {
+    dependant.addEventListener("keydown", (e) => {
       // Only allow digits 0-9
       if (!/[0-9]/.test(e.key)) {
+        e.preventDefault();
+      }
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
         e.preventDefault();
       }
     });
@@ -98,22 +107,26 @@ function setUpEventListeners() {
 }
 
 function start() {
-  const start = getGlobalID(
+  const startAyah = getGlobalID(
     parseInt(startSurahInput.dataset.number!),
     parseInt(startAyahInput.value),
     suwar,
   );
-  const end = getGlobalID(
+  const endAyah = getGlobalID(
     parseInt(endSurahInput.dataset.number!),
     parseInt(endAyahInput.value),
     suwar,
   );
-  const ruku = getRukuWithinRange(start, end, ayaat);
+  const ruku = getRukuWithinRange(startAyah, endAyah, ayaat);
 
   const ayah = getRukuStartingAyah(ruku, ayaat);
 
+  if (!ayah) {
+    console.error(`No starting ayah found for Ruku ${ruku}.`);
+    return;
+  }
   console.log(
-    `Quiz will in range ayah ${start} to ayah ${end}, within Ruku ${ruku} at ayah ${ayah.id}.`,
+    `Quiz will in range ayah ${startAyah} to ayah ${endAyah}, within Ruku ${ruku} at ayah ${ayah.id}.`,
   );
 }
 

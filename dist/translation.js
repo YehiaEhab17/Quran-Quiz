@@ -1,5 +1,5 @@
 let translations = null;
-let currentLang = "arabic";
+let currentLang = "english";
 export async function initTranslations() {
     const response = await fetch("data/translation.json");
     translations = await response.json();

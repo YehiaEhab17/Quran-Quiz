@@ -2,7 +2,7 @@ import { TranslationData, TranslationItem } from "./types.js";
 
 type Language = "english" | "arabic";
 let translations: TranslationData | null = null;
-let currentLang: Language = "arabic";
+let currentLang: Language = "english";
 
 export async function initTranslations(): Promise<void> {
   const response = await fetch("data/translation.json");

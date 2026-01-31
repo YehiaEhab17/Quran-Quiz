@@ -1,8 +1,5 @@
-export function findSurah(input, suwar, all = false) {
+export function findSurah(input, suwar) {
     const query = input.trim().toLowerCase();
-    if (all) {
-        return suwar;
-    }
     if (!query) {
         return [];
     }
@@ -11,27 +8,25 @@ export function findSurah(input, suwar, all = false) {
         s.english.toLowerCase().includes(query) ||
         s.arabic.includes(query));
 }
-export function populateDatalist(query, suwar, all = false, surahDatalist) {
-    const matches = findSurah(query, suwar, all);
+export function findAyah(surahNumber, ayahNumber, ayaat) {
+    return ayaat.find((a) => a.surah === surahNumber && a.ayah === ayahNumber);
+}
+export function populateDatalist(query, suwar, surahDatalist) {
+    const matches = query.trim() ? findSurah(query, suwar) : suwar;
     surahDatalist.innerHTML = "";
+    const fragment = document.createDocumentFragment();
     matches.forEach((s) => {
         const option = document.createElement("option");
         option.value = `${s.number}. ${s.arabic} (${s.english})`;
-        surahDatalist.appendChild(option);
+        fragment.appendChild(option);
     });
+    surahDatalist.appendChild(fragment);
 }
-export function getRukuWithinRange(start, end, ayaat) {
-    const startRuku = ayaat[start - 1].ruku;
-    const endRuku = ayaat[end - 1].ruku;
+export function getRukuWithinRange(start, end) {
+    const startRuku = start.ruku;
+    const endRuku = end.ruku;
     const ruku = startRuku + Math.floor(Math.random() * (endRuku - startRuku + 1));
     return ruku;
-}
-export function getGlobalID(surahNumber, ayahNumber, suwar) {
-    let ayahCount = 0;
-    for (let i = 0; i < surahNumber - 1; i++) {
-        ayahCount += suwar[i].length;
-    }
-    return ayahCount + ayahNumber;
 }
 export function getRukuStartingAyah(rukuNumber, ayaat) {
     const startingAyah = ayaat.find((ayah) => ayah.ruku === rukuNumber);

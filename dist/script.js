@@ -18,6 +18,7 @@ const endAyahInput = document.getElementById("end-ayah");
 const userInput = document.getElementById("selection-form");
 const surahDatalist = document.getElementById("surah-names");
 const quizOutput = document.getElementById("quiz-output");
+const formError = document.getElementById("form-error");
 // --- DATA VARIABLES ---
 let suwar = [];
 let ayaat = [];
@@ -39,27 +40,36 @@ function init() {
     });
 }
 function setUpEventListeners() {
-    const startPair = new SurahAyahInputPair(startSurahInput, startAyahInput, suwar, surahDatalist);
-    const endPair = new SurahAyahInputPair(endSurahInput, endAyahInput, suwar, surahDatalist);
+    const startPair = new SurahAyahInputPair(startSurahInput, startAyahInput, suwar, ayaat, surahDatalist);
+    const endPair = new SurahAyahInputPair(endSurahInput, endAyahInput, suwar, ayaat, surahDatalist);
     userInput.addEventListener("submit", (event) => {
         event.preventDefault();
         start(startPair, endPair);
     });
 }
 function start(startPair, endPair) {
-    const startAyah = startPair.getGlobalAyahID();
-    const endAyah = endPair.getGlobalAyahID();
+    startPair.verifyInputs();
+    endPair.verifyInputs();
+    let startAyah = startPair.getAyah();
+    let endAyah = endPair.getAyah();
     if (!startAyah || !endAyah) {
         console.error("Invalid start or end ayah.");
         return;
     }
-    const ruku = getRukuWithinRange(startAyah, endAyah, ayaat);
+    const ruku = getRukuWithinRange(startAyah, endAyah);
     const ayah = getRukuStartingAyah(ruku, ayaat);
     if (!ayah) {
         console.error(`No starting ayah found for Ruku ${ruku}.`);
         return;
     }
-    console.log(`Quiz will in range ayah ${startAyah} to ayah ${endAyah}, within Ruku ${ruku} at ayah ${ayah.id} in surah ${ayah.surah} ${ayah.ayah}.`);
+    if (endAyah.id < startAyah.id) {
+        [startAyah, endAyah] = [endAyah, startAyah];
+        console.log("Swapped start and end ayahs to maintain order.");
+        formError.textContent =
+            "Note: Start and End Ayahs were swapped to maintain order.";
+        formError.classList.add("visible");
+    }
+    console.log(`Quiz from ${startAyah.surah}:${startAyah.ayah} to ${endAyah.surah}:${endAyah.ayah}. Starting Ruku: ${ruku}, Starting Ayah ${ayah.surah}:${ayah.ayah} (ID: ${ayah.id})`);
     quizOutput.textContent = ayah.text;
 }
 init();

@@ -1,4 +1,4 @@
-import { populateDatalist, findSurah, getGlobalID } from "./util.js";
+import { populateDatalist, findSurah, findAyah } from "./util.js";
 
 export interface Surah {
   display: string;
@@ -18,6 +18,11 @@ export interface Ayah {
   juz: number;
 }
 
+export interface Ruku {
+  id: number;
+  ayaat: Ayah[];
+}
+
 export class SurahAyahInputPair {
   private surahError: HTMLElement;
   private ayahError: HTMLElement;
@@ -26,6 +31,7 @@ export class SurahAyahInputPair {
     private surahInput: HTMLInputElement,
     private ayahInput: HTMLInputElement,
     private suwar: Surah[],
+    private ayaat: Ayah[],
     private surahDatalist: HTMLDataListElement,
   ) {
     this.surahError = document.getElementById(`${this.surahInput.id}-error`)!;
@@ -35,9 +41,8 @@ export class SurahAyahInputPair {
 
   private setupListeners() {
     this.surahInput.addEventListener("focus", this.handleFocus.bind(this));
-    this.surahInput.addEventListener("blur", this.handleBlur.bind(this));
+    this.surahInput.addEventListener("blur", this.validateSurah.bind(this));
     this.surahInput.addEventListener("input", this.handleSurahInput.bind(this));
-    this.surahInput.addEventListener("keydown", this.preventEnter.bind(this));
 
     this.ayahInput.addEventListener("input", this.validateAyah.bind(this));
     this.ayahInput.addEventListener("keydown", this.allowOnlyDigits.bind(this));
@@ -45,31 +50,32 @@ export class SurahAyahInputPair {
 
   private handleFocus() {
     this.surahInput.select();
-    populateDatalist("", this.suwar, true, this.surahDatalist);
-  }
-
-  private handleBlur() {
-    const surah = findSurah(this.surahInput.value, this.suwar);
-
-    if (surah.length === 0) {
-      this.surahInput.value = "";
-      this.ayahInput.value = "";
-      this.ayahInput.disabled = true;
-      this.showError(this.surahError, "Invalid Surah");
-    } else {
-      this.surahInput.value = surah[0].display;
-      this.surahInput.dataset.number = surah[0].number.toString();
-      this.ayahInput.disabled = false;
-      this.ayahInput.max = surah[0].length.toString();
-
-      this.hideError(this.surahError);
-      this.validateAyah();
-    }
+    populateDatalist("", this.suwar, this.surahDatalist);
   }
 
   private handleSurahInput() {
     const query = this.surahInput.value.trim().toLowerCase();
-    populateDatalist(query, this.suwar, false, this.surahDatalist);
+    populateDatalist(query, this.suwar, this.surahDatalist);
+  }
+
+  private validateSurah() {
+    const results = findSurah(this.surahInput.value, this.suwar);
+
+    if (results.length === 0) {
+      this.surahInput.value = "";
+      this.ayahInput.value = "";
+      this.ayahInput.disabled = true;
+      this.showError(this.surahError, "Enter a valid Surah");
+      return;
+    }
+
+    this.surahInput.value = results[0].display;
+    this.surahInput.dataset.number = results[0].number.toString();
+    this.ayahInput.disabled = false;
+    this.ayahInput.max = results[0].length.toString();
+    this.hideError(this.surahError);
+
+    this.validateAyah();
   }
 
   private validateAyah() {
@@ -87,19 +93,14 @@ export class SurahAyahInputPair {
     }
   }
 
-  private preventEnter(e: KeyboardEvent) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-    }
-  }
-
   private allowOnlyDigits(e: KeyboardEvent) {
     if (
       e.key === "Backspace" ||
       e.key === "Delete" ||
       e.key === "Tab" ||
       e.key === "ArrowLeft" ||
-      e.key === "ArrowRight"
+      e.key === "ArrowRight" ||
+      e.key === "Enter"
     ) {
       return;
     }
@@ -126,12 +127,17 @@ export class SurahAyahInputPair {
     const value = this.ayahInput.value;
     return value ? parseInt(value) : null;
   }
-  getGlobalAyahID(): number | null {
+  getAyah(): Ayah | undefined {
     const surahID = this.getSurahID();
     const localAyahID = this.getLocalAyahID();
     if (surahID && localAyahID) {
-      return getGlobalID(surahID, localAyahID, this.suwar);
+      return findAyah(surahID, localAyahID, this.ayaat);
     }
-    return null;
+    return undefined;
+  }
+
+  verifyInputs(): void {
+    this.validateSurah();
+    this.validateAyah();
   }
 }

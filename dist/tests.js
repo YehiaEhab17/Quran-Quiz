@@ -1,4 +1,10 @@
-import { getGlobalID } from "./util.js";
+export function getGlobalID(surahNumber, ayahNumber, suwar) {
+    let ayahCount = 0;
+    for (let i = 0; i < surahNumber - 1; i++) {
+        ayahCount += suwar[i].length;
+    }
+    return ayahCount + ayahNumber;
+}
 export function testGlobalIDMapping(suwar, ayaat) {
     let totalTests = 0;
     let passedTests = 0;

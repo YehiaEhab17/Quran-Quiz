@@ -1,14 +1,8 @@
-import { Surah, Ayah } from "./types.js";
+import { Surah, Ayah, Ruku } from "./types.js";
 
-export function findSurah(
-  input: string,
-  suwar: Surah[],
-  all: boolean = false,
-): Surah[] {
+export function findSurah(input: string, suwar: Surah[]): Surah[] {
   const query: string = input.trim().toLowerCase();
-  if (all) {
-    return suwar;
-  }
+
   if (!query) {
     return [];
   }
@@ -21,47 +15,38 @@ export function findSurah(
   );
 }
 
+export function findAyah(
+  surahNumber: number,
+  ayahNumber: number,
+  ayaat: Ayah[],
+): Ayah | undefined {
+  return ayaat.find((a) => a.surah === surahNumber && a.ayah === ayahNumber);
+}
+
 export function populateDatalist(
   query: string,
   suwar: Surah[],
-  all: boolean = false,
   surahDatalist: HTMLDataListElement,
 ): void {
-  const matches = findSurah(query, suwar, all);
+  const matches = query.trim() ? findSurah(query, suwar) : suwar;
 
   surahDatalist.innerHTML = "";
+  const fragment = document.createDocumentFragment();
 
   matches.forEach((s) => {
     const option = document.createElement("option");
     option.value = `${s.number}. ${s.arabic} (${s.english})`;
-    surahDatalist.appendChild(option);
+    fragment.appendChild(option);
   });
+  surahDatalist.appendChild(fragment);
 }
 
-export function getRukuWithinRange(
-  start: number,
-  end: number,
-  ayaat: Ayah[],
-): number {
-  const startRuku = ayaat[start - 1].ruku;
-  const endRuku = ayaat[end - 1].ruku;
+export function getRukuWithinRange(start: Ayah, end: Ayah): number {
+  const startRuku = start.ruku;
+  const endRuku = end.ruku;
 
   const ruku = startRuku + Math.floor(Math.random() * (endRuku - startRuku + 1));
   return ruku;
-}
-
-export function getGlobalID(
-  surahNumber: number,
-  ayahNumber: number,
-  suwar: Surah[],
-): number {
-  let ayahCount = 0;
-
-  for (let i = 0; i < surahNumber - 1; i++) {
-    ayahCount += suwar[i].length;
-  }
-
-  return ayahCount + ayahNumber;
 }
 
 export function getRukuStartingAyah(

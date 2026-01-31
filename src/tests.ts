@@ -1,5 +1,18 @@
-import { getGlobalID } from "./util.js";
 import { Surah, Ayah } from "./types.js";
+
+export function getGlobalID(
+  surahNumber: number,
+  ayahNumber: number,
+  suwar: Surah[],
+): number {
+  let ayahCount = 0;
+
+  for (let i = 0; i < surahNumber - 1; i++) {
+    ayahCount += suwar[i].length;
+  }
+
+  return ayahCount + ayahNumber;
+}
 
 export function testGlobalIDMapping(suwar: Surah[], ayaat: Ayah[]) {
   let totalTests = 0;

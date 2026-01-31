@@ -1,3 +1,6 @@
+/* ============================================
+   FORM CONTROLS - Remove number input spinners
+   ============================================ */
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -11,6 +14,9 @@ input[type="number"] {
   appearance: textfield;
 }
 
+/* ============================================
+   FONTS
+   ============================================ */
 @font-face {
   font-family: "KFGQPC-Uthmanic";
   src: url("/fonts/KFGQPC Uthmanic Script HAFS Regular.otf") format("truetype");
@@ -19,23 +25,49 @@ input[type="number"] {
   font-display: block;
 }
 
+/* ============================================
+   PAGE LAYOUT
+   ============================================ */
+.container {
+  display: grid;
+  grid-template-columns: minmax(300px, 400px) 1fr; /* Left side has min/max width */
+  gap: 2rem;
+  align-items: start;
+  max-width: 1400px; /* Add this */
+  margin: 0 auto; /* Center the container */
+  padding: 0 2rem; /* Add some breathing room on edges */
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================
+   LAYOUT - Input Grid
+   ============================================ */
 .inputs-grid {
-  max-width: 30%;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem 1.5rem;
   align-items: center;
 }
+
 .inputs-grid label {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
+
 #start-ayah,
 #end-ayah {
   width: 14ch;
 }
 
+/* ============================================
+   ERROR HANDLING
+   ============================================ */
 .error-message {
   min-height: 1.5em;
   color: red;
@@ -47,21 +79,49 @@ input[type="number"] {
   visibility: visible;
 }
 
-#quiz-output {
-  margin-top: 1rem;
-  min-height: 2.5rem;
-  max-width: 50%;
+/* ============================================
+   QUIZ COMPONENTS
+   ============================================ */
+#quiz {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
   padding: 0.5rem;
-  box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: #f9f9f9;
 }
 
+#quiz-output {
+  min-height: 10rem;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+#quiz-controls {
+  display: flex;
+  gap: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#quiz-controls button {
+  flex: 1;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+/* ============================================
+   TYPOGRAPHY - Quran Text
+   ============================================ */
 .quran {
   font-family: "KFGQPC-Uthmanic", serif;
+  font-size: 1.4rem;
+  line-height: 2.2;
   direction: rtl;
   text-align: right;
-  line-height: 2.2;
-  font-size: 1.4rem;
 }

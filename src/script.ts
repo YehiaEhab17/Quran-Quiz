@@ -11,6 +11,7 @@ const userInput = document.getElementById("selection-form") as HTMLFormElement;
 const surahDatalist = document.getElementById("surah-names") as HTMLDataListElement;
 
 const quizOutput = document.getElementById("quiz-output") as HTMLElement;
+const formError = document.getElementById("form-error") as HTMLElement;
 
 // --- DATA VARIABLES ---
 let suwar: Surah[] = [];
@@ -41,6 +42,7 @@ function setUpEventListeners() {
     startSurahInput,
     startAyahInput,
     suwar,
+    ayaat,
     surahDatalist,
   );
 
@@ -48,6 +50,7 @@ function setUpEventListeners() {
     endSurahInput,
     endAyahInput,
     suwar,
+    ayaat,
     surahDatalist,
   );
 
@@ -58,15 +61,18 @@ function setUpEventListeners() {
 }
 
 function start(startPair: SurahAyahInputPair, endPair: SurahAyahInputPair) {
-  const startAyah = startPair.getGlobalAyahID();
-  const endAyah = endPair.getGlobalAyahID();
+  startPair.verifyInputs();
+  endPair.verifyInputs();
+
+  let startAyah = startPair.getAyah();
+  let endAyah = endPair.getAyah();
 
   if (!startAyah || !endAyah) {
     console.error("Invalid start or end ayah.");
     return;
   }
 
-  const ruku = getRukuWithinRange(startAyah, endAyah, ayaat);
+  const ruku = getRukuWithinRange(startAyah, endAyah);
   const ayah = getRukuStartingAyah(ruku, ayaat);
 
   if (!ayah) {
@@ -74,8 +80,16 @@ function start(startPair: SurahAyahInputPair, endPair: SurahAyahInputPair) {
     return;
   }
 
+  if (endAyah.id < startAyah.id) {
+    [startAyah, endAyah] = [endAyah, startAyah];
+    console.log("Swapped start and end ayahs to maintain order.");
+    formError.textContent =
+      "Note: Start and End Ayahs were swapped to maintain order.";
+    formError.classList.add("visible");
+  }
+
   console.log(
-    `Quiz will in range ayah ${startAyah} to ayah ${endAyah}, within Ruku ${ruku} at ayah ${ayah.id} in surah ${ayah.surah} ${ayah.ayah}.`,
+    `Quiz from ${startAyah.surah}:${startAyah.ayah} to ${endAyah.surah}:${endAyah.ayah}. Starting Ruku: ${ruku}, Starting Ayah ${ayah.surah}:${ayah.ayah} (ID: ${ayah.id})`,
   );
 
   quizOutput.textContent = ayah.text;

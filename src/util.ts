@@ -49,10 +49,10 @@ export function getRukuWithinRange(start: Ayah, end: Ayah): number {
   return ruku;
 }
 
-export function getRukuStartingAyah(
-  rukuNumber: number,
-  ayaat: Ayah[],
-): Ayah | undefined {
-  const startingAyah = ayaat.find((ayah) => ayah.ruku === rukuNumber);
-  return startingAyah;
+export function getRuku(rukuNumber: number, ayaat: Ayah[]): Ruku | undefined {
+  let ruku: Ruku = {
+    id: rukuNumber,
+    ayaat: ayaat.filter((ayah) => ayah.ruku === rukuNumber),
+  };
+  return ruku.ayaat.length > 0 ? ruku : undefined;
 }

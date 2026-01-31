@@ -28,8 +28,11 @@ export function getRukuWithinRange(start, end) {
     const ruku = startRuku + Math.floor(Math.random() * (endRuku - startRuku + 1));
     return ruku;
 }
-export function getRukuStartingAyah(rukuNumber, ayaat) {
-    const startingAyah = ayaat.find((ayah) => ayah.ruku === rukuNumber);
-    return startingAyah;
+export function getRuku(rukuNumber, ayaat) {
+    let ruku = {
+        id: rukuNumber,
+        ayaat: ayaat.filter((ayah) => ayah.ruku === rukuNumber),
+    };
+    return ruku.ayaat.length > 0 ? ruku : undefined;
 }
 //# sourceMappingURL=util.js.map

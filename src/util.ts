@@ -55,8 +55,10 @@ export function getRuku(rukuNumber: number, ayaat: Ayah[]): Ruku | undefined {
   return ayaatInRuku.length > 0 ? { id: rukuNumber, ayaat: ayaatInRuku } : undefined;
 }
 
+const ARABIC_DIGITS = "٠١٢٣٤٥٦٧٨٩";
+const DIGIT_REGEX = /\d/g;
 export function getArabicDigit(num: number): string {
-  return num.toString().replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[parseInt(d)]);
+  return num.toString().replace(DIGIT_REGEX, (d) => ARABIC_DIGITS[+d]);
 }
 
 export function concatenateAyaat(ayaat: Ayah[]): string {

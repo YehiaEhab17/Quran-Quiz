@@ -1,6 +1,6 @@
 import { testGlobalIDMapping } from "./tests.js";
 import { Ayah, Surah, SurahAyahInputPair } from "./types.js";
-import { getRukuWithinRange, getRukuStartingAyah } from "./util.js";
+import { getRukuWithinRange, getRuku } from "./util.js";
 
 // --- DOM ELEMENTS ---
 const startSurahInput = document.getElementById("start-surah") as HTMLInputElement;
@@ -72,13 +72,13 @@ function start(startPair: SurahAyahInputPair, endPair: SurahAyahInputPair) {
     return;
   }
 
-  const ruku = getRukuWithinRange(startAyah, endAyah);
-  const ayah = getRukuStartingAyah(ruku, ayaat);
-
-  if (!ayah) {
-    console.error(`No starting ayah found for Ruku ${ruku}.`);
+  const rukuNumber = getRukuWithinRange(startAyah, endAyah);
+  const ruku = getRuku(rukuNumber, ayaat);
+  if (!ruku) {
+    console.error(`No ruku found for number ${rukuNumber}.`);
     return;
   }
+  const ayah = ruku.ayaat[0];
 
   if (endAyah.id < startAyah.id) {
     [startAyah, endAyah] = [endAyah, startAyah];
@@ -89,7 +89,8 @@ function start(startPair: SurahAyahInputPair, endPair: SurahAyahInputPair) {
   }
 
   console.log(
-    `Quiz from ${startAyah.surah}:${startAyah.ayah} to ${endAyah.surah}:${endAyah.ayah}. Starting Ruku: ${ruku}, Starting Ayah ${ayah.surah}:${ayah.ayah} (ID: ${ayah.id})`,
+    `Quiz from ${startAyah.surah}:${startAyah.ayah} to ${endAyah.surah}:${endAyah.ayah}. 
+    Starting Ruku: ${ruku.id}, Starting Ayah ${ayah.surah}:${ayah.ayah} (ID: ${ayah.id})`,
   );
 
   quizOutput.textContent = ayah.text;

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { testGlobalIDMapping } from "./tests.js";
 import { SurahAyahInputPair } from "./types.js";
-import { getRukuWithinRange, getRukuStartingAyah } from "./util.js";
+import { getRukuWithinRange, getRuku } from "./util.js";
 // --- DOM ELEMENTS ---
 const startSurahInput = document.getElementById("start-surah");
 const startAyahInput = document.getElementById("start-ayah");
@@ -56,12 +56,13 @@ function start(startPair, endPair) {
         console.error("Invalid start or end ayah.");
         return;
     }
-    const ruku = getRukuWithinRange(startAyah, endAyah);
-    const ayah = getRukuStartingAyah(ruku, ayaat);
-    if (!ayah) {
-        console.error(`No starting ayah found for Ruku ${ruku}.`);
+    const rukuNumber = getRukuWithinRange(startAyah, endAyah);
+    const ruku = getRuku(rukuNumber, ayaat);
+    if (!ruku) {
+        console.error(`No ruku found for number ${rukuNumber}.`);
         return;
     }
+    const ayah = ruku.ayaat[0];
     if (endAyah.id < startAyah.id) {
         [startAyah, endAyah] = [endAyah, startAyah];
         console.log("Swapped start and end ayahs to maintain order.");
@@ -69,7 +70,8 @@ function start(startPair, endPair) {
             "Note: Start and End Ayahs were swapped to maintain order.";
         formError.classList.add("visible");
     }
-    console.log(`Quiz from ${startAyah.surah}:${startAyah.ayah} to ${endAyah.surah}:${endAyah.ayah}. Starting Ruku: ${ruku}, Starting Ayah ${ayah.surah}:${ayah.ayah} (ID: ${ayah.id})`);
+    console.log(`Quiz from ${startAyah.surah}:${startAyah.ayah} to ${endAyah.surah}:${endAyah.ayah}. 
+    Starting Ruku: ${ruku.id}, Starting Ayah ${ayah.surah}:${ayah.ayah} (ID: ${ayah.id})`);
     quizOutput.textContent = ayah.text;
 }
 init();

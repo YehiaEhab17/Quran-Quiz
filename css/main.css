@@ -204,14 +204,11 @@ button[type="submit"]:hover {
   grid-column: 4;
 }
 
-/* In HTML reveal-surah comes before reveal-ayah, but user wants reveal-ayah then reveal-surah visually */
-#reveal-ayah {
-  grid-column: 1 / span 2;
-  order: 1;
-}
 #reveal-surah {
+  grid-column: 1 / span 2;
+}
+#reveal-ayah {
   grid-column: 3 / span 2;
-  order: 2;
 }
 
 #quiz-controls button:hover:not(:disabled) {
@@ -255,7 +252,6 @@ button[type="submit"]:hover {
 .error-message {
   color: var(--error-color);
   font-size: 0.8rem;
-  margin-top: 0.25rem;
   min-height: 4em;
   display: block;
   visibility: hidden;
@@ -294,10 +290,10 @@ button[type="submit"]:hover {
   #copy-ayah {
     grid-column: 2;
   }
-  #reveal-ayah {
+  #reveal-surah {
     grid-column: 1;
   }
-  #reveal-surah {
+  #reveal-ayah {
     grid-column: 2;
   }
 }

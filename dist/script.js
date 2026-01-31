@@ -2,6 +2,7 @@ import { testGlobalIDMapping } from "./tests.js";
 import { getRukuWithinRange, getRuku } from "./util.js";
 import { SurahAyahInputPair, QuizControls, AyahDisplay } from "./classes.js";
 import { setRuku, quizStarted } from "./state.js";
+import { initTranslations, getText } from "./translation.js";
 // --- DOM ELEMENTS ---
 const startSurahInput = document.getElementById("start-surah");
 const startAyahInput = document.getElementById("start-ayah");
@@ -18,6 +19,7 @@ let controls;
 let display;
 // --- INITIALIZATION ---
 async function init() {
+    await initTranslations();
     const [suwarResp, ayaatResp] = await Promise.all([
         fetch("data/suwar.json"),
         fetch("data/ayaat.json"),
@@ -70,8 +72,7 @@ function start(startPair, endPair) {
     if (endAyah.id < startAyah.id) {
         [startAyah, endAyah] = [endAyah, startAyah];
         console.log("Swapped start and end ayahs to maintain order.");
-        formError.textContent =
-            "Note: Start and End Ayahs were swapped to maintain order.";
+        formError.textContent = getText("errors.swappedAyahs");
         formError.classList.add("visible");
     }
     console.log(`Quiz from ${startAyah.surah}:${startAyah.ayah} to ${endAyah.surah}:${endAyah.ayah}. 

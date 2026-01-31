@@ -9,14 +9,14 @@
     <title>Quran Quiz</title>
   </head>
   <body>
-    <h1>Welcome to the Quran Quiz</h1>
+    <h1 data-i18n="mainHeading">Welcome to the Quran Quiz</h1>
 
     <div class="container">
       <form id="selection-form" autocomplete="off">
         <datalist id="surah-names"></datalist>
         <div class="inputs-grid">
           <label>
-            Starting Surah:
+            <span data-i18n="labels.startSurah"> Starting Surah: </span>
             <input
               type="text"
               id="start-surah"
@@ -30,7 +30,7 @@
           </label>
 
           <label>
-            Starting Ayah:
+            <span data-i18n="labels.startAyah"> Starting Ayah: </span>
             <input
               type="number"
               id="start-ayah"
@@ -43,9 +43,8 @@
             />
             <span id="start-ayah-error" class="error-message"></span>
           </label>
-
           <label>
-            Ending Surah:
+            <span data-i18n="labels.endSurah"> Ending Surah: </span>
             <input
               type="text"
               id="end-surah"
@@ -58,7 +57,7 @@
           </label>
 
           <label>
-            Ending Ayah:
+            <span data-i18n="labels.endAyah"> Ending Ayah: </span>
             <input
               type="number"
               id="end-ayah"
@@ -73,18 +72,26 @@
           </label>
         </div>
         <br />
-        <button type="submit">Start Quiz</button>
+        <button data-i18n="buttons.startQuiz" type="submit">Start Quiz</button>
         <div id="form-error" class="error-message"></div>
       </form>
 
       <div id="quiz">
         <div id="quiz-controls">
-          <button disabled id="show-more">+</button>
-          <button disabled id="show-less">-</button>
-          <button disabled id="next-quiz">Next Quiz</button>
-          <button disabled id="copy-ayah">Copy Ayah</button>
-          <button disabled id="reveal-surah">Reveal Surah</button>
-          <button disabled id="reveal-ayah">Reveal Ayah</button>
+          <button data-i18n="buttons.showMore" disabled id="show-more">+</button>
+          <button data-i18n="buttons.showLess" disabled id="show-less">-</button>
+          <button data-i18n="buttons.nextQuiz" disabled id="next-quiz">
+            Next Quiz
+          </button>
+          <button data-i18n="buttons.copyAyah" disabled id="copy-ayah">
+            Copy Ayah
+          </button>
+          <button data-i18n="buttons.revealSurah" disabled id="reveal-surah">
+            Reveal Surah
+          </button>
+          <button data-i18n="buttons.revealAyah" disabled id="reveal-ayah">
+            Reveal Ayah
+          </button>
         </div>
         <div id="quiz-output" class="quran"></div>
       </div>

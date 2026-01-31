@@ -1,0 +1,82 @@
+{
+  "pageTitle": {
+    "english": "Quran Quiz",
+    "arabic": "اختبار القرآن"
+  },
+  "mainHeading": {
+    "english": "Welcome to the Quran Quiz",
+    "arabic": "مرحباً بكم في اختبار القرآن"
+  },
+  "labels": {
+    "startSurah": {
+      "english": "Starting Surah:",
+      "arabic": "سورة البداية:"
+    },
+    "startAyah": {
+      "english": "Starting Ayah:",
+      "arabic": "آية البداية:"
+    },
+    "endSurah": {
+      "english": "Ending Surah:",
+      "arabic": "سورة النهاية:"
+    },
+    "endAyah": {
+      "english": "Ending Ayah:",
+      "arabic": "آية النهاية:"
+    }
+  },
+  "buttons": {
+    "startQuiz": {
+      "english": "Start Quiz",
+      "arabic": "ابدأ الاختبار"
+    },
+    "showMore": {
+      "english": "+",
+      "arabic": "+"
+    },
+    "showLess": {
+      "english": "-",
+      "arabic": "-"
+    },
+    "nextQuiz": {
+      "english": "Next Quiz",
+      "arabic": "الاختبار التالي"
+    },
+    "copyAyah": {
+      "english": "Copy Ayah",
+      "arabic": "نسخ الآية"
+    },
+    "revealSurah": {
+      "english": "Reveal Surah",
+      "arabic": "إظهار السورة"
+    },
+    "revealAyah": {
+      "english": "Reveal Ayah",
+      "arabic": "إظهار الآية"
+    },
+    "copied": {
+      "english": "Copied!",
+      "arabic": "تم النسخ!"
+    }
+  },
+  "errors": {
+    "invalidSurah": {
+      "english": "Enter a valid Surah",
+      "arabic": "أدخل سورة صحيحة"
+    },
+    "invalidAyahRange": {
+      "english": "Enter an ayah between 1 and",
+      "arabic": "أدخل آية بين ١ و"
+    },
+    "swappedAyahs": {
+      "english": "Note: Start and End Ayahs were swapped to maintain order.",
+      "arabic": "ملاحظة: تم تبديل آيات البداية والنهاية للحفاظ على الترتيب."
+    }
+  },
+  "dynamic": {
+    "ayahPrefix": {
+      "english": "Ayah",
+      "arabic": "آية"
+    }
+  }
+}

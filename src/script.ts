@@ -3,6 +3,7 @@ import { Ayah, Surah } from "./types.js";
 import { getRukuWithinRange, getRuku } from "./util.js";
 import { SurahAyahInputPair, QuizControls, AyahDisplay } from "./classes.js";
 import { appState, setRuku, quizStarted } from "./state.js";
+import { initTranslations, getText } from "./translation.js";
 
 // --- DOM ELEMENTS ---
 const startSurahInput = document.getElementById("start-surah") as HTMLInputElement;
@@ -24,6 +25,8 @@ let display: AyahDisplay;
 
 // --- INITIALIZATION ---
 async function init() {
+  await initTranslations();
+
   const [suwarResp, ayaatResp] = await Promise.all([
     fetch("data/suwar.json"),
     fetch("data/ayaat.json"),
@@ -104,8 +107,7 @@ function start(startPair: SurahAyahInputPair, endPair: SurahAyahInputPair) {
   if (endAyah.id < startAyah.id) {
     [startAyah, endAyah] = [endAyah, startAyah];
     console.log("Swapped start and end ayahs to maintain order.");
-    formError.textContent =
-      "Note: Start and End Ayahs were swapped to maintain order.";
+    formError.textContent = getText("errors.swappedAyahs");
     formError.classList.add("visible");
   }
 

@@ -8,7 +8,7 @@ import {
 } from "./util.js";
 import { Ayah, Ruku, Surah } from "./types.js";
 import { appState } from "./state.js";
-
+import { getText } from "./translation.js";
 export class SurahAyahInputPair {
   private surahError: HTMLElement;
   private ayahError: HTMLElement;
@@ -51,7 +51,7 @@ export class SurahAyahInputPair {
       this.surahInput.value = "";
       this.ayahInput.value = "";
       this.ayahInput.disabled = true;
-      this.showError(this.surahError, "Enter a valid Surah");
+      this.showError(this.surahError, getText("errors.invalidSurah"));
       return;
     }
 
@@ -73,7 +73,7 @@ export class SurahAyahInputPair {
     this.ayahInput.value = clamp(1, val, max).toString();
 
     val < 1 || val > max
-      ? this.showError(this.ayahError, `Enter an ayah between 1 and ${max}`)
+      ? this.showError(this.ayahError, getText("errors.invalidAyah"))
       : this.hideError(this.ayahError);
   }
 
@@ -184,9 +184,9 @@ export class QuizControls {
   };
 
   private reset = () => {
-    this.buttons.revealSurah.textContent = "Reveal Surah";
-    this.buttons.revealAyah.textContent = "Reveal Ayah";
-    this.buttons.copyAyah.textContent = "Copy Ayah";
+    this.buttons.revealSurah.textContent = getText("buttons.revealSurah");
+    this.buttons.revealAyah.textContent = getText("buttons.revealAyah");
+    this.buttons.copyAyah.textContent = getText("buttons.copyAyah");
   };
 
   private showMore = () => {
@@ -204,7 +204,7 @@ export class QuizControls {
 
   private copyAyah = async () => {
     if (this.display.text) await copyToClipboard(this.display.text);
-    this.buttons.copyAyah.textContent = "Copied!";
+    this.buttons.copyAyah.textContent = getText("buttons.copied");
   };
 
   private revealSurah = () => {
@@ -215,7 +215,7 @@ export class QuizControls {
       const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0].display;
       this.buttons.revealSurah.textContent = `${surah}`;
     } else {
-      this.buttons.revealSurah.textContent = "Reveal Surah";
+      this.buttons.revealSurah.textContent = getText("buttons.revealSurah");
     }
   };
 
@@ -224,7 +224,7 @@ export class QuizControls {
     if (this.ayahRevealed) {
       this.buttons.revealAyah.textContent = `Ayah ${appState.Ruku?.ayaat[0].ayah}`;
     } else {
-      this.buttons.revealAyah.textContent = "Reveal Ayah";
+      this.buttons.revealAyah.textContent = getText("buttons.revealAyah");
     }
   };
 }

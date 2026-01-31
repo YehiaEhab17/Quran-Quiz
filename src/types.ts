@@ -20,3 +20,36 @@ export interface Ruku {
   id: number;
   ayaat: Ayah[];
 }
+
+export interface TranslationItem {
+  english: string;
+  arabic: string;
+}
+export interface TranslationData {
+  pageTitle: TranslationItem;
+  mainHeading: TranslationItem;
+  labels: {
+    startSurah: TranslationItem;
+    startAyah: TranslationItem;
+    endSurah: TranslationItem;
+    endAyah: TranslationItem;
+  };
+  buttons: {
+    startQuiz: TranslationItem;
+    showMore: TranslationItem;
+    showLess: TranslationItem;
+    nextQuiz: TranslationItem;
+    copyAyah: TranslationItem;
+    revealSurah: TranslationItem;
+    revealAyah: TranslationItem;
+    copied: TranslationItem;
+  };
+  errors: {
+    invalidSurah: TranslationItem;
+    invalidAyahRange: TranslationItem;
+    swappedAyahs: TranslationItem;
+  };
+  dynamic: {
+    ayahPrefix: TranslationItem;
+  };
+}

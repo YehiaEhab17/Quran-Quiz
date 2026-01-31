@@ -50,9 +50,6 @@ export function getRukuWithinRange(start: Ayah, end: Ayah): number {
 }
 
 export function getRuku(rukuNumber: number, ayaat: Ayah[]): Ruku | undefined {
-  let ruku: Ruku = {
-    id: rukuNumber,
-    ayaat: ayaat.filter((ayah) => ayah.ruku === rukuNumber),
-  };
-  return ruku.ayaat.length > 0 ? ruku : undefined;
+  const ayaatInRuku = ayaat.filter((ayah) => ayah.ruku === rukuNumber);
+  return ayaatInRuku.length > 0 ? { id: rukuNumber, ayaat: ayaatInRuku } : undefined;
 }

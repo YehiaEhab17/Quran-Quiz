@@ -29,10 +29,7 @@ export function getRukuWithinRange(start, end) {
     return ruku;
 }
 export function getRuku(rukuNumber, ayaat) {
-    let ruku = {
-        id: rukuNumber,
-        ayaat: ayaat.filter((ayah) => ayah.ruku === rukuNumber),
-    };
-    return ruku.ayaat.length > 0 ? ruku : undefined;
+    const ayaatInRuku = ayaat.filter((ayah) => ayah.ruku === rukuNumber);
+    return ayaatInRuku.length > 0 ? { id: rukuNumber, ayaat: ayaatInRuku } : undefined;
 }
 //# sourceMappingURL=util.js.map

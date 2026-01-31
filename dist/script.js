@@ -60,6 +60,8 @@ function setUpEventListeners() {
     window.addEventListener("translated", () => {
         startPair.hideErrors();
         endPair.hideErrors();
+        formError.classList.remove("visible");
+        formError.textContent = "";
     });
 }
 function start(startPair, endPair) {
@@ -84,6 +86,10 @@ function start(startPair, endPair) {
         console.log("Swapped start and end ayahs to maintain order.");
         formError.textContent = getText("errors.swappedAyahs");
         formError.classList.add("visible");
+    }
+    else {
+        formError.classList.remove("visible");
+        formError.textContent = "";
     }
     console.log(`Quiz from ${startAyah.surah}:${startAyah.ayah} to ${endAyah.surah}:${endAyah.ayah}. 
     Starting Ruku: ${ruku.id}, Starting Ayah ${ayah.surah}:${ayah.ayah} (ID: ${ayah.id})`);

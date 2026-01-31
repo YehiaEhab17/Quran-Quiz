@@ -98,6 +98,8 @@ function setUpEventListeners() {
   window.addEventListener("translated", () => {
     startPair.hideErrors();
     endPair.hideErrors();
+    formError.classList.remove("visible");
+    formError.textContent = "";
   });
 }
 
@@ -127,6 +129,9 @@ function start(startPair: SurahAyahInputPair, endPair: SurahAyahInputPair) {
     console.log("Swapped start and end ayahs to maintain order.");
     formError.textContent = getText("errors.swappedAyahs");
     formError.classList.add("visible");
+  } else {
+    formError.classList.remove("visible");
+    formError.textContent = "";
   }
 
   console.log(

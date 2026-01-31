@@ -145,6 +145,8 @@ export class QuizControls {
 
   private display: AyahDisplay;
 
+  private lastScrollTime: number = 0;
+
   constructor(display: AyahDisplay) {
     this.display = display;
     this.setupListeners();
@@ -159,6 +161,7 @@ export class QuizControls {
     this.buttons.revealSurah.addEventListener("click", this.revealSurah);
     this.buttons.revealAyah.addEventListener("click", this.revealAyah);
 
+    this.display.element.addEventListener("wheel", this.handleScroll.bind(this));
     window.addEventListener("quiz:started", () => {
       console.log("Quiz started.");
       this.disableAll(false);
@@ -169,6 +172,15 @@ export class QuizControls {
     Object.values(this.buttons).forEach((button) => {
       button.disabled = state;
     });
+  };
+
+  private handleScroll = (e: WheelEvent) => {
+    if (!appState.Started) return;
+    const now = Date.now();
+    if (now - this.lastScrollTime < 100) return;
+    this.lastScrollTime = now;
+
+    e.deltaY > 0 ? this.showMore() : this.showLess();
   };
 
   private reset = () => {
@@ -201,7 +213,7 @@ export class QuizControls {
 
     if (this.surahRevealed) {
       const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0].display;
-      this.buttons.revealSurah.textContent = `Surah : ${surah}`;
+      this.buttons.revealSurah.textContent = `${surah}`;
     } else {
       this.buttons.revealSurah.textContent = "Reveal Surah";
     }
@@ -210,7 +222,7 @@ export class QuizControls {
   private revealAyah = () => {
     this.ayahRevealed = !this.ayahRevealed;
     if (this.ayahRevealed) {
-      this.buttons.revealAyah.textContent = `Ayah : ${appState.Ruku?.ayaat[0].ayah}`;
+      this.buttons.revealAyah.textContent = `Ayah ${appState.Ruku?.ayaat[0].ayah}`;
     } else {
       this.buttons.revealAyah.textContent = "Reveal Ayah";
     }
@@ -250,5 +262,9 @@ export class AyahDisplay {
 
     this.text = concatenateAyaat(ayaat);
     this.display.textContent = this.text;
+  }
+
+  get element(): HTMLElement {
+    return this.display;
   }
 }

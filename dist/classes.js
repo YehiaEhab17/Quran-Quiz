@@ -109,10 +109,20 @@ export class QuizControls {
         };
         this.surahRevealed = false;
         this.ayahRevealed = false;
+        this.lastScrollTime = 0;
         this.disableAll = (state) => {
             Object.values(this.buttons).forEach((button) => {
                 button.disabled = state;
             });
+        };
+        this.handleScroll = (e) => {
+            if (!appState.Started)
+                return;
+            const now = Date.now();
+            if (now - this.lastScrollTime < 100)
+                return;
+            this.lastScrollTime = now;
+            e.deltaY > 0 ? this.showMore() : this.showLess();
         };
         this.reset = () => {
             this.buttons.revealSurah.textContent = "Reveal Surah";
@@ -140,7 +150,7 @@ export class QuizControls {
                 return;
             if (this.surahRevealed) {
                 const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0].display;
-                this.buttons.revealSurah.textContent = `Surah : ${surah}`;
+                this.buttons.revealSurah.textContent = `${surah}`;
             }
             else {
                 this.buttons.revealSurah.textContent = "Reveal Surah";
@@ -150,7 +160,7 @@ export class QuizControls {
             var _a;
             this.ayahRevealed = !this.ayahRevealed;
             if (this.ayahRevealed) {
-                this.buttons.revealAyah.textContent = `Ayah : ${(_a = appState.Ruku) === null || _a === void 0 ? void 0 : _a.ayaat[0].ayah}`;
+                this.buttons.revealAyah.textContent = `Ayah ${(_a = appState.Ruku) === null || _a === void 0 ? void 0 : _a.ayaat[0].ayah}`;
             }
             else {
                 this.buttons.revealAyah.textContent = "Reveal Ayah";
@@ -167,6 +177,7 @@ export class QuizControls {
         this.buttons.copyAyah.addEventListener("click", this.copyAyah);
         this.buttons.revealSurah.addEventListener("click", this.revealSurah);
         this.buttons.revealAyah.addEventListener("click", this.revealAyah);
+        this.display.element.addEventListener("wheel", this.handleScroll.bind(this));
         window.addEventListener("quiz:started", () => {
             console.log("Quiz started.");
             this.disableAll(false);
@@ -197,6 +208,9 @@ export class AyahDisplay {
         const ayaat = this.ruku.ayaat.slice(0, this.currentAyahIndex + 1);
         this.text = concatenateAyaat(ayaat);
         this.display.textContent = this.text;
+    }
+    get element() {
+        return this.display;
     }
 }
 //# sourceMappingURL=classes.js.map

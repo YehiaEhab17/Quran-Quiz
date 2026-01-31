@@ -3,7 +3,12 @@ import { Ayah, Surah } from "./types.js";
 import { getRukuWithinRange, getRuku } from "./util.js";
 import { SurahAyahInputPair, QuizControls, AyahDisplay } from "./classes.js";
 import { appState, setRuku, quizStarted } from "./state.js";
-import { initTranslations, getText } from "./translation.js";
+import {
+  initTranslations,
+  getText,
+  getCurrentLanguage,
+  setLanguage,
+} from "./translation.js";
 
 // --- DOM ELEMENTS ---
 const startSurahInput = document.getElementById("start-surah") as HTMLInputElement;
@@ -16,6 +21,8 @@ const surahDatalist = document.getElementById("surah-names") as HTMLDataListElem
 
 const quizOutput = document.getElementById("quiz-output") as HTMLElement;
 const formError = document.getElementById("form-error") as HTMLElement;
+
+const translateButton = document.getElementById("translate") as HTMLButtonElement;
 
 // --- DATA VARIABLES ---
 let suwar: Surah[] = [];
@@ -69,6 +76,12 @@ function setUpEventListeners() {
     start(startPair, endPair);
   });
 
+  translateButton.addEventListener("click", () => {
+    getCurrentLanguage() === "english"
+      ? setLanguage("arabic")
+      : setLanguage("english");
+  });
+
   window.addEventListener("ruku:change", (e: Event) => {
     const customEvent = e as CustomEvent;
     const ruku = customEvent.detail;
@@ -80,6 +93,11 @@ function setUpEventListeners() {
 
   window.addEventListener("quiz:next", () => {
     start(startPair, endPair);
+  });
+
+  window.addEventListener("translated", () => {
+    startPair.hideErrors();
+    endPair.hideErrors();
   });
 }
 

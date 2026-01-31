@@ -1,6 +1,6 @@
 export const appState = {
-    Surah: null, //unused currently
-    Ayah: null, //unused currently
+    Surah: null, //unused
+    Ayah: null, //unused
     Ruku: null,
     Started: false,
 };
@@ -16,10 +16,4 @@ export function quizStopped() {
     appState.Started = false;
     window.dispatchEvent(new CustomEvent("quiz:stopped"));
 }
-/* to listen to the state change use this function
-window.addEventListener("surah:change", (e) => {
-  const surah = e.detail;
-  // update UI, audio, ayah list, etc
-});
-*/
 //# sourceMappingURL=state.js.map

@@ -2,16 +2,11 @@ import { TranslationData, TranslationItem } from "./types.js";
 
 type Language = "english" | "arabic";
 let translations: TranslationData | null = null;
-let currentLang: Language = "english";
+let currentLang: Language = "arabic";
 
 export async function initTranslations(): Promise<void> {
   const response = await fetch("data/translation.json");
   translations = await response.json();
-
-  // Simple detection: if browser starts with 'ar', use arabic
-  if (navigator.language.startsWith("ar")) {
-    currentLang = "arabic";
-  }
 
   updatePage();
 }
@@ -43,8 +38,10 @@ export function getText(keyPath: string): string {
 
 export function updatePage() {
   if (!translations) return;
-  document.title = translations.pageTitle[currentLang];
 
+  window.dispatchEvent(new CustomEvent("translated"));
+
+  document.title = translations.pageTitle[currentLang];
   // Update elements with data-i18n attribute
   const elements = document.querySelectorAll("[data-i18n]");
   elements.forEach((el) => {

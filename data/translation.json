@@ -57,6 +57,10 @@
     "copied": {
       "english": "Copied!",
       "arabic": "تم النسخ!"
+    },
+    "translate": {
+      "english": "للعربية",
+      "arabic": "to english"
     }
   },
   "errors": {

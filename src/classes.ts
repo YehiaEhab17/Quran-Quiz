@@ -103,6 +103,11 @@ export class SurahAyahInputPair {
     errorElement.classList.remove("visible");
   }
 
+  hideErrors() {
+    this.hideError(this.surahError);
+    this.hideError(this.ayahError);
+  }
+
   getSurahID(): number | null {
     const value = this.surahInput.dataset.number;
     return value ? parseInt(value) : null;

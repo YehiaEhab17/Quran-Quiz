@@ -162,6 +162,16 @@ button[type="submit"]:hover {
   transform: translateY(-1px);
 }
 
+#translate {
+  background-color: white;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  position: fixed;
+  z-index: 100;
+  top: 1rem;
+  left: 1rem;
+}
+
 /* Quiz Controls Styling */
 #quiz-controls {
   display: grid;

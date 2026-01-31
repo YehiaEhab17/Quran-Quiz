@@ -1,12 +1,8 @@
 let translations = null;
-let currentLang = "english";
+let currentLang = "arabic";
 export async function initTranslations() {
     const response = await fetch("data/translation.json");
     translations = await response.json();
-    // Simple detection: if browser starts with 'ar', use arabic
-    if (navigator.language.startsWith("ar")) {
-        currentLang = "arabic";
-    }
     updatePage();
 }
 export function getCurrentLanguage() {
@@ -35,6 +31,7 @@ export function getText(keyPath) {
 export function updatePage() {
     if (!translations)
         return;
+    window.dispatchEvent(new CustomEvent("translated"));
     document.title = translations.pageTitle[currentLang];
     // Update elements with data-i18n attribute
     const elements = document.querySelectorAll("[data-i18n]");

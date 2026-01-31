@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
-    "target": "ES6", // Modern JS output
-    "module": "ES6", // Use import/export
-    "outDir": "./dist", // Compiled JS goes here
-    "rootDir": "./src", // Your TS source code
-    "strict": true, // All strict type checks
-    "noUnusedLocals": true, // Helps keep code clean
-    "noUnusedParameters": true, // Same for function params
-    "sourceMap": true, // Useful for debugging
-    "lib": ["DOM", "ES6"] // Browser + ES6 APIs
+    "target": "ES2017",
+    "module": "ES6",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "sourceMap": true,
+    "lib": ["DOM", "ES2017"]
   },
   "include": ["src/**/*"]
 }

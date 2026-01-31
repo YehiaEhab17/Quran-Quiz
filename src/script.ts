@@ -1,29 +1,25 @@
 import { testGlobalIDMapping } from "./tests.js";
-import { Ayah, Surah, SurahAyahInputPair } from "./types.js";
+import { Ayah, Surah } from "./types.js";
 import { getRukuWithinRange, getRuku } from "./util.js";
+import { SurahAyahInputPair, QuizControls } from "./classes.js";
+import { setRuku } from "./state.js";
 
 // --- DOM ELEMENTS ---
 const startSurahInput = document.getElementById("start-surah") as HTMLInputElement;
 const startAyahInput = document.getElementById("start-ayah") as HTMLInputElement;
 const endSurahInput = document.getElementById("end-surah") as HTMLInputElement;
 const endAyahInput = document.getElementById("end-ayah") as HTMLInputElement;
+
 const userInput = document.getElementById("selection-form") as HTMLFormElement;
 const surahDatalist = document.getElementById("surah-names") as HTMLDataListElement;
 
 const quizOutput = document.getElementById("quiz-output") as HTMLElement;
 const formError = document.getElementById("form-error") as HTMLElement;
 
-// --- BUTTONS AND INTERACTIONS ---
-const showMoreButton = document.getElementById("show-more") as HTMLButtonElement;
-const showLessButton = document.getElementById("show-less") as HTMLButtonElement;
-const nextQuizButton = document.getElementById("next-quiz") as HTMLButtonElement;
-const copyAyahButton = document.getElementById("copy-ayah") as HTMLButtonElement;
-const revealSurahButton = document.getElementById("reveal-surah") as HTMLButtonElement;
-const revealAyahButton = document.getElementById("reveal-ayah") as HTMLButtonElement;
-
 // --- DATA VARIABLES ---
 let suwar: Surah[] = [];
 let ayaat: Ayah[] = [];
+let controls: QuizControls;
 
 // --- INITIALIZATION ---
 async function init() {
@@ -43,6 +39,7 @@ async function init() {
   }
 
   setUpEventListeners();
+  controls = new QuizControls();
 }
 
 function setUpEventListeners() {
@@ -65,6 +62,16 @@ function setUpEventListeners() {
   userInput.addEventListener("submit", (event) => {
     event.preventDefault();
     start(startPair, endPair);
+  });
+
+  window.addEventListener("ruku:change", (e: Event) => {
+    const customEvent = e as CustomEvent;
+    const ruku = customEvent.detail;
+
+    console.log(`State changed: Ruku ${ruku.id} loaded.`);
+
+    const firstAyah = ruku.ayaat[0];
+    quizOutput.textContent = firstAyah.text;
   });
 }
 
@@ -101,7 +108,7 @@ function start(startPair: SurahAyahInputPair, endPair: SurahAyahInputPair) {
     Starting Ruku: ${ruku.id}, Starting Ayah ${ayah.surah}:${ayah.ayah} (ID: ${ayah.id})`,
   );
 
-  quizOutput.textContent = ayah.text;
+  setRuku(ruku);
 }
 
 init();

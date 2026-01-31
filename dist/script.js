@@ -1,15 +1,7 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { testGlobalIDMapping } from "./tests.js";
-import { SurahAyahInputPair } from "./types.js";
 import { getRukuWithinRange, getRuku } from "./util.js";
+import { SurahAyahInputPair, QuizControls } from "./classes.js";
+import { setRuku } from "./state.js";
 // --- DOM ELEMENTS ---
 const startSurahInput = document.getElementById("start-surah");
 const startAyahInput = document.getElementById("start-ayah");
@@ -19,32 +11,25 @@ const userInput = document.getElementById("selection-form");
 const surahDatalist = document.getElementById("surah-names");
 const quizOutput = document.getElementById("quiz-output");
 const formError = document.getElementById("form-error");
-// --- BUTTONS AND INTERACTIONS ---
-const showMoreButton = document.getElementById("show-more");
-const showLessButton = document.getElementById("show-less");
-const nextQuizButton = document.getElementById("next-quiz");
-const copyAyahButton = document.getElementById("copy-ayah");
-const revealSurahButton = document.getElementById("reveal-surah");
-const revealAyahButton = document.getElementById("reveal-ayah");
 // --- DATA VARIABLES ---
 let suwar = [];
 let ayaat = [];
+let controls;
 // --- INITIALIZATION ---
-function init() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const [suwarResp, ayaatResp] = yield Promise.all([
-            fetch("data/suwar.json"),
-            fetch("data/ayaat.json"),
-        ]);
-        suwar = yield suwarResp.json();
-        ayaat = yield ayaatResp.json();
-        console.log("Data loaded successfully.");
-        // Run tests in development environment
-        if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-            test();
-        }
-        setUpEventListeners();
-    });
+async function init() {
+    const [suwarResp, ayaatResp] = await Promise.all([
+        fetch("data/suwar.json"),
+        fetch("data/ayaat.json"),
+    ]);
+    suwar = await suwarResp.json();
+    ayaat = await ayaatResp.json();
+    console.log("Data loaded successfully.");
+    // Run tests in development environment
+    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        test();
+    }
+    setUpEventListeners();
+    controls = new QuizControls();
 }
 function setUpEventListeners() {
     const startPair = new SurahAyahInputPair(startSurahInput, startAyahInput, suwar, ayaat, surahDatalist);
@@ -52,6 +37,13 @@ function setUpEventListeners() {
     userInput.addEventListener("submit", (event) => {
         event.preventDefault();
         start(startPair, endPair);
+    });
+    window.addEventListener("ruku:change", (e) => {
+        const customEvent = e;
+        const ruku = customEvent.detail;
+        console.log(`State changed: Ruku ${ruku.id} loaded.`);
+        const firstAyah = ruku.ayaat[0];
+        quizOutput.textContent = firstAyah.text;
     });
 }
 function start(startPair, endPair) {
@@ -79,7 +71,7 @@ function start(startPair, endPair) {
     }
     console.log(`Quiz from ${startAyah.surah}:${startAyah.ayah} to ${endAyah.surah}:${endAyah.ayah}. 
     Starting Ruku: ${ruku.id}, Starting Ayah ${ayah.surah}:${ayah.ayah} (ID: ${ayah.id})`);
-    quizOutput.textContent = ayah.text;
+    setRuku(ruku);
 }
 init();
 function test() {

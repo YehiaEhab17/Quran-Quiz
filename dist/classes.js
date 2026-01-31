@@ -1,6 +1,6 @@
 import { populateDatalist, findSurah, findAyah, concatenateAyaat, clamp, copyToClipboard, } from "./util.js";
 import { appState } from "./state.js";
-import { getText } from "./translation.js";
+import { getCurrentLanguage, getText } from "./translation.js";
 export class SurahAyahInputPair {
     constructor(surahInput, ayahInput, suwar, ayaat, surahDatalist) {
         this.surahInput = surahInput;
@@ -154,8 +154,9 @@ export class QuizControls {
             if (!appState.Ruku)
                 return;
             if (this.surahRevealed) {
-                const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0].display;
-                this.buttons.revealSurah.textContent = `${surah}`;
+                const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0];
+                let name = getCurrentLanguage() === "english" ? surah.english : surah.arabic;
+                this.buttons.revealSurah.textContent = `${name}`;
             }
             else {
                 this.buttons.revealSurah.textContent = getText("buttons.revealSurah");

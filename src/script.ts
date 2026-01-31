@@ -1,8 +1,8 @@
 import { testGlobalIDMapping } from "./tests.js";
 import { Ayah, Surah } from "./types.js";
 import { getRukuWithinRange, getRuku } from "./util.js";
-import { SurahAyahInputPair, QuizControls } from "./classes.js";
-import { setRuku } from "./state.js";
+import { SurahAyahInputPair, QuizControls, AyahDisplay } from "./classes.js";
+import { appState, setRuku, quizStarted } from "./state.js";
 
 // --- DOM ELEMENTS ---
 const startSurahInput = document.getElementById("start-surah") as HTMLInputElement;
@@ -20,6 +20,7 @@ const formError = document.getElementById("form-error") as HTMLElement;
 let suwar: Surah[] = [];
 let ayaat: Ayah[] = [];
 let controls: QuizControls;
+let display: AyahDisplay;
 
 // --- INITIALIZATION ---
 async function init() {
@@ -39,7 +40,8 @@ async function init() {
   }
 
   setUpEventListeners();
-  controls = new QuizControls();
+  display = new AyahDisplay(quizOutput);
+  controls = new QuizControls(display);
 }
 
 function setUpEventListeners() {
@@ -70,12 +72,16 @@ function setUpEventListeners() {
 
     console.log(`State changed: Ruku ${ruku.id} loaded.`);
 
-    const firstAyah = ruku.ayaat[0];
-    quizOutput.textContent = firstAyah.text;
+    display.setRuku(ruku);
+  });
+
+  window.addEventListener("quiz:next", () => {
+    start(startPair, endPair);
   });
 }
 
 function start(startPair: SurahAyahInputPair, endPair: SurahAyahInputPair) {
+  quizStarted();
   startPair.verifyInputs();
   endPair.verifyInputs();
 

@@ -1,5 +1,12 @@
-import { populateDatalist, findSurah, findAyah } from "./util.js";
-import { Ayah, Surah } from "./types.js";
+import {
+  populateDatalist,
+  findSurah,
+  findAyah,
+  concatenateAyaat,
+  clamp,
+  copyToClipboard,
+} from "./util.js";
+import { Ayah, Ruku, Surah } from "./types.js";
 import { appState } from "./state.js";
 
 export class SurahAyahInputPair {
@@ -62,14 +69,12 @@ export class SurahAyahInputPair {
     const max = parseInt(this.ayahInput.max);
 
     if (isNaN(val)) return;
-    if (val < 1) this.ayahInput.value = "1";
 
-    if (val > max) {
-      this.ayahInput.value = max.toString();
-      this.showError(this.ayahError, `Max ayah is ${max}`);
-    } else {
-      this.hideError(this.ayahError);
-    }
+    this.ayahInput.value = clamp(1, val, max).toString();
+
+    val < 1 || val > max
+      ? this.showError(this.ayahError, `Enter an ayah between 1 and ${max}`)
+      : this.hideError(this.ayahError);
   }
 
   private allowOnlyDigits(e: KeyboardEvent) {
@@ -138,37 +143,56 @@ export class QuizControls {
   private surahRevealed: boolean = false;
   private ayahRevealed: boolean = false;
 
-  private ayahNumber: number = 1;
+  private display: AyahDisplay;
 
-  constructor() {
+  constructor(display: AyahDisplay) {
+    this.display = display;
     this.setupListeners();
   }
 
   private setupListeners() {
+    this.disableAll(true);
     this.buttons.showMore.addEventListener("click", this.showMore);
     this.buttons.showLess.addEventListener("click", this.showLess);
     this.buttons.nextQuiz.addEventListener("click", this.nextQuiz);
     this.buttons.copyAyah.addEventListener("click", this.copyAyah);
     this.buttons.revealSurah.addEventListener("click", this.revealSurah);
     this.buttons.revealAyah.addEventListener("click", this.revealAyah);
+
+    window.addEventListener("quiz:started", () => {
+      console.log("Quiz started.");
+      this.disableAll(false);
+    });
   }
 
+  private disableAll = (state: boolean) => {
+    Object.values(this.buttons).forEach((button) => {
+      button.disabled = state;
+    });
+  };
+
+  private reset = () => {
+    this.buttons.revealSurah.textContent = "Reveal Surah";
+    this.buttons.revealAyah.textContent = "Reveal Ayah";
+    this.buttons.copyAyah.textContent = "Copy Ayah";
+  };
+
   private showMore = () => {
-    this.ayahNumber++;
-    console.log("Show More clicked");
+    this.display.incrementIndex();
   };
 
   private showLess = () => {
-    this.ayahNumber--;
-    console.log("Show Less clicked");
+    this.display.incrementIndex(true);
   };
 
   private nextQuiz = () => {
-    console.log("Next Quiz clicked");
+    this.reset();
+    window.dispatchEvent(new CustomEvent("quiz:next"));
   };
 
-  private copyAyah = () => {
-    console.log("Copy Ayah clicked");
+  private copyAyah = async () => {
+    if (this.display.text) await copyToClipboard(this.display.text);
+    this.buttons.copyAyah.textContent = "Copied!";
   };
 
   private revealSurah = () => {
@@ -176,7 +200,7 @@ export class QuizControls {
     if (this.surahRevealed) {
       this.buttons.revealSurah.textContent = `Surah : ${appState.Ruku?.ayaat[0].surah}`;
     } else {
-      this.buttons.revealSurah.textContent = "Reveal Surah Name";
+      this.buttons.revealSurah.textContent = "Reveal Surah";
     }
   };
 
@@ -185,7 +209,43 @@ export class QuizControls {
     if (this.ayahRevealed) {
       this.buttons.revealAyah.textContent = `Ayah : ${appState.Ruku?.ayaat[0].ayah}`;
     } else {
-      this.buttons.revealAyah.textContent = "Reveal Ayah Number";
+      this.buttons.revealAyah.textContent = "Reveal Ayah";
     }
   };
+}
+
+export class AyahDisplay {
+  private ruku?: Ruku;
+  private currentAyahIndex: number = 0;
+  public text: string = "";
+
+  constructor(private display: HTMLElement) {
+    this.display = display;
+  }
+
+  setRuku(ruku: Ruku) {
+    this.ruku = ruku;
+    this.currentAyahIndex = 0;
+    this.updateDisplay();
+  }
+
+  incrementIndex(decrement: boolean = false) {
+    if (!this.ruku) return;
+
+    this.currentAyahIndex = clamp(
+      0,
+      this.currentAyahIndex + (decrement ? -1 : 1),
+      this.ruku.ayaat.length - 1,
+    );
+
+    this.updateDisplay();
+  }
+
+  private updateDisplay() {
+    if (!this.ruku) return;
+    const ayaat = this.ruku.ayaat.slice(0, this.currentAyahIndex + 1);
+
+    this.text = concatenateAyaat(ayaat);
+    this.display.textContent = this.text;
+  }
 }

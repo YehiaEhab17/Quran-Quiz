@@ -32,4 +32,28 @@ export function getRuku(rukuNumber, ayaat) {
     const ayaatInRuku = ayaat.filter((ayah) => ayah.ruku === rukuNumber);
     return ayaatInRuku.length > 0 ? { id: rukuNumber, ayaat: ayaatInRuku } : undefined;
 }
+export function getArabicDigit(num) {
+    return num.toString().replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[parseInt(d)]);
+}
+export function concatenateAyaat(ayaat) {
+    if (ayaat.length === 0)
+        return "";
+    let combinedText = ayaat[0].text;
+    for (let i = 1; i < ayaat.length; i++) {
+        combinedText += ` ${getArabicDigit(ayaat[i - 1].ayah)} ${ayaat[i].text}`;
+    }
+    return combinedText;
+}
+export function clamp(min, value, max) {
+    return Math.min(Math.max(value, min), max);
+}
+export async function copyToClipboard(text) {
+    try {
+        await navigator.clipboard.writeText(text);
+        console.log("Copied to clipboard!");
+    }
+    catch (err) {
+        console.error("Failed to copy: ", err);
+    }
+}
 //# sourceMappingURL=util.js.map

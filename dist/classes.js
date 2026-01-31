@@ -1,4 +1,4 @@
-import { populateDatalist, findSurah, findAyah } from "./util.js";
+import { populateDatalist, findSurah, findAyah, concatenateAyaat, clamp, copyToClipboard, } from "./util.js";
 import { appState } from "./state.js";
 export class SurahAyahInputPair {
     constructor(surahInput, ayahInput, suwar, ayaat, surahDatalist) {
@@ -47,15 +47,10 @@ export class SurahAyahInputPair {
         const max = parseInt(this.ayahInput.max);
         if (isNaN(val))
             return;
-        if (val < 1)
-            this.ayahInput.value = "1";
-        if (val > max) {
-            this.ayahInput.value = max.toString();
-            this.showError(this.ayahError, `Max ayah is ${max}`);
-        }
-        else {
-            this.hideError(this.ayahError);
-        }
+        this.ayahInput.value = clamp(1, val, max).toString();
+        val < 1 || val > max
+            ? this.showError(this.ayahError, `Enter an ayah between 1 and ${max}`)
+            : this.hideError(this.ayahError);
     }
     allowOnlyDigits(e) {
         if (e.key === "Backspace" ||
@@ -103,7 +98,7 @@ export class QuizControls {
     getButton(id) {
         return document.getElementById(id);
     }
-    constructor() {
+    constructor(display) {
         this.buttons = {
             showMore: this.getButton("show-more"),
             showLess: this.getButton("show-less"),
@@ -114,20 +109,30 @@ export class QuizControls {
         };
         this.surahRevealed = false;
         this.ayahRevealed = false;
-        this.ayahNumber = 1;
+        this.disableAll = (state) => {
+            Object.values(this.buttons).forEach((button) => {
+                button.disabled = state;
+            });
+        };
+        this.reset = () => {
+            this.buttons.revealSurah.textContent = "Reveal Surah";
+            this.buttons.revealAyah.textContent = "Reveal Ayah";
+            this.buttons.copyAyah.textContent = "Copy Ayah";
+        };
         this.showMore = () => {
-            this.ayahNumber++;
-            console.log("Show More clicked");
+            this.display.incrementIndex();
         };
         this.showLess = () => {
-            this.ayahNumber--;
-            console.log("Show Less clicked");
+            this.display.incrementIndex(true);
         };
         this.nextQuiz = () => {
-            console.log("Next Quiz clicked");
+            this.reset();
+            window.dispatchEvent(new CustomEvent("quiz:next"));
         };
-        this.copyAyah = () => {
-            console.log("Copy Ayah clicked");
+        this.copyAyah = async () => {
+            if (this.display.text)
+                await copyToClipboard(this.display.text);
+            this.buttons.copyAyah.textContent = "Copied!";
         };
         this.revealSurah = () => {
             var _a;
@@ -136,7 +141,7 @@ export class QuizControls {
                 this.buttons.revealSurah.textContent = `Surah : ${(_a = appState.Ruku) === null || _a === void 0 ? void 0 : _a.ayaat[0].surah}`;
             }
             else {
-                this.buttons.revealSurah.textContent = "Reveal Surah Name";
+                this.buttons.revealSurah.textContent = "Reveal Surah";
             }
         };
         this.revealAyah = () => {
@@ -146,18 +151,50 @@ export class QuizControls {
                 this.buttons.revealAyah.textContent = `Ayah : ${(_a = appState.Ruku) === null || _a === void 0 ? void 0 : _a.ayaat[0].ayah}`;
             }
             else {
-                this.buttons.revealAyah.textContent = "Reveal Ayah Number";
+                this.buttons.revealAyah.textContent = "Reveal Ayah";
             }
         };
+        this.display = display;
         this.setupListeners();
     }
     setupListeners() {
+        this.disableAll(true);
         this.buttons.showMore.addEventListener("click", this.showMore);
         this.buttons.showLess.addEventListener("click", this.showLess);
         this.buttons.nextQuiz.addEventListener("click", this.nextQuiz);
         this.buttons.copyAyah.addEventListener("click", this.copyAyah);
         this.buttons.revealSurah.addEventListener("click", this.revealSurah);
         this.buttons.revealAyah.addEventListener("click", this.revealAyah);
+        window.addEventListener("quiz:started", () => {
+            console.log("Quiz started.");
+            this.disableAll(false);
+        });
+    }
+}
+export class AyahDisplay {
+    constructor(display) {
+        this.display = display;
+        this.currentAyahIndex = 0;
+        this.text = "";
+        this.display = display;
+    }
+    setRuku(ruku) {
+        this.ruku = ruku;
+        this.currentAyahIndex = 0;
+        this.updateDisplay();
+    }
+    incrementIndex(decrement = false) {
+        if (!this.ruku)
+            return;
+        this.currentAyahIndex = clamp(0, this.currentAyahIndex + (decrement ? -1 : 1), this.ruku.ayaat.length - 1);
+        this.updateDisplay();
+    }
+    updateDisplay() {
+        if (!this.ruku)
+            return;
+        const ayaat = this.ruku.ayaat.slice(0, this.currentAyahIndex + 1);
+        this.text = concatenateAyaat(ayaat);
+        this.display.textContent = this.text;
     }
 }
 //# sourceMappingURL=classes.js.map

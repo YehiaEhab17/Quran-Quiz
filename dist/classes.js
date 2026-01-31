@@ -27,7 +27,7 @@ export class SurahAyahInputPair {
         populateDatalist(query, this.suwar, this.surahDatalist);
     }
     validateSurah() {
-        const results = findSurah(this.surahInput.value, this.suwar);
+        const results = findSurah(this.surahInput.value);
         if (results.length === 0) {
             this.surahInput.value = "";
             this.ayahInput.value = "";
@@ -135,10 +135,12 @@ export class QuizControls {
             this.buttons.copyAyah.textContent = "Copied!";
         };
         this.revealSurah = () => {
-            var _a;
             this.surahRevealed = !this.surahRevealed;
+            if (!appState.Ruku)
+                return;
             if (this.surahRevealed) {
-                this.buttons.revealSurah.textContent = `Surah : ${(_a = appState.Ruku) === null || _a === void 0 ? void 0 : _a.ayaat[0].surah}`;
+                const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0].display;
+                this.buttons.revealSurah.textContent = `Surah : ${surah}`;
             }
             else {
                 this.buttons.revealSurah.textContent = "Reveal Surah";

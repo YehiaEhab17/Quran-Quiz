@@ -1,7 +1,23 @@
-/* Modern Quran Quiz Styling */
+/* Modern Quran Quiz Styling Proposal */
 
 /* ============================================
-   CRITICAL IMPORTS & RESETS
+   FORM CONTROLS - Remove number input spinners
+   ============================================ */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* ============================================
+   FONTS
    ============================================ */
 @font-face {
   font-family: "KFGQPC-Uthmanic";
@@ -11,23 +27,12 @@
   font-display: block;
 }
 
-/* Remove spinners from number inputs */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-input[type="number"] {
-  -moz-appearance: textfield;
-  appearance: textfield;
-}
-
 :root {
   /* Color Palette - Deep Green & Gold Theme */
   --primary-color: #2e7d32; /* Deep Green */
   --primary-hover: #1b5e20; /* Darker Green */
   --secondary-color: #d4af37; /* Gold/Bronze */
-  --bg-color: #e8f5e9; /* Very Light Green/Mint Tint */
+  --bg-color: #f5f7fa; /* Light Grey/Blue Tint */
   --card-bg: #ffffff; /* White */
   --text-main: #2c3e50; /* Dark Slate */
   --text-muted: #7f8c8d; /* Grey */
@@ -40,14 +45,13 @@ input[type="number"] {
   --spacing-lg: 2rem;
 
   /* BorderRadius */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
 
   /* Shadows */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Base Resets & Typography */
@@ -55,28 +59,24 @@ body {
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bg-color);
-  background-image: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
   color: var(--text-main);
   line-height: 1.6;
   margin: 0;
   padding: 0;
-  min-height: 100vh;
 }
 
 h1 {
   text-align: center;
   color: var(--primary-color);
-  margin: 2rem 0;
-  font-weight: 700;
-  font-size: 3.5rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  letter-spacing: -0.5px;
+  margin: var(--spacing-lg) 0;
+  font-weight: 300;
+  font-size: 2.5rem;
 }
 
 /* Main Container Layout */
 .container {
   display: grid;
-  grid-template-columns: 425px 1fr;
+  grid-template-columns: minmax(300px, 400px) 1fr;
   gap: var(--spacing-lg);
   max-width: 1200px;
   margin: 0 auto;
@@ -90,11 +90,8 @@ form#selection-form,
   background: var(--card-bg);
   padding: var(--spacing-lg);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
 }
 
 /* Form Styling */
@@ -118,32 +115,28 @@ input[type="number"] {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   font-size: 1rem;
-  transition: all 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
   margin-top: 0.25rem;
-  background-color: #fafafa;
 }
 
 input[type="text"]:focus,
 input[type="number"]:focus {
   outline: none;
   border-color: var(--primary-color);
-  background-color: white;
-  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
 }
 
 /* Button Styling */
 button {
   cursor: pointer;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1.5rem;
   border: none;
   border-radius: var(--radius-sm);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 1rem;
   transition: all 0.2s ease;
-  min-height: 48px; /* Consistent height */
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* Primary Action Button */
@@ -153,103 +146,63 @@ button[type="submit"] {
   width: 100%;
   margin-top: var(--spacing-md);
   text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 button[type="submit"]:hover {
   background-color: var(--primary-hover);
-  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+  box-shadow: var(--shadow-md);
   transform: translateY(-1px);
 }
 
 /* Quiz Controls Styling */
 #quiz-controls {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
-
-  /* Sticky Positioning */
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background-color: var(--card-bg);
-
-  /* Spacing & Visuals */
-  padding: 1rem 0;
-  margin-bottom: 0;
-  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+  padding: 0;
+  border: none;
 }
 
 #quiz-controls button {
   background-color: white;
   border: 1px solid var(--border-color);
   color: var(--text-main);
-  width: 100%; /* Fill the grid cell */
-}
-
-/* Specific Layout: 
-   Row 1: + - Next Copy
-   Row 2: Reveal Ayah Reveal Surah
-*/
-#show-more {
-  grid-column: 1;
-}
-#show-less {
-  grid-column: 2;
-}
-#next-quiz {
-  grid-column: 3;
-}
-#copy-ayah {
-  grid-column: 4;
-}
-
-/* In HTML reveal-surah comes before reveal-ayah, but user wants reveal-ayah then reveal-surah visually */
-#reveal-ayah {
-  grid-column: 1 / span 2;
-  order: 1;
-}
-#reveal-surah {
-  grid-column: 3 / span 2;
-  order: 2;
+  flex: 1 1 auto; /* Allow buttons to grow/shrink but respect content */
+  min-width: 100px;
 }
 
 #quiz-controls button:hover:not(:disabled) {
-  background-color: #f1f8e9;
-  border-color: var(--primary-color);
+  background-color: var(--bg-color);
+  border-color: var(--secondary-color);
   color: var(--primary-color);
 }
 
 #quiz-controls button:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
-  background-color: #f5f5f5;
-  color: #aaa;
-  border-color: #eee;
+  background-color: #f0f0f0;
 }
 
 /* Quiz Output Area */
 #quiz-output {
-  background-color: #fafafa;
+  background-color: #fafafa; /* Slightly off-white for text area */
   border: 2px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: var(--spacing-lg);
   min-height: 300px;
   position: relative;
-  /* Ensure consistent sizing */
-  width: 100%;
-  box-sizing: border-box;
 }
 
 /* Quran Text Specifics */
 .quran {
   font-family: "KFGQPC-Uthmanic", serif;
-  font-size: 1.5rem;
-  line-height: 2.6;
-  color: #000;
-  text-align: right;
   direction: rtl;
+
+  font-size: 2rem;
+  line-height: 2.5;
+  color: black;
 }
 
 /* Error Messages */
@@ -257,7 +210,7 @@ button[type="submit"]:hover {
   color: var(--error-color);
   font-size: 0.8rem;
   margin-top: 0.25rem;
-  min-height: 4em;
+  min-height: 52em; /* Prevent layout shift */
   display: block;
   visibility: hidden;
 }
@@ -265,45 +218,34 @@ button[type="submit"]:hover {
 .error-message.visible {
   visibility: visible;
 }
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .container {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Stack form and quiz on mobile */
     gap: var(--spacing-md);
     padding: var(--spacing-sm);
   }
 
   h1 {
-    font-size: 2rem;
+    font-size: 1.8rem;
     margin: var(--spacing-md) 0;
   }
 
-  /* On mobile, stack controls into 2 columns instead of 4 */
-  #quiz-controls {
-    grid-template-columns: 1fr 1fr;
+  .inputs-grid {
+    grid-template-columns: 1fr; /* Stack inputs on very small screens if needed, mostly 1fr 1fr is okay but let's be safe */
   }
 
-  #show-more {
-    grid-column: 1;
+  #quiz-controls {
+    justify-content: stretch;
   }
-  #show-less {
-    grid-column: 2;
-  }
-  #next-quiz {
-    grid-column: 1;
-  }
-  #copy-ayah {
-    grid-column: 2;
-  }
-  #reveal-ayah {
-    grid-column: 1;
-  }
-  #reveal-surah {
-    grid-column: 2;
+
+  #quiz-controls button {
+    flex: 1 1 45%; /* 2 buttons per row roughly */
   }
 }
 
-/* Dark Mode Support */
+/* Dark Mode Support (Optional but recommended) */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg-color: #121212;
@@ -311,12 +253,6 @@ button[type="submit"]:hover {
     --text-main: #e0e0e0;
     --border-color: #333;
     --text-muted: #b0b0b0;
-    --primary-color: #66bb6a; /* Lighter green for dark mode */
-    --primary-hover: #81c784;
-  }
-
-  body {
-    background-image: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
   }
 
   input[type="text"],
@@ -335,7 +271,6 @@ button[type="submit"]:hover {
 
   #quiz-controls button:hover:not(:disabled) {
     background-color: #333;
-    color: var(--primary-color);
   }
 
   .quran {

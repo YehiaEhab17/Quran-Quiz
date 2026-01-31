@@ -45,7 +45,7 @@ export class SurahAyahInputPair {
   }
 
   private validateSurah() {
-    const results = findSurah(this.surahInput.value, this.suwar);
+    const results = findSurah(this.surahInput.value);
 
     if (results.length === 0) {
       this.surahInput.value = "";
@@ -197,8 +197,11 @@ export class QuizControls {
 
   private revealSurah = () => {
     this.surahRevealed = !this.surahRevealed;
+    if (!appState.Ruku) return;
+
     if (this.surahRevealed) {
-      this.buttons.revealSurah.textContent = `Surah : ${appState.Ruku?.ayaat[0].surah}`;
+      const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0].display;
+      this.buttons.revealSurah.textContent = `Surah : ${surah}`;
     } else {
       this.buttons.revealSurah.textContent = "Reveal Surah";
     }

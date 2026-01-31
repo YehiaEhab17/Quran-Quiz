@@ -1,6 +1,7 @@
 import { Surah, Ayah, Ruku } from "./types.js";
+import { suwar } from "./script.js";
 
-export function findSurah(input: string, suwar: Surah[]): Surah[] {
+export function findSurah(input: string): Surah[] {
   const query: string = input.trim().toLowerCase();
 
   if (!query) {
@@ -28,7 +29,7 @@ export function populateDatalist(
   suwar: Surah[],
   surahDatalist: HTMLDataListElement,
 ): void {
-  const matches = query.trim() ? findSurah(query, suwar) : suwar;
+  const matches = query.trim() ? findSurah(query) : suwar;
 
   surahDatalist.innerHTML = "";
   const fragment = document.createDocumentFragment();

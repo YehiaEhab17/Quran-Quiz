@@ -1,4 +1,5 @@
-export function findSurah(input, suwar) {
+import { suwar } from "./script.js";
+export function findSurah(input) {
     const query = input.trim().toLowerCase();
     if (!query) {
         return [];
@@ -12,7 +13,7 @@ export function findAyah(surahNumber, ayahNumber, ayaat) {
     return ayaat.find((a) => a.surah === surahNumber && a.ayah === ayahNumber);
 }
 export function populateDatalist(query, suwar, surahDatalist) {
-    const matches = query.trim() ? findSurah(query, suwar) : suwar;
+    const matches = query.trim() ? findSurah(query) : suwar;
     surahDatalist.innerHTML = "";
     const fragment = document.createDocumentFragment();
     matches.forEach((s) => {

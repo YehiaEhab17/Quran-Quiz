@@ -50,7 +50,7 @@ export class SurahAyahInputPair {
             return;
         this.ayahInput.value = clamp(1, val, max).toString();
         val < 1 || val > max
-            ? this.showError(this.ayahError, getText("errors.invalidAyah"))
+            ? this.showError(this.ayahError, getText("errors.invalidAyahRange") + max)
             : this.hideError(this.ayahError);
     }
     allowOnlyDigits(e) {
@@ -165,7 +165,7 @@ export class QuizControls {
             var _a;
             this.ayahRevealed = !this.ayahRevealed;
             if (this.ayahRevealed) {
-                this.buttons.revealAyah.textContent = `Ayah ${(_a = appState.Ruku) === null || _a === void 0 ? void 0 : _a.ayaat[0].ayah}`;
+                this.buttons.revealAyah.textContent = `${getText("dynamic.ayahPrefix")} ${(_a = appState.Ruku) === null || _a === void 0 ? void 0 : _a.ayaat[0].ayah}`;
             }
             else {
                 this.buttons.revealAyah.textContent = getText("buttons.revealAyah");

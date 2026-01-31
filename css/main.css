@@ -306,6 +306,11 @@ button[type="submit"]:hover {
   #reveal-ayah {
     grid-column: 2;
   }
+
+  #translate {
+    bottom: 1rem;
+    left: 1rem;
+  }
 }
 
 /* Dark Mode Support */
@@ -318,6 +323,10 @@ button[type="submit"]:hover {
     --text-muted: #b0b0b0;
     --primary-color: #66bb6a; /* Lighter green for dark mode */
     --primary-hover: #81c784;
+  }
+
+  #translate {
+    background-color: rgb(31, 31, 31);
   }
 
   body {

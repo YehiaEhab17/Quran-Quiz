@@ -70,7 +70,7 @@
     },
     "invalidAyahRange": {
       "english": "Enter an ayah between 1 and",
-      "arabic": "أدخل آية بين ١ و"
+      "arabic": "أدخل آية بين 1 و"
     },
     "swappedAyahs": {
       "english": "Note: Start and End Ayahs were swapped to maintain order.",

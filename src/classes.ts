@@ -73,7 +73,7 @@ export class SurahAyahInputPair {
     this.ayahInput.value = clamp(1, val, max).toString();
 
     val < 1 || val > max
-      ? this.showError(this.ayahError, getText("errors.invalidAyah"))
+      ? this.showError(this.ayahError, getText("errors.invalidAyahRange") + max)
       : this.hideError(this.ayahError);
   }
 
@@ -227,7 +227,7 @@ export class QuizControls {
   private revealAyah = () => {
     this.ayahRevealed = !this.ayahRevealed;
     if (this.ayahRevealed) {
-      this.buttons.revealAyah.textContent = `Ayah ${appState.Ruku?.ayaat[0].ayah}`;
+      this.buttons.revealAyah.textContent = `${getText("dynamic.ayahPrefix")} ${appState.Ruku?.ayaat[0].ayah}`;
     } else {
       this.buttons.revealAyah.textContent = getText("buttons.revealAyah");
     }

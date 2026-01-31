@@ -13,6 +13,14 @@ const surahDatalist = document.getElementById("surah-names") as HTMLDataListElem
 const quizOutput = document.getElementById("quiz-output") as HTMLElement;
 const formError = document.getElementById("form-error") as HTMLElement;
 
+// --- BUTTONS AND INTERACTIONS ---
+const showMoreButton = document.getElementById("show-more") as HTMLButtonElement;
+const showLessButton = document.getElementById("show-less") as HTMLButtonElement;
+const nextQuizButton = document.getElementById("next-quiz") as HTMLButtonElement;
+const copyAyahButton = document.getElementById("copy-ayah") as HTMLButtonElement;
+const revealSurahButton = document.getElementById("reveal-surah") as HTMLButtonElement;
+const revealAyahButton = document.getElementById("reveal-ayah") as HTMLButtonElement;
+
 // --- DATA VARIABLES ---
 let suwar: Surah[] = [];
 let ayaat: Ayah[] = [];

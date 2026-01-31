@@ -19,6 +19,13 @@ const userInput = document.getElementById("selection-form");
 const surahDatalist = document.getElementById("surah-names");
 const quizOutput = document.getElementById("quiz-output");
 const formError = document.getElementById("form-error");
+// --- BUTTONS AND INTERACTIONS ---
+const showMoreButton = document.getElementById("show-more");
+const showLessButton = document.getElementById("show-less");
+const nextQuizButton = document.getElementById("next-quiz");
+const copyAyahButton = document.getElementById("copy-ayah");
+const revealSurahButton = document.getElementById("reveal-surah");
+const revealAyahButton = document.getElementById("reveal-ayah");
 // --- DATA VARIABLES ---
 let suwar = [];
 let ayaat = [];

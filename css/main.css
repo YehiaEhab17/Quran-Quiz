@@ -170,6 +170,15 @@ button[type="submit"]:hover {
   z-index: 100;
   top: 1rem;
   left: 1rem;
+
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  min-height: unset; /* Override the button min-height: 48px rule */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Quiz Controls Styling */

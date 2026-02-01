@@ -308,6 +308,7 @@ button[type="submit"]:hover {
   }
 
   #translate {
+    top: unset;
     bottom: 1rem;
     left: 1rem;
   }

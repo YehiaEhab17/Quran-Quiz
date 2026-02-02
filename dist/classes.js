@@ -17,7 +17,6 @@ export class SurahAyahInputPair {
         this.surahInput.addEventListener("blur", this.validateSurah.bind(this));
         this.surahInput.addEventListener("input", this.handleSurahInput.bind(this));
         this.ayahInput.addEventListener("input", this.validateAyah.bind(this));
-        this.ayahInput.addEventListener("keydown", this.allowOnlyDigits.bind(this));
     }
     handleFocus() {
         this.surahInput.select();
@@ -44,6 +43,8 @@ export class SurahAyahInputPair {
         this.validateAyah();
     }
     validateAyah() {
+        const value = this.ayahInput.value;
+        this.ayahInput.value = value.replace(/[^0-9]/g, "");
         const val = parseInt(this.ayahInput.value);
         const max = parseInt(this.ayahInput.max);
         if (isNaN(val))
@@ -52,19 +53,6 @@ export class SurahAyahInputPair {
         val < 1 || val > max
             ? this.showError(this.ayahError, getText("errors.invalidAyahRange") + max)
             : this.hideError(this.ayahError);
-    }
-    allowOnlyDigits(e) {
-        if (e.key === "Backspace" ||
-            e.key === "Delete" ||
-            e.key === "Tab" ||
-            e.key === "ArrowLeft" ||
-            e.key === "ArrowRight" ||
-            e.key === "Enter") {
-            return;
-        }
-        if (!/[0-9]/.test(e.key)) {
-            e.preventDefault();
-        }
     }
     showError(errorElement, message) {
         errorElement.textContent = message;
@@ -217,6 +205,35 @@ export class AyahDisplay {
     }
     get element() {
         return this.display;
+    }
+}
+export class BasicInput {
+    constructor(input) {
+        this.input = input;
+        this.input.addEventListener("input", () => {
+            const value = this.input.value;
+            this.input.value = value.replace(/[^0-9]/g, "");
+            const val = parseInt(this.input.value);
+            const max = parseInt(this.input.max);
+            if (isNaN(val))
+                return;
+            this.input.value = clamp(1, val, max).toString();
+            val < 1 || val > max
+                ? this.showError(this.error, getText("errors.invalidAyahRange") + max)
+                : this.hideError(this.error);
+        });
+    }
+    showError(errorElement, message) {
+        errorElement.textContent = message;
+        errorElement.classList.add("visible");
+    }
+    hideError(errorElement) {
+        errorElement.textContent = "";
+        errorElement.classList.remove("visible");
+    }
+    get value() {
+        const value = this.input.value;
+        return parseInt(value);
     }
 }
 //# sourceMappingURL=classes.js.map

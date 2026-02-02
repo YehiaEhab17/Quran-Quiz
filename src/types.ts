@@ -25,6 +25,11 @@ export interface TranslationItem {
   english: string;
   arabic: string;
 }
+
+export interface TranslationParagraph {
+  english: string[];
+  arabic: string[];
+}
 export interface TranslationData {
   pageTitle: TranslationItem;
   mainHeading: TranslationItem;
@@ -49,7 +54,17 @@ export interface TranslationData {
     invalidAyahRange: TranslationItem;
     swappedAyahs: TranslationItem;
   };
+  information: {
+    title: TranslationItem;
+    content: TranslationParagraph;
+    warning: TranslationParagraph;
+  };
   dynamic: {
     ayahPrefix: TranslationItem;
+    inputModes: {
+      surah: TranslationItem;
+      juz: TranslationItem;
+      hizb: TranslationItem;
+    };
   };
 }

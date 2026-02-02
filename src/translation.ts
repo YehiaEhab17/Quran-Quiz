@@ -1,4 +1,4 @@
-import { TranslationData, TranslationItem } from "./types.js";
+import { TranslationData } from "./types.js";
 
 type Language = "english" | "arabic";
 let translations: TranslationData | null = null;
@@ -20,7 +20,7 @@ export function setLanguage(lang: Language) {
   updatePage();
 }
 
-export function getText(keyPath: string): string {
+function evaluateTranslationPath(keyPath: string): string | string[] {
   if (!translations) return "";
   const keys = keyPath.split(".");
   let current: any = translations;
@@ -32,8 +32,27 @@ export function getText(keyPath: string): string {
     current = current[k];
   }
   // Current should now be a TranslationItem or similar
-  const item = current as TranslationItem;
+  const item = current;
   return item[currentLang] || item.english || "";
+}
+
+export function getText(keyPath: string): string {
+  const value = evaluateTranslationPath(keyPath);
+  if (Array.isArray(value)) {
+    console.warn(`Expected string but got paragraphs: ${keyPath}`);
+    return value.join(" ");
+  }
+  return value;
+}
+
+export function getParagraphs(keyPath: string, separator = "\n\n"): string {
+  const value = evaluateTranslationPath(keyPath);
+
+  if (Array.isArray(value)) {
+    return value.join(separator);
+  }
+
+  return value;
 }
 
 export function updatePage() {
@@ -41,15 +60,28 @@ export function updatePage() {
 
   window.dispatchEvent(new CustomEvent("translated"));
 
-  document.title = translations.pageTitle[currentLang];
+  document.title = getText("pageTitle");
   // Update elements with data-i18n attribute
   const elements = document.querySelectorAll("[data-i18n]");
   elements.forEach((el) => {
     const key = el.getAttribute("data-i18n");
-    if (key) {
+    if (!key) return;
+
+    if (el.hasAttribute("data-i18n-paragraphs")) {
+      el.innerHTML = "";
+      const paragraphs = getParagraphs(key).split("\n\n");
+      const fragment = new DocumentFragment();
+      paragraphs.forEach((p) => {
+        const pEL = document.createElement("p");
+        pEL.textContent = p;
+        fragment.appendChild(pEL);
+      });
+      el.appendChild(fragment);
+    } else {
       el.textContent = getText(key);
     }
   });
+
   // Handle direction (RTL for Arabic)
   document.documentElement.lang = currentLang === "arabic" ? "ar" : "en";
   document.documentElement.dir = currentLang === "arabic" ? "rtl" : "ltr";

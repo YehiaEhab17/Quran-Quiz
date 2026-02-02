@@ -12,7 +12,7 @@ export function setLanguage(lang) {
     currentLang = lang;
     updatePage();
 }
-export function getText(keyPath) {
+function evaluateTranslationPath(keyPath) {
     if (!translations)
         return "";
     const keys = keyPath.split(".");
@@ -28,16 +28,44 @@ export function getText(keyPath) {
     const item = current;
     return item[currentLang] || item.english || "";
 }
+export function getText(keyPath) {
+    const value = evaluateTranslationPath(keyPath);
+    if (Array.isArray(value)) {
+        console.warn(`Expected string but got paragraphs: ${keyPath}`);
+        return value.join(" ");
+    }
+    return value;
+}
+export function getParagraphs(keyPath, separator = "\n\n") {
+    const value = evaluateTranslationPath(keyPath);
+    if (Array.isArray(value)) {
+        return value.join(separator);
+    }
+    return value;
+}
 export function updatePage() {
     if (!translations)
         return;
     window.dispatchEvent(new CustomEvent("translated"));
-    document.title = translations.pageTitle[currentLang];
+    document.title = getText("pageTitle");
     // Update elements with data-i18n attribute
     const elements = document.querySelectorAll("[data-i18n]");
     elements.forEach((el) => {
         const key = el.getAttribute("data-i18n");
-        if (key) {
+        if (!key)
+            return;
+        if (el.hasAttribute("data-i18n-paragraphs")) {
+            el.innerHTML = "";
+            const paragraphs = getParagraphs(key).split("\n\n");
+            const fragment = new DocumentFragment();
+            paragraphs.forEach((p) => {
+                const pEL = document.createElement("p");
+                pEL.textContent = p;
+                fragment.appendChild(pEL);
+            });
+            el.appendChild(fragment);
+        }
+        else {
             el.textContent = getText(key);
         }
     });

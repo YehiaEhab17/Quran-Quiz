@@ -10,74 +10,88 @@
   </head>
   <body>
     <h1 data-i18n="mainHeading">Welcome to the Quran Quiz</h1>
-    <button data-note="buttons.translate" id="translate">
-      <img src="images/globe.png" />
-    </button>
     <div class="container">
-      <form id="selection-form" autocomplete="off">
-        <datalist id="surah-names"></datalist>
-        <div class="inputs-grid">
-          <label>
-            <span data-i18n="labels.startSurah"> Starting Surah: </span>
-            <input
-              type="text"
-              id="start-surah"
-              name="start-surah"
-              list="surah-names"
-              autocomplete="off"
-              required
-              autofocus
-            />
-            <span id="start-surah-error" class="error-message"></span>
-          </label>
-
-          <label>
-            <span data-i18n="labels.startAyah"> Starting Ayah: </span>
-            <input
-              type="number"
-              id="start-ayah"
-              name="start-ayah"
-              min="1"
-              max="3"
-              autocomplete="off"
-              required
-              disabled
-            />
-            <span id="start-ayah-error" class="error-message"></span>
-          </label>
-          <label>
-            <span data-i18n="labels.endSurah"> Ending Surah: </span>
-            <input
-              type="text"
-              id="end-surah"
-              name="end-surah"
-              list="surah-names"
-              autocomplete="off"
-              required
-            />
-            <span id="end-surah-error" class="error-message"></span>
-          </label>
-
-          <label>
-            <span data-i18n="labels.endAyah"> Ending Ayah: </span>
-            <input
-              type="number"
-              id="end-ayah"
-              name="end-ayah"
-              min="1"
-              max="3"
-              autocomplete="off"
-              required
-              disabled
-            />
-            <span id="end-ayah-error" class="error-message"></span>
-          </label>
+      <div class="card">
+        <div class="card-header">
+          <button id="translate" class="header-btn">
+            <img src="images/globe.png" />
+          </button>
+          <div class="select-wrapper">
+            <select id="input-mode">
+              <option value="ayah" data-i18n="dynamic.inputModes.ayah">Ayah</option>
+              <option value="surah" data-i18n="dynamic.inputModes.surah">Surah</option>
+              <option value="juz" data-i18n="dynamic.inputModes.juz">Juz</option>
+              <option value="hizb" data-i18n="dynamic.inputModes.hizb">Hizb</option>
+            </select>
+          </div>
+          <button id="information" class="header-btn">
+            <img src="images/book-alert.png" />
+          </button>
         </div>
-        <br />
-        <button data-i18n="buttons.startQuiz" type="submit">Start Quiz</button>
-        <div id="form-error" class="error-message"></div>
-      </form>
+        <form id="selection-form" autocomplete="off">
+          <datalist id="surah-names"></datalist>
+          <div class="inputs-grid">
+            <label>
+              <span data-i18n="labels.startSurah"> Starting Surah: </span>
+              <input
+                type="text"
+                id="start-surah"
+                name="start-surah"
+                list="surah-names"
+                autocomplete="off"
+                required
+                autofocus
+              />
+              <span id="start-surah-error" class="error-message"></span>
+            </label>
 
+            <label>
+              <span data-i18n="labels.startAyah"> Starting Ayah: </span>
+              <input
+                type="number"
+                id="start-ayah"
+                name="start-ayah"
+                min="1"
+                max="3"
+                autocomplete="off"
+                required
+                disabled
+              />
+              <span id="start-ayah-error" class="error-message"></span>
+            </label>
+            <label>
+              <span data-i18n="labels.endSurah"> Ending Surah: </span>
+              <input
+                type="text"
+                id="end-surah"
+                name="end-surah"
+                list="surah-names"
+                autocomplete="off"
+                required
+              />
+              <span id="end-surah-error" class="error-message"></span>
+            </label>
+
+            <label>
+              <span data-i18n="labels.endAyah"> Ending Ayah: </span>
+              <input
+                type="number"
+                id="end-ayah"
+                name="end-ayah"
+                min="1"
+                max="3"
+                autocomplete="off"
+                required
+                disabled
+              />
+              <span id="end-ayah-error" class="error-message"></span>
+            </label>
+          </div>
+          <br />
+          <button data-i18n="buttons.startQuiz" type="submit">Start Quiz</button>
+          <div id="form-error" class="error-message"></div>
+        </form>
+      </div>
       <div id="quiz">
         <div id="quiz-controls">
           <button data-i18n="buttons.showMore" disabled id="show-more">+</button>
@@ -98,6 +112,23 @@
         <div id="quiz-output" class="quran"></div>
       </div>
     </div>
+
+    <dialog id="info-dialog">
+      <h2 data-i18n="information.title" id="dialog-title">Information</h2>
+      <div
+        data-i18n="information.content"
+        data-i18n-paragraphs
+        id="dialog-content"
+      ></div>
+      <br />
+      <div
+        data-i18n="information.warning"
+        data-i18n-paragraphs
+        id="dialog-warning"
+      ></div>
+      <button id="close-dialog">X</button>
+    </dialog>
+
     <script type="module" src="dist/script.js"></script>
   </body>
 </html>

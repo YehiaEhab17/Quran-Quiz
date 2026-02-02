@@ -13,7 +13,7 @@
       "arabic": "سورة البداية:"
     },
     "startAyah": {
-      "english": "Starting Ayah:",
+      "english": "Start Ayah:",
       "arabic": "آية البداية:"
     },
     "endSurah": {
@@ -21,7 +21,7 @@
       "arabic": "سورة النهاية:"
     },
     "endAyah": {
-      "english": "Ending Ayah:",
+      "english": "End Ayah:",
       "arabic": "آية النهاية:"
     }
   },
@@ -39,8 +39,8 @@
       "arabic": "-"
     },
     "nextQuiz": {
-      "english": "Next Quiz",
-      "arabic": "الاختبار التالي"
+      "english": "Next Question",
+      "arabic": "السؤال التالي"
     },
     "copyAyah": {
       "english": "Copy Ayah",
@@ -69,18 +69,70 @@
       "arabic": "أدخل سورة صحيحة"
     },
     "invalidAyahRange": {
-      "english": "Enter an ayah between 1 and",
-      "arabic": "أدخل آية بين 1 و"
+      "english": "Enter an ayah between 1 and ",
+      "arabic": "أدخل آية بين 1 و "
     },
     "swappedAyahs": {
       "english": "Note: Start and End Ayahs were swapped to maintain order.",
       "arabic": "ملاحظة: تم تبديل آيات البداية والنهاية للحفاظ على الترتيب."
     }
   },
+  "information": {
+    "title": {
+      "english": "How to use:",
+      "arabic": "كيفة الاستعمال"
+    },
+    "content": {
+      "english": [
+        "This is a quiz that will help you with your Quran Revision",
+        "Select a starting and ending Surah and Ayah range.",
+        "Click \"Start Quiz\" and you will be tested on this range",
+        "Try to continue the Ayah from memory",
+        "After you complete the second Ayah, press \"+\" to see the next one",
+        "When you have completed the test, press \"Next Question\" to see the next range"
+      ],
+      "arabic": [
+        "هذا اختبار يساعدك على مراجعة القرآن.",
+        "اختر سورة وآية البداية والنهاية.",
+        "اضغط على \"ابدأ الاختبار\" لبدء الاختبار على هذا النطاق.",
+        "حاول إكمال الآية من حفظك.",
+        "بعد إكمال الآية الثانية، اضغط على \"+\" لعرض الآية التالية.",
+        "عند الانتهاء من الاختبار، اضغط على \"السؤال التالي\" لعرض نطاق جديد."
+      ]
+    },
+    "warning": {
+      "english": [
+        "Disclaimer: This is not a replacement for reading upon a Sheikh or revising with other students",
+        "It is meant as a supplement so that you are able to revise by your own or prepare for Competitions"
+      ],
+      "arabic": [
+        "تنبيه: هذا ليس بديلاً عن القراءة على شيخ أو المراجعة مع طلاب آخرين وإنما هو وسيلة مساعدة للمراجعة الفردية أو الاستعداد للمسابقات."
+      ]
+    }
+  },
+
   "dynamic": {
     "ayahPrefix": {
       "english": "Ayah",
       "arabic": "آية"
+    },
+    "inputModes": {
+      "ayah": {
+        "english": "Ayah",
+        "arabic": "آية"
+      },
+      "surah": {
+        "english": "Surah",
+        "arabic": "سورة"
+      },
+      "juz": {
+        "english": "Juz",
+        "arabic": "جزء"
+      },
+      "hizb": {
+        "english": "Hizb",
+        "arabic": "حزب"
+      }
     }
   }
 }

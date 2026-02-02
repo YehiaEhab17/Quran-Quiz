@@ -13,10 +13,12 @@ const surahDatalist = document.getElementById("surah-names");
 const quizOutput = document.getElementById("quiz-output");
 const formError = document.getElementById("form-error");
 const translateButton = document.getElementById("translate");
+const infoButton = document.getElementById("information");
+const infoDialog = document.getElementById("info-dialog");
+const closeDialog = document.getElementById("close-dialog");
 // --- DATA VARIABLES ---
 let suwar = [];
 let ayaat = [];
-let controls;
 let display;
 // --- INITIALIZATION ---
 async function init() {
@@ -34,7 +36,7 @@ async function init() {
     }
     setUpEventListeners();
     display = new AyahDisplay(quizOutput);
-    controls = new QuizControls(display);
+    new QuizControls(display);
 }
 function setUpEventListeners() {
     const startPair = new SurahAyahInputPair(startSurahInput, startAyahInput, suwar, ayaat, surahDatalist);
@@ -62,6 +64,21 @@ function setUpEventListeners() {
         endPair.hideErrors();
         formError.classList.remove("visible");
         formError.textContent = "";
+    });
+    infoButton.addEventListener("click", () => {
+        infoDialog.showModal();
+    });
+    closeDialog.addEventListener("click", () => {
+        infoDialog.close();
+    });
+    infoDialog.addEventListener("click", (e) => {
+        if (e.target === infoDialog) {
+            infoDialog.close();
+        }
+    });
+    const inputModeSelect = document.getElementById("input-mode");
+    inputModeSelect.addEventListener("change", () => {
+        console.log(`Input mode changed to: ${inputModeSelect.value}`);
     });
 }
 function start(startPair, endPair) {

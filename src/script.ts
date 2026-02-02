@@ -2,7 +2,7 @@ import { testGlobalIDMapping } from "./tests.js";
 import { Ayah, Surah } from "./types.js";
 import { getRukuWithinRange, getRuku } from "./util.js";
 import { SurahAyahInputPair, QuizControls, AyahDisplay } from "./classes.js";
-import { appState, setRuku, quizStarted } from "./state.js";
+import { setRuku, quizStarted } from "./state.js";
 import {
   initTranslations,
   getText,
@@ -23,11 +23,13 @@ const quizOutput = document.getElementById("quiz-output") as HTMLElement;
 const formError = document.getElementById("form-error") as HTMLElement;
 
 const translateButton = document.getElementById("translate") as HTMLButtonElement;
+const infoButton = document.getElementById("information") as HTMLButtonElement;
+const infoDialog = document.getElementById("info-dialog") as HTMLDialogElement;
+const closeDialog = document.getElementById("close-dialog") as HTMLButtonElement;
 
 // --- DATA VARIABLES ---
 let suwar: Surah[] = [];
 let ayaat: Ayah[] = [];
-let controls: QuizControls;
 let display: AyahDisplay;
 
 // --- INITIALIZATION ---
@@ -51,7 +53,7 @@ async function init() {
 
   setUpEventListeners();
   display = new AyahDisplay(quizOutput);
-  controls = new QuizControls(display);
+  new QuizControls(display);
 }
 
 function setUpEventListeners() {
@@ -100,6 +102,25 @@ function setUpEventListeners() {
     endPair.hideErrors();
     formError.classList.remove("visible");
     formError.textContent = "";
+  });
+
+  infoButton.addEventListener("click", () => {
+    infoDialog.showModal();
+  });
+
+  closeDialog.addEventListener("click", () => {
+    infoDialog.close();
+  });
+
+  infoDialog.addEventListener("click", (e) => {
+    if (e.target === infoDialog) {
+      infoDialog.close();
+    }
+  });
+
+  const inputModeSelect = document.getElementById("input-mode") as HTMLSelectElement;
+  inputModeSelect.addEventListener("change", () => {
+    console.log(`Input mode changed to: ${inputModeSelect.value}`);
   });
 }
 

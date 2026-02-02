@@ -2,7 +2,7 @@ import { testGlobalIDMapping } from "./tests.js";
 import { Ayah, Surah } from "./types.js";
 import { getRukuWithinRange, getRuku } from "./util.js";
 import { SurahAyahInputPair, QuizControls, AyahDisplay } from "./classes.js";
-import { setRuku, quizStarted } from "./state.js";
+import { setRuku, quizStarted, quizStopped } from "./state.js";
 import {
   initTranslations,
   getText,
@@ -21,6 +21,9 @@ const surahDatalist = document.getElementById("surah-names") as HTMLDataListElem
 
 const quizOutput = document.getElementById("quiz-output") as HTMLElement;
 const formError = document.getElementById("form-error") as HTMLElement;
+
+const startQuizButton = document.getElementById("start-quiz") as HTMLButtonElement;
+const stopQuizButton = document.getElementById("stop-quiz") as HTMLButtonElement;
 
 const translateButton = document.getElementById("translate") as HTMLButtonElement;
 const infoButton = document.getElementById("information") as HTMLButtonElement;
@@ -78,6 +81,16 @@ function setUpEventListeners() {
     start(startPair, endPair);
   });
 
+  stopQuizButton.addEventListener("click", () => {
+    quizStopped();
+    display.clear();
+    formError.classList.remove("visible");
+    formError.textContent = "";
+
+    stopQuizButton.classList.add("hidden");
+    startQuizButton.classList.remove("hidden");
+  });
+
   translateButton.addEventListener("click", () => {
     getCurrentLanguage() === "english"
       ? setLanguage("arabic")
@@ -125,7 +138,6 @@ function setUpEventListeners() {
 }
 
 function start(startPair: SurahAyahInputPair, endPair: SurahAyahInputPair) {
-  quizStarted();
   startPair.verifyInputs();
   endPair.verifyInputs();
 
@@ -143,6 +155,11 @@ function start(startPair: SurahAyahInputPair, endPair: SurahAyahInputPair) {
     console.error(`No ruku found for number ${rukuNumber}.`);
     return;
   }
+
+  quizStarted();
+  startQuizButton.classList.add("hidden");
+  stopQuizButton.classList.remove("hidden");
+
   const ayah = ruku.ayaat[0];
 
   if (endAyah.id < startAyah.id) {

@@ -1,7 +1,7 @@
 /* Modern Quran Quiz Styling */
 
 /* ============================================
-   CRITICAL IMPORTS & RESETS
+   1. FONTS & RESETS
    ============================================ */
 @font-face {
   font-family: "KFGQPC-Uthmanic";
@@ -17,11 +17,15 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
 input[type="number"] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
 
+/* ============================================
+   2. VARIABLES
+   ============================================ */
 :root {
   /* Color Palette - Deep Green & Gold Theme */
   --primary-color: #2e7d32; /* Deep Green */
@@ -39,7 +43,7 @@ input[type="number"] {
   --spacing-md: 1rem;
   --spacing-lg: 2rem;
 
-  /* BorderRadius */
+  /* Border Radius */
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
@@ -50,7 +54,9 @@ input[type="number"] {
   --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-/* Base Resets & Typography */
+/* ============================================
+   3. BASE STYLES
+   ============================================ */
 body {
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -73,7 +79,9 @@ h1 {
   letter-spacing: -0.5px;
 }
 
-/* Main Container Layout */
+/* ============================================
+   4. LAYOUT
+   ============================================ */
 .container {
   display: grid;
   grid-template-columns: 425px 1fr;
@@ -84,7 +92,11 @@ h1 {
   align-items: start;
 }
 
-/* Card Styling */
+/* ============================================
+   5. COMMON COMPONENTS
+   ============================================ */
+
+/* --- Card --- */
 .card,
 #quiz {
   background: var(--card-bg);
@@ -96,11 +108,65 @@ h1 {
     box-shadow 0.2s ease;
 }
 
-#quiz {
-  padding: var(--spacing-lg);
+/* --- Buttons --- */
+button {
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Card Header */
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+/* Utility buttons (Translate & Information) */
+#translate,
+#information {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+  background-color: white;
+  cursor: pointer;
+  appearance: none;
+  text-align: center;
+  min-width: 60px;
+}
+
+#translate:hover,
+#information:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-color: var(--primary-color);
+}
+
+/* Primary Action Button */
+button[type="submit"] {
+  background-color: var(--primary-color);
+  color: white;
+  width: 100%;
+  margin-top: var(--spacing-md);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+button[type="submit"]:hover {
+  background-color: var(--primary-hover);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+  transform: translateY(-1px);
+}
+
+/* --- Header --- */
 .card-header {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -136,7 +202,7 @@ h1 {
   object-fit: contain;
 }
 
-/* Select Box in Header */
+/* --- Input Mode Select --- */
 .select-wrapper {
   display: flex;
   justify-content: center;
@@ -170,33 +236,12 @@ h1 {
   box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
 }
 
+/* ============================================
+   6. FORMS & INPUTS
+   ============================================ */
 form#selection-form {
   padding: var(--spacing-lg);
 }
-
-/* Remove old fixed button styles */
-#translate,
-#information {
-  padding: 0.25rem 0.75rem; /* smaller padding */
-  border: 1px solid var(--border-color); /* visible border using your theme variable */
-  border-radius: 20px; /* rounded corners */
-  font-size: 0.95rem; /* text size */
-  font-weight: 600; /* slightly bold text */
-  color: var(--text-main); /* text color from theme */
-  background-color: white; /* button background */
-  cursor: pointer; /* pointer on hover */
-  appearance: none; /* remove OS default button styles */
-  text-align: center; /* center text */
-  min-width: 60px; /* smaller width */
-  margin-right: 0.5rem; /* space between buttons */
-}
-
-#translate:hover,
-#information:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  border-color: var(--primary-color);
-}
-/* Form Styling */
 
 .inputs-grid {
   display: grid;
@@ -214,23 +259,8 @@ form#selection-form {
 }
 
 .inputs-grid label:hover {
-  /* Only apply hover effect if the input inside is not disabled */
   color: inherit;
 }
-
-/* We need to target the label when it's being hovered, but only if it's NOT associated with a disabled input. 
-   Since we can't easily select parent based on child state without :has(), and structure is label > input, we can use :has() if supported, or just accept that labels might hover.
-   Actually, the user said "hover for disabled labels". Labels aren't usually disabled. But the inputs inside are.
-   Let's try to use :focus-within or just style the label based on the input's state if possible. 
-   With :has() support increasing, we can try: label:has(input:not(:disabled)):hover
-   However, to be safe and compatible, maybe we should just remove the label hover effect if it's causing confusion, or restrict it.
-   
-   Better approach for broader support: The previous code was:
-   .inputs-grid label:hover { color: var(--primary-color); }
-   
-   If we can't reliably detect disabled input inside label without :has(), we might leave it or use :has().
-   Let's check if we can use :has(). It is supported in modern browsers.
-*/
 
 .inputs-grid label:has(input:not(:disabled)):hover {
   color: var(--primary-color);
@@ -245,6 +275,8 @@ input[type="number"] {
   transition: all 0.2s;
   margin-top: 0.25rem;
   background-color: #fafafa;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 input[type="text"]:hover:not(:disabled),
@@ -260,128 +292,14 @@ input[type="number"]:focus {
   box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
 }
 
-/* Button Styling */
-button {
-  cursor: pointer;
-  padding: 0.75rem 1rem;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-  min-height: 48px; /* Consistent height */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-button:hover:not(:disabled) {
-  transform: translateY(-1px);
-}
-
-/* Primary Action Button */
-button[type="submit"] {
-  background-color: var(--primary-color);
-  color: white;
-  width: 100%;
-  margin-top: var(--spacing-md);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 700;
-}
-
-button[type="submit"]:hover {
-  background-color: var(--primary-hover);
-  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
-  transform: translateY(-1px);
-}
-
-/* Dialog Styling */
-#info-dialog {
-  border: none;
-  border-radius: var(--radius-md);
+/* ============================================
+   7. QUIZ INTERFACE
+   ============================================ */
+#quiz {
   padding: var(--spacing-lg);
-  box-shadow: var(--shadow-lg);
-  background-color: var(--card-bg);
-  color: var(--text-main);
-  max-width: 500px;
-  width: 90%;
-  margin: auto;
-  max-height: 90vh; /* Handle tall content on small screens */
-  overflow-y: auto; /* Scroll if content overflows */
 }
 
-#info-dialog[open] {
-  animation: fade-in 0.3s ease-out;
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-#info-dialog h2 {
-  color: var(--primary-color);
-  margin-top: 0;
-  padding-right: 2rem; /* Ensure title doesn't overlap close button on small screens */
-}
-
-#dialog-content p,
-#dialog-warning p {
-  margin-bottom: 0.75rem;
-}
-
-#dialog-warning {
-  color: var(--error-color);
-  font-weight: 500;
-  margin-top: var(--spacing-md);
-  padding-top: var(--spacing-sm);
-  border-top: 1px solid var(--border-color);
-}
-
-#close-dialog {
-  position: absolute;
-  top: var(--spacing-sm);
-  inset-inline-end: var(--spacing-sm);
-  background: transparent;
-  border: none;
-  font-size: 1.5rem; /* Larger font for easier tapping */
-  color: var(--text-muted);
-  width: 40px; /* Explicit touch target size */
-  height: 40px;
-  min-height: unset;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-#close-dialog:hover {
-  color: var(--error-color);
-  background-color: rgba(211, 47, 47, 0.1);
-  box-shadow: none;
-  transform: none;
-}
-
-/* Mobile Adjustments for Dialog */
-@media (max-width: 480px) {
-  #info-dialog {
-    width: 95%;
-    padding: var(--spacing-md);
-    margin: 1rem auto;
-  }
-}
-
-/* Quiz Controls Styling */
+/* --- Controls Toolbar --- */
 #quiz-controls {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -403,31 +321,7 @@ button[type="submit"]:hover {
   background-color: white;
   border: 1px solid var(--border-color);
   color: var(--text-main);
-  width: 100%; /* Fill the grid cell */
-}
-
-/* Specific Layout: 
-   Row 1: + - Next Copy
-   Row 2: Reveal Ayah Reveal Surah
-*/
-#show-more {
-  grid-column: 1;
-}
-#show-less {
-  grid-column: 2;
-}
-#next-quiz {
-  grid-column: 3;
-}
-#copy-ayah {
-  grid-column: 4;
-}
-
-#reveal-surah {
-  grid-column: 1 / span 2;
-}
-#reveal-ayah {
-  grid-column: 3 / span 2;
+  width: 100%;
 }
 
 #quiz-controls button:hover:not(:disabled) {
@@ -444,20 +338,40 @@ button[type="submit"]:hover {
   border-color: #eee;
 }
 
-/* Quiz Output Area */
+/* Control Button Positioning */
+#show-more {
+  grid-column: 1;
+}
+#show-less {
+  grid-column: 2;
+}
+#next-quiz {
+  grid-column: 3;
+}
+#copy-ayah {
+  grid-column: 4;
+}
+#reveal-surah {
+  grid-column: 1 / span 2;
+}
+#reveal-ayah {
+  grid-column: 3 / span 2;
+}
+
+/* --- Output Area --- */
 #quiz-output {
   background-color: #fafafa;
   border: 2px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: var(--spacing-lg);
-  min-height: 300px;
+  max-height: 100px;
   position: relative;
-  /* Ensure consistent sizing */
   width: 100%;
   box-sizing: border-box;
+  overflow-y: auto;
+  align-self: flex-start;
 }
 
-/* Quran Text Specifics */
 .quran {
   font-family: "KFGQPC-Uthmanic", serif;
   font-size: 1.5rem;
@@ -467,7 +381,6 @@ button[type="submit"]:hover {
   direction: rtl;
 }
 
-/* Error Messages */
 .error-message {
   color: var(--error-color);
   font-size: 0.8rem;
@@ -479,12 +392,104 @@ button[type="submit"]:hover {
 .error-message.visible {
   visibility: visible;
 }
-/* Responsive Adjustments */
+
+/* ============================================
+   8. DIALOGS
+   ============================================ */
+#info-dialog {
+  border: none;
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-lg);
+  background-color: var(--card-bg);
+  color: var(--text-main);
+  max-width: 500px;
+  width: 90%;
+  margin: auto;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+#info-dialog[open] {
+  animation: fade-in 0.3s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#info-dialog h2 {
+  color: var(--primary-color);
+  margin-top: 0;
+  padding-right: 2rem;
+}
+
+#dialog-content p,
+#dialog-warning p {
+  margin-bottom: 0.75rem;
+}
+
+#dialog-warning {
+  color: var(--error-color);
+  font-weight: 500;
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--border-color);
+}
+
+#close-dialog {
+  position: absolute;
+  top: var(--spacing-sm);
+  inset-inline-end: var(--spacing-sm);
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  width: 40px;
+  height: 40px;
+  min-height: unset;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#close-dialog:hover {
+  color: var(--error-color);
+  background-color: rgba(211, 47, 47, 0.1);
+  box-shadow: none;
+  transform: none;
+}
+
+/* ============================================
+   9. RESPONSIVE DESIGN
+   ============================================ */
 @media (max-width: 768px) {
   .container {
     grid-template-columns: 1fr;
     gap: var(--spacing-md);
     padding: var(--spacing-sm);
+  }
+
+  .inputs-grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+    gap: var(--spacing-sm);
+  }
+
+  #surah-inputs,
+  #ayah-inputs {
+    min-width: 0;
+    overflow: hidden;
   }
 
   h1 {
@@ -496,7 +501,8 @@ button[type="submit"]:hover {
   #quiz {
     padding: var(--spacing-sm);
   }
-  /* On mobile, stack controls into 2 columns instead of 4 */
+
+  /* Stack controls into 2 columns instead of 4 */
   #quiz-controls {
     grid-template-columns: 1fr 1fr;
   }
@@ -521,7 +527,17 @@ button[type="submit"]:hover {
   }
 }
 
-/* Dark Mode Support */
+@media (max-width: 480px) {
+  #info-dialog {
+    width: 95%;
+    padding: var(--spacing-md);
+    margin: 1rem auto;
+  }
+}
+
+/* ============================================
+   10. DARK MODE
+   ============================================ */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg-color: #121212;
@@ -529,8 +545,12 @@ button[type="submit"]:hover {
     --text-main: #e0e0e0;
     --border-color: #333;
     --text-muted: #b0b0b0;
-    --primary-color: #66bb6a; /* Lighter green for dark mode */
+    --primary-color: #66bb6a;
     --primary-hover: #81c784;
+  }
+
+  body {
+    background-image: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
   }
 
   .card,
@@ -571,10 +591,6 @@ button[type="submit"]:hover {
 
   #close-dialog {
     color: #e0e0e0;
-  }
-
-  body {
-    background-image: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
   }
 
   input[type="text"],

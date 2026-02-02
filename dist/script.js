@@ -1,7 +1,7 @@
 import { testGlobalIDMapping } from "./tests.js";
 import { getRukuWithinRange, getRuku } from "./util.js";
 import { SurahAyahInputPair, QuizControls, AyahDisplay } from "./classes.js";
-import { setRuku, quizStarted } from "./state.js";
+import { setRuku, quizStarted, quizStopped } from "./state.js";
 import { initTranslations, getText, getCurrentLanguage, setLanguage, } from "./translation.js";
 // --- DOM ELEMENTS ---
 const startSurahInput = document.getElementById("start-surah");
@@ -12,6 +12,8 @@ const userInput = document.getElementById("selection-form");
 const surahDatalist = document.getElementById("surah-names");
 const quizOutput = document.getElementById("quiz-output");
 const formError = document.getElementById("form-error");
+const startQuizButton = document.getElementById("start-quiz");
+const stopQuizButton = document.getElementById("stop-quiz");
 const translateButton = document.getElementById("translate");
 const infoButton = document.getElementById("information");
 const infoDialog = document.getElementById("info-dialog");
@@ -44,6 +46,14 @@ function setUpEventListeners() {
     userInput.addEventListener("submit", (event) => {
         event.preventDefault();
         start(startPair, endPair);
+    });
+    stopQuizButton.addEventListener("click", () => {
+        quizStopped();
+        display.clear();
+        formError.classList.remove("visible");
+        formError.textContent = "";
+        stopQuizButton.classList.add("hidden");
+        startQuizButton.classList.remove("hidden");
     });
     translateButton.addEventListener("click", () => {
         getCurrentLanguage() === "english"
@@ -82,7 +92,6 @@ function setUpEventListeners() {
     });
 }
 function start(startPair, endPair) {
-    quizStarted();
     startPair.verifyInputs();
     endPair.verifyInputs();
     let startAyah = startPair.getAyah();
@@ -97,6 +106,9 @@ function start(startPair, endPair) {
         console.error(`No ruku found for number ${rukuNumber}.`);
         return;
     }
+    quizStarted();
+    startQuizButton.classList.add("hidden");
+    stopQuizButton.classList.remove("hidden");
     const ayah = ruku.ayaat[0];
     if (endAyah.id < startAyah.id) {
         [startAyah, endAyah] = [endAyah, startAyah];

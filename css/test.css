@@ -1,0 +1,432 @@
+/* ==========================================================================
+   THEME: MODERN ISLAMIC MINIMALIST ("Sahara Midnight")
+   ========================================================================== */
+
+/* 1. CORE VARIABLES & SETUP
+   ========================================================================== */
+@font-face {
+  font-family: "KFGQPC-Uthmanic";
+  src: url("../fonts/KFGQPC Uthmanic Script HAFS Regular.otf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* -- Palette -- */
+  --col-primary: #1e4d46;       /* Deep Teal */
+  --col-primary-light: #2c6e64; /* Lighter Teal for hover */
+  --col-accent: #c5a059;        /* Muted Gold */
+  --col-accent-glow: #e6c885;   /* Brighter Gold */
+  
+  --col-bg-body: #f7f6f2;       /* Warm Paper White */
+  --col-bg-card: #ffffff;
+  --col-bg-input: #fcfcfc;
+  
+  --col-text-main: #2d3436;     /* Soft Black */
+  --col-text-muted: #636e72;
+  --col-border: #e2e2df;
+  
+  --col-error: #d63031;
+  --col-success: #00b894;
+
+  /* -- Dimensions -- */
+  --space-unit: 1rem;
+  --radius-sm: 8px;
+  --radius-lg: 24px;  /* Softer, rounder corners */
+  --radius-pill: 50px;
+
+  /* -- Effects -- */
+  --shadow-soft: 0 10px 30px -10px rgba(30, 77, 70, 0.15);
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --trans-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 2. RESET & BASE
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--col-bg-body);
+  color: var(--col-text-main);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  /* Subtle pattern overlay if desired, keeping it clean for now */
+}
+
+/* Remove spin buttons */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
+
+/* 3. TYPOGRAPHY
+   ========================================================================== */
+h1 {
+  text-align: center;
+  color: var(--col-primary);
+  font-weight: 800;
+  font-size: 2.5rem;
+  margin: 2rem 0;
+  letter-spacing: -0.02em;
+}
+
+/* 4. LAYOUT
+   ========================================================================== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-unit);
+  display: grid;
+  grid-template-columns: 400px 1fr; /* Fixed width sidebar, fluid content */
+  gap: 2rem;
+  align-items: start;
+}
+
+/* 5. CARDS (Glass/Paper Effect)
+   ========================================================================== */
+.card, #quiz {
+  background: var(--col-bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  border: 1px solid white; /* Subtle highlight */
+  overflow: hidden; /* Contains children */
+  transition: var(--trans-fast);
+}
+
+#quiz {
+  padding: 2rem;
+  min-height: 400px; /* Visual balance */
+  display: flex;
+  flex-direction: column;
+}
+
+/* 6. HEADER SECTION (Sidebar)
+   ========================================================================== */
+.card-header {
+  padding: 1.5rem;
+  background: linear-gradient(to right, #ffffff, #fafafa);
+  border-bottom: 1px solid var(--col-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Input Mode Select */
+.select-wrapper { flex-grow: 1; }
+
+#input-mode {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--col-border);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--col-primary);
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--trans-fast);
+  appearance: none; /* Custom arrow logic could be added here */
+}
+
+#input-mode:hover {
+  border-color: var(--col-primary);
+  background-color: rgba(30, 77, 70, 0.05);
+}
+
+/* Header Icons */
+.header-btn {
+  background: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: var(--trans-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-btn:hover {
+  background-color: rgba(197, 160, 89, 0.15); /* Gold tint */
+  transform: scale(1.1);
+}
+.header-btn img { width: 24px; height: 24px; display: block; }
+
+/* Remove old style overrides for utility buttons if they existed */
+#translate, #information {
+  min-width: auto;
+}
+
+/* 7. FORM ELEMENTS
+   ========================================================================== */
+form#selection-form {
+  padding: 2rem 1.5rem;
+}
+
+.inputs-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* Surah wider than Ayah */
+  gap: 1.5rem;
+}
+
+/* Groups */
+#surah-inputs, #ayah-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Labels */
+label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--col-text-muted);
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+/* Inputs */
+input[type="text"], input[type="number"] {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 2px solid var(--col-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--col-bg-input);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--col-text-main);
+  transition: var(--trans-fast);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--col-primary);
+  box-shadow: 0 0 0 4px rgba(30, 77, 70, 0.1);
+  background-color: #fff;
+}
+
+input:disabled {
+  background-color: #f1f1f1;
+  color: #a0a0a0;
+  border-color: transparent;
+}
+
+/* Submit Button */
+button[type="submit"] {
+  width: 100%;
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: var(--col-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(30, 77, 70, 0.2);
+  transition: var(--trans-fast);
+}
+
+button[type="submit"]:hover {
+  background-color: var(--col-primary-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(30, 77, 70, 0.3);
+}
+
+button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+/* 8. QUIZ INTERFACE
+   ========================================================================== */
+/* Controls Toolbar */
+#quiz-controls {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--col-border);
+  position: sticky;
+  top: 0;
+  background: var(--col-bg-card); /* Cover content behind when scrolling */
+  z-index: 10;
+}
+
+/* Quiz Buttons */
+#quiz-controls button {
+  background: white;
+  border: 1px solid var(--col-border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0.5rem;
+  color: var(--col-text-main);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--trans-fast);
+}
+
+#quiz-controls button:hover:not(:disabled) {
+  border-color: var(--col-accent);
+  color: var(--col-accent); /* Gold text on hover */
+  background-color: #fffcf5;
+}
+
+#quiz-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f9f9f9;
+}
+
+/* Specific Grid Placements (same logical flow) */
+#show-more   { grid-column: 1; }
+#show-less   { grid-column: 2; }
+#next-quiz   { grid-column: 3; }
+#copy-ayah   { grid-column: 4; }
+#reveal-surah { grid-column: 1 / span 2; }
+#reveal-ayah  { grid-column: 3 / span 2; }
+
+/* Quran Output */
+#quiz-output {
+  flex-grow: 1;
+  background-color: #fafafa;
+  border: 2px dashed var(--col-border); /* Dashed border for "worksheet" feel */
+  border-radius: var(--radius-sm);
+  padding: 2rem;
+  text-align: right;
+  direction: rtl;
+  min-height: 200px;
+}
+
+.quran {
+  font-family: "KFGQPC-Uthmanic", serif;
+  font-size: 2rem;
+  line-height: 2.2;
+  color: #000;
+}
+
+/* 9. UTILITY & DIALOGS
+   ========================================================================== */
+.error-message {
+  color: var(--col-error);
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  display: block;
+  min-height: 1.2em; /* Prevent layout jump */
+  visibility: hidden;
+}
+
+.error-message.visible {
+  visibility: visible;
+}
+
+/* Modal */
+#info-dialog {
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  background: var(--col-bg-card);
+}
+
+#info-dialog::backdrop {
+  background: rgba(30, 40, 45, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+#close-dialog {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  border: none;
+  background: transparent;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--col-text-muted);
+}
+
+/* 10. MOBILE RESPONSIVENESS
+   ========================================================================== */
+@media (max-width: 850px) {
+  .container {
+    grid-template-columns: 1fr; /* Stack sidebar on top */
+    max-width: 600px;
+  }
+  
+  h1 { font-size: 2rem; margin: 1.5rem 0; }
+  
+  .card-header {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container { padding: 0.5rem; }
+  
+  .inputs-grid {
+    grid-template-columns: 1fr; /* Full width inputs */
+  }
+  
+  #quiz-controls {
+    grid-template-columns: 1fr 1fr; /* 2 columns for buttons */
+  }
+  
+  /* Re-flow buttons for 2 cols */
+  #show-more   { grid-column: 1; }
+  #show-less   { grid-column: 2; }
+  #next-quiz   { grid-column: 1; }
+  #copy-ayah   { grid-column: 2; }
+  #reveal-surah { grid-column: 1; }
+  #reveal-ayah  { grid-column: 2; }
+}
+
+/* 11. DARK MODE SUPPORT
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --col-primary: #81c784;       /* Lighter Green/Teal */
+    --col-primary-light: #a5d6a7;
+    --col-accent: #ffd54f;        /* Bright Gold */
+    
+    --col-bg-body: #121212;       /* Deep Black */
+    --col-bg-card: #1e1e1e;       /* Dark Grey */
+    --col-bg-input: #2c2c2c;
+    
+    --col-text-main: #e0e0e0;
+    --col-text-muted: #b0bec5;
+    --col-border: #333333;
+  }
+
+  .card, #quiz {
+    border-color: #333;
+    box-shadow: none;
+  }
+
+  .card-header {
+    background: #232323;
+  }
+  
+  #input-mode { color: #fff; }
+  #input-mode:hover { background-color: rgba(255,255,255,0.05); }
+
+  .quran { color: #ffffff; }
+  
+  #quiz-controls button {
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+  }
+  
+  #quiz-controls button:hover:not(:disabled) {
+    background-color: #333;
+    color: var(--col-primary);
+  }
+}

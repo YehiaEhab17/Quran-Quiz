@@ -30,6 +30,10 @@
       "english": "Start Quiz",
       "arabic": "ابدأ الاختبار"
     },
+    "stopQuiz": {
+      "english": "Stop Quiz",
+      "arabic": "إنهاء الاختبار"
+    },
     "showMore": {
       "english": "+",
       "arabic": "+"

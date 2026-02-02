@@ -8,6 +8,10 @@ export class SurahAyahInputPair {
         this.suwar = suwar;
         this.ayaat = ayaat;
         this.surahDatalist = surahDatalist;
+        this.disableAll = (state) => {
+            this.surahInput.disabled = state;
+            this.ayahInput.disabled = state;
+        };
         this.surahError = document.getElementById(`${this.surahInput.id}-error`);
         this.ayahError = document.getElementById(`${this.ayahInput.id}-error`);
         this.setupListeners();
@@ -17,6 +21,8 @@ export class SurahAyahInputPair {
         this.surahInput.addEventListener("blur", this.validateSurah.bind(this));
         this.surahInput.addEventListener("input", this.handleSurahInput.bind(this));
         this.ayahInput.addEventListener("input", this.validateAyah.bind(this));
+        window.addEventListener("quiz:started", () => this.disableAll(true));
+        window.addEventListener("quiz:stopped", () => this.disableAll(false));
     }
     handleFocus() {
         this.surahInput.select();
@@ -109,6 +115,7 @@ export class QuizControls {
             });
         };
         this.handleScroll = (e) => {
+            e.preventDefault();
             if (!appState.Started)
                 return;
             const now = Date.now();
@@ -124,9 +131,17 @@ export class QuizControls {
         };
         this.showMore = () => {
             this.display.incrementIndex();
+            this.buttons.showLess.disabled = false;
+            if (this.display.index === this.display.maxAyaat - 1) {
+                this.buttons.showMore.disabled = true;
+            }
         };
         this.showLess = () => {
             this.display.incrementIndex(true);
+            this.buttons.showMore.disabled = false;
+            if (this.display.index === 0) {
+                this.buttons.showLess.disabled = true;
+            }
         };
         this.nextQuiz = () => {
             this.reset();
@@ -175,6 +190,11 @@ export class QuizControls {
         window.addEventListener("quiz:started", () => {
             console.log("Quiz started.");
             this.disableAll(false);
+            this.buttons.showLess.disabled = true;
+        });
+        window.addEventListener("quiz:stopped", () => {
+            this.disableAll(true);
+            this.reset();
         });
     }
 }
@@ -190,11 +210,20 @@ export class AyahDisplay {
         this.currentAyahIndex = 0;
         this.updateDisplay();
     }
+    clear() {
+        this.ruku = undefined;
+        this.currentAyahIndex = 0;
+        this.text = "";
+        this.display.textContent = "";
+    }
     incrementIndex(decrement = false) {
         if (!this.ruku)
             return;
         this.currentAyahIndex = clamp(0, this.currentAyahIndex + (decrement ? -1 : 1), this.ruku.ayaat.length - 1);
         this.updateDisplay();
+        requestAnimationFrame(() => {
+            this.display.scrollTop = this.display.scrollHeight;
+        });
     }
     updateDisplay() {
         if (!this.ruku)
@@ -206,10 +235,18 @@ export class AyahDisplay {
     get element() {
         return this.display;
     }
+    get maxAyaat() {
+        var _a, _b;
+        return ((_b = (_a = this.ruku) === null || _a === void 0 ? void 0 : _a.ayaat) === null || _b === void 0 ? void 0 : _b.length) ? this.ruku.ayaat.length - 1 : 0;
+    }
+    get index() {
+        return this.currentAyahIndex;
+    }
 }
 export class BasicInput {
     constructor(input) {
         this.input = input;
+        this.error = document.getElementById(`${this.input.id}-error`);
         this.input.addEventListener("input", () => {
             const value = this.input.value;
             this.input.value = value.replace(/[^0-9]/g, "");

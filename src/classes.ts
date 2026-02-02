@@ -31,6 +31,9 @@ export class SurahAyahInputPair {
     this.surahInput.addEventListener("input", this.handleSurahInput.bind(this));
 
     this.ayahInput.addEventListener("input", this.validateAyah.bind(this));
+
+    window.addEventListener("quiz:started", () => this.disableAll(true));
+    window.addEventListener("quiz:stopped", () => this.disableAll(false));
   }
 
   private handleFocus() {
@@ -111,6 +114,11 @@ export class SurahAyahInputPair {
     return undefined;
   }
 
+  private disableAll = (state: boolean) => {
+    this.surahInput.disabled = state;
+    this.ayahInput.disabled = state;
+  };
+
   verifyInputs(): void {
     this.validateSurah();
     this.validateAyah();
@@ -156,6 +164,12 @@ export class QuizControls {
     window.addEventListener("quiz:started", () => {
       console.log("Quiz started.");
       this.disableAll(false);
+      this.buttons.showLess.disabled = true;
+    });
+
+    window.addEventListener("quiz:stopped", () => {
+      this.disableAll(true);
+      this.reset();
     });
   }
 
@@ -166,6 +180,7 @@ export class QuizControls {
   };
 
   private handleScroll = (e: WheelEvent) => {
+    e.preventDefault();
     if (!appState.Started) return;
     const now = Date.now();
     if (now - this.lastScrollTime < 100) return;
@@ -182,10 +197,20 @@ export class QuizControls {
 
   private showMore = () => {
     this.display.incrementIndex();
+
+    this.buttons.showLess.disabled = false;
+    if (this.display.index === this.display.maxAyaat - 1) {
+      this.buttons.showMore.disabled = true;
+    }
   };
 
   private showLess = () => {
     this.display.incrementIndex(true);
+
+    this.buttons.showMore.disabled = false;
+    if (this.display.index === 0) {
+      this.buttons.showLess.disabled = true;
+    }
   };
 
   private nextQuiz = () => {
@@ -236,6 +261,13 @@ export class AyahDisplay {
     this.updateDisplay();
   }
 
+  clear() {
+    this.ruku = undefined;
+    this.currentAyahIndex = 0;
+    this.text = "";
+    this.display.textContent = "";
+  }
+
   incrementIndex(decrement: boolean = false) {
     if (!this.ruku) return;
 
@@ -246,6 +278,9 @@ export class AyahDisplay {
     );
 
     this.updateDisplay();
+    requestAnimationFrame(() => {
+      this.display.scrollTop = this.display.scrollHeight;
+    });
   }
 
   private updateDisplay() {
@@ -259,12 +294,22 @@ export class AyahDisplay {
   get element(): HTMLElement {
     return this.display;
   }
+
+  get maxAyaat(): number {
+    return this.ruku?.ayaat?.length ? this.ruku.ayaat.length - 1 : 0;
+  }
+
+  get index(): number {
+    return this.currentAyahIndex;
+  }
 }
 
 export class BasicInput {
   private error: HTMLElement;
 
   constructor(private input: HTMLInputElement) {
+    this.error = document.getElementById(`${this.input.id}-error`)!;
+
     this.input.addEventListener("input", () => {
       const value = this.input.value;
       this.input.value = value.replace(/[^0-9]/g, "");

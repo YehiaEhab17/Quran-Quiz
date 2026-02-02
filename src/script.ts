@@ -163,7 +163,7 @@ function start(startPair: SurahAyahInputPair, endPair: SurahAyahInputPair) {
   setRuku(ruku);
 }
 
-init();
+window.addEventListener("load", init);
 
 function test() {
   testGlobalIDMapping(suwar, ayaat);

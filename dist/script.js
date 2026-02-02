@@ -112,7 +112,7 @@ function start(startPair, endPair) {
     Starting Ruku: ${ruku.id}, Starting Ayah ${ayah.surah}:${ayah.ayah} (ID: ${ayah.id})`);
     setRuku(ruku);
 }
-init();
+window.addEventListener("load", init);
 function test() {
     testGlobalIDMapping(suwar, ayaat);
 }

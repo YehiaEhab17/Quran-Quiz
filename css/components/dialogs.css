@@ -1,0 +1,41 @@
+/* ==========================================================================
+   DIALOGS / MODALS
+   ========================================================================== */
+
+#info-dialog {
+  border: none;
+  border-radius: 8px;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  
+  background-color: var(--dialog-bg);
+  color: var(--dialog-text);
+}
+
+#info-dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+#dialog-warning {
+  color: var(--error-color-dialog);
+  font-weight: 600;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--sidebar-border);
+}
+
+#close-dialog {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: var(--close-icon-color);
+}

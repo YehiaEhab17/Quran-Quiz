@@ -1,0 +1,276 @@
+/* ==========================================================================
+   QUIZ COMPONENT (Right Panel)
+   ========================================================================== */
+
+#quiz {
+  background-color: var(--content-bg);
+  color: var(--content-text);
+  overflow-y: hidden; /* Changed from auto to hidden to allow inner scrolling */
+  position: relative;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+}
+
+/* Sticky Controls Bar */
+#quiz-controls {
+  position: sticky;
+  top: 0;
+  background-color: var(--controls-bg);
+  backdrop-filter: blur(5px);
+  border-bottom: 1px solid var(--controls-border);
+  padding: 1rem;
+  z-index: 50;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  min-height: 76px;
+
+  /* Grid Definition */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: stretch;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.left-group,
+.right-group {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+/* Base Control Buttons */
+#quiz-controls button {
+  padding: 0 1rem;
+  height: 42px;
+  background: var(--controls-btn-bg);
+  border: 1px solid var(--controls-btn-border);
+  border-radius: 4px;
+  color: var(--controls-btn-text);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#quiz-controls button:hover:not(:disabled) {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  transform: translateY(-1px);
+}
+
+#quiz-controls button:disabled {
+  background-color: var(--btn-disabled-bg);
+  color: var(--btn-disabled-text);
+  border-color: var(--btn-disabled-border);
+  cursor: not-allowed;
+}
+
+/* Specific Button Sizing */
+.left-group button {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+}
+
+#hint {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+}
+
+#copy-ayah {
+  flex: 0 0 42px !important;
+  padding: 0;
+  width: 42px !important;
+}
+
+#copy-ayah img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Mistake Counter */
+#mistake-counter-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+
+  background-color: var(--mistake-bg);
+  color: var(--mistake-text);
+
+  border-left: 1px solid var(--mistake-border);
+  border-right: 1px solid var(--mistake-border);
+  border-top: none;
+  border-bottom: none;
+  border-radius: 0;
+
+  height: calc(100% + 2rem); /* Offsets the 1rem top/bottom padding of parent */
+  margin: -1rem 0;
+  padding: 0 0.5rem;
+}
+
+#mistake-counter-container button {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  border: 1px solid var(--mistake-btn-border);
+  background: var(--mistake-btn-bg);
+  color: var(--mistake-btn-text);
+}
+
+#mistake-counter-container button:hover {
+  background-color: var(--sidebar-border); /* Subtle hover bg */
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+#mistake-count {
+  font-weight: 600;
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+/* Quiz Output */
+#quiz-output {
+  padding: 2rem 3rem;
+  flex-grow: 1;
+  border: none;
+  background: transparent;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.quran {
+  font-family: "KFGQPC-Uthmanic", serif;
+  font-size: 2.2rem;
+  line-height: 2.5;
+  text-align: right;
+  direction: rtl;
+  color: var(--quran-text);
+}
+
+/* Mobile Overrides for Quiz */
+@media (max-width: 768px) {
+  #quiz {
+    display: flex;
+    flex-direction: column;
+    height: 95vh;
+    min-height: 400px;
+    overflow: hidden;
+    flex-grow: 0;
+  }
+
+  #quiz-controls {
+    position: relative;
+    top: 0;
+    padding: 0.75rem;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    justify-content: stretch;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    z-index: 10;
+    background-color: var(--content-bg);
+    border-bottom: 1px solid var(--sidebar-border);
+    overflow: visible;
+  }
+
+  #quiz-controls button {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.8rem;
+    width: 100%;
+    flex: none;
+    height: 42px;
+  }
+
+  /* Flatten structure */
+  .control-group {
+    display: contents;
+  }
+
+  .left-group,
+  .center-group,
+  .right-group {
+    justify-content: normal;
+  }
+
+  #copy-ayah {
+    width: 100% !important;
+    margin: 0;
+    flex: 0 0 42px !important;
+  }
+
+  /* Grid placement */
+  #show-more {
+    grid-column: span 2;
+    order: 1;
+  }
+  #show-less {
+    grid-column: span 2;
+    order: 2;
+  }
+  #next-quiz {
+    grid-column: span 2;
+    order: 3;
+  }
+  #skip-quiz {
+    grid-column: span 2;
+    order: 4;
+  }
+  #copy-ayah {
+    grid-column: span 2;
+    order: 5;
+  }
+  #hint {
+    grid-column: span 10;
+    order: 6;
+  }
+
+  #mistake-counter-container {
+    grid-column: 1 / -1;
+    order: 8;
+    justify-content: center;
+    width: 100%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.25rem;
+    margin: 0;
+    height: auto;
+    background: transparent;
+    border: none;
+  }
+
+  #mistake-counter-container button {
+    width: 32px !important;
+    height: 32px !important;
+    flex: 0 0 auto;
+  }
+
+  #quiz-output {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex-grow: 1;
+    height: 0;
+  }
+
+  .quran {
+    font-size: 1.5rem;
+  }
+}

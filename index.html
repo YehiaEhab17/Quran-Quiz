@@ -1,40 +1,73 @@
 <!doctype html>
 <html lang="en">
+  <!-- 
+    ========================================================================
+    QURAN QUIZ - MAIN APPLICATION
+    ========================================================================
+    Structure:
+    1. Head: Meta tags, Styles, Title
+    2. Body:
+       - Container (Grid Layout)
+         - Left Panel: Sidebar / Settings Form
+         - Right Panel: Quiz Area / Controls
+       - Dialogs: Info, Report
+       - Templates: Question Report
+       - Scripts
+    ========================================================================
+  -->
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A tool to test your memorization of the Quran."
+    />
+
+    <!-- Favicon -->
     <link rel="icon" href="images/favicon.png" type="image/png" />
-    <!-- <link rel="stylesheet" href="css/main.css" /> -->
-    <link rel="stylesheet" href="css/test2.css" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/main.css" />
 
     <title>Quran Quiz</title>
   </head>
   <body>
+    <!-- Main Application Grid -->
     <div class="container">
+      <!-- ==================================================================
+           LEFT PANEL: SIDEBAR & SETTINGS
+           ================================================================== -->
       <div class="card">
+        <!-- Header: Translate Button, Mode Select, Info Button -->
         <div class="card-header">
-          <button id="translate" class="header-btn">
-            <img src="images/globe.png" />
+          <button id="translate" class="header-btn" aria-label="Translate">
+            <img src="images/globe.png" alt="Translate Icon" />
           </button>
+
           <div class="select-wrapper">
-            <select disabled id="input-mode">
+            <select disabled id="input-mode" aria-label="Select Input Mode">
               <option value="ayah" data-i18n="dynamic.inputModes.ayah">Ayah</option>
               <option value="surah" data-i18n="dynamic.inputModes.surah">Surah</option>
               <option value="juz" data-i18n="dynamic.inputModes.juz">Juz</option>
               <option value="hizb" data-i18n="dynamic.inputModes.hizb">Hizb</option>
             </select>
           </div>
-          <button id="information" class="header-btn">
-            <img src="images/book-alert.png" />
+
+          <button id="information" class="header-btn" aria-label="Information">
+            <img src="images/book-alert.png" alt="Info Icon" />
           </button>
         </div>
+
+        <!-- Quiz Configuration Form -->
         <form id="selection-form" autocomplete="off">
           <datalist id="surah-names"></datalist>
+
           <div class="inputs-grid">
+            <!-- Surah Selection Section -->
             <div id="surah-inputs">
-              <label for="start-surah" data-i18n="labels.startSurah">
-                Starting Surah:
-              </label>
+              <label for="start-surah" data-i18n="labels.startSurah"
+                >Starting Surah:</label
+              >
               <input
                 type="text"
                 id="start-surah"
@@ -44,11 +77,13 @@
                 required
                 autofocus
               />
-              <span id="start-surah-error" class="error-message"></span>
+              <span
+                id="start-surah-error"
+                class="error-message"
+                aria-live="polite"
+              ></span>
 
-              <label for="end-surah" data-i18n="labels.endSurah">
-                Ending Surah:
-              </label>
+              <label for="end-surah" data-i18n="labels.endSurah">Ending Surah:</label>
               <input
                 type="text"
                 id="end-surah"
@@ -57,13 +92,16 @@
                 autocomplete="off"
                 required
               />
-              <span id="end-surah-error" class="error-message"></span>
+              <span
+                id="end-surah-error"
+                class="error-message"
+                aria-live="polite"
+              ></span>
             </div>
 
+            <!-- Ayah Selection Section (Dynamic) -->
             <div id="ayah-inputs">
-              <label for="start-ayah" data-i18n="labels.startAyah">
-                Start Ayah:
-              </label>
+              <label for="start-ayah" data-i18n="labels.startAyah">Start Ayah:</label>
               <input
                 type="number"
                 id="start-ayah"
@@ -74,9 +112,13 @@
                 required
                 disabled
               />
-              <span id="start-ayah-error" class="error-message"></span>
+              <span
+                id="start-ayah-error"
+                class="error-message"
+                aria-live="polite"
+              ></span>
 
-              <label for="end-ayah" data-i18n="labels.endAyah"> End Ayah: </label>
+              <label for="end-ayah" data-i18n="labels.endAyah">End Ayah:</label>
               <input
                 type="number"
                 id="end-ayah"
@@ -87,13 +129,21 @@
                 required
                 disabled
               />
-              <span id="end-ayah-error" class="error-message"></span>
+              <span
+                id="end-ayah-error"
+                class="error-message"
+                aria-live="polite"
+              ></span>
             </div>
           </div>
+
           <br />
+
+          <!-- Form Actions -->
           <button data-i18n="buttons.startQuiz" type="submit" id="start-quiz">
             Start Quiz
           </button>
+
           <button
             data-i18n="buttons.stopQuiz"
             type="button"
@@ -102,40 +152,78 @@
           >
             Stop Quiz
           </button>
-          <div id="form-error" class="error-message"></div>
+
+          <div id="form-error" class="error-message" aria-live="assertive"></div>
         </form>
       </div>
+
+      <!-- ==================================================================
+           RIGHT PANEL: QUIZ INTERFACE
+           ================================================================== -->
       <div id="quiz">
+        <!-- Sticky Control Bar -->
         <div id="quiz-controls">
+          <!-- Left: Navigation Controls -->
           <div class="control-group left-group">
-            <button data-i18n="buttons.showMore" disabled id="show-more">+</button>
-            <button data-i18n="buttons.showLess" disabled id="show-less">-</button>
+            <button
+              data-i18n="buttons.showMore"
+              disabled
+              id="show-more"
+              aria-label="Show More"
+            >
+              +
+            </button>
+            <button
+              data-i18n="buttons.showLess"
+              disabled
+              id="show-less"
+              aria-label="Show Less"
+            >
+              -
+            </button>
             <button data-i18n="buttons.nextQuiz" disabled id="next-quiz">
               Next Question
             </button>
             <button disabled data-i18n="buttons.skipQuiz" id="skip-quiz">Skip</button>
           </div>
 
+          <!-- Center: Mistake Counter -->
           <div class="control-group center-group">
             <div id="mistake-counter-container">
-              <button disabled id="add-mistake">+</button>
+              <button disabled id="add-mistake" aria-label="Add Mistake">+</button>
               <span data-i18n="labels.mistakes">Mistakes:</span>
-              <span id="mistake-count">999</span>
-              <button disabled id="subtract-mistake">-</button>
+              <span id="mistake-count">0</span>
+              <!-- Initialized to 0 instead of 999 for cleaner look -->
+              <button disabled id="subtract-mistake" aria-label="Subtract Mistake">
+                -
+              </button>
             </div>
           </div>
 
+          <!-- Right: Hint & Actions -->
           <div class="control-group right-group">
             <button data-i18n="buttons.hint" disabled id="hint">Hint</button>
-            <button disabled id="copy-ayah" class="icon-btn">
-              <img src="images/copy.png" alt="Copy" />
+            <button
+              disabled
+              id="copy-ayah"
+              class="icon-btn"
+              aria-label="Copy Ayah to Clipboard"
+            >
+              <img src="images/copy.png" alt="Copy Icon" />
             </button>
           </div>
         </div>
-        <div id="quiz-output" class="quran"></div>
+
+        <!-- Main Quran Text Output -->
+        <div id="quiz-output" class="quran" aria-live="polite"></div>
       </div>
     </div>
 
+    <!-- ==================================================================
+         DIALOGS & TEMPLATES
+         ================================================================== -->
+
+    <!-- Info Dialog -->
     <dialog id="info-dialog">
       <h2 data-i18n="information.title" id="dialog-title">Information</h2>
       <div
@@ -149,11 +237,13 @@
         data-i18n-paragraphs
         id="dialog-warning"
       ></div>
-      <button id="close-dialog">X</button>
+      <button id="close-dialog" aria-label="Close Dialog">X</button>
     </dialog>
 
+    <!-- Report Dialog (Populated dynamically) -->
     <dialog id="report-dialog"></dialog>
 
+    <!-- Question Report Template -->
     <template id="q-template">
       <div class="q-block">
         <h3 data-i18n="report.question" class="q-number"></h3>
@@ -164,6 +254,7 @@
       </div>
     </template>
 
+    <!-- Application Script -->
     <script type="module" src="dist/script.js"></script>
   </body>
 </html>

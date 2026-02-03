@@ -1,0 +1,58 @@
+/* ==========================================================================
+   LAYOUT STRUCTURE
+   ========================================================================== */
+
+/* Full-screen grid container */
+.container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent body scroll */
+}
+
+.container > * {
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Default Split (Desktop) */
+.container .card {
+  width: 350px;
+  flex-shrink: 0;
+}
+
+.container #quiz {
+  flex-grow: 1;
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* Switch to Vertical Flow */
+  .container {
+    flex-direction: column;
+    height: auto; /* Allow full page scrolling */
+    overflow: visible;
+    display: flex;
+  }
+
+  .container > * {
+    width: 100%;
+  }
+
+  /* Adjust Sidebar / Settings Layout */
+  .container .card {
+    width: 100%;
+    height: auto;
+    flex-shrink: 0;
+  }
+
+  body {
+    height: auto;
+    overflow-y: auto;
+  }
+}

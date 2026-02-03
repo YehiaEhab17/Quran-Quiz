@@ -1,0 +1,40 @@
+/* ==========================================================================
+   TOAST NOTIFICATIONS
+   ========================================================================== */
+
+@keyframes fade-in-out {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  10% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  90% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+}
+
+.toast-notification {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--accent-color);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  z-index: 2000;
+  font-weight: 600;
+  pointer-events: none;
+  animation: fade-in-out 2s ease forwards;
+}

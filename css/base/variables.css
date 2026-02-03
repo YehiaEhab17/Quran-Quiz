@@ -1,0 +1,139 @@
+/* ==========================================================================
+   VARIABLES & THEME
+   ========================================================================== */
+
+:root {
+  /* ====================
+     LIGHT MODE PALETTE
+     ==================== */
+
+  /* Sidebar (Left Panel) */
+  --sidebar-bg: #f8fafc; /* Very light slate/grey */
+  --sidebar-text: #334155; /* Dark slate for text */
+  --sidebar-input-bg: #ffffff;
+  --sidebar-border: #e2e8f0; /* Light border */
+
+  /* Content (Right Panel) */
+  --content-bg: #ffffff;
+  --content-text: #1e293b;
+
+  /* Accents */
+  --accent-color: #0d9488; /* Teal-700 - darker for visibility on light bg */
+  --accent-hover: #0f766e;
+  --accent-text: #ffffff;
+
+  /* Status */
+  --error-color: #ef4444; /* Red */
+  --error-color-dialog: #dc2626;
+
+  /* Global Settings */
+  --transition-speed: 0.2s;
+
+  /* Component Specific Variables (Extracted for separation) */
+  
+  /* Header */
+  --header-bg: var(--sidebar-bg);
+  --header-btn-bg: #ffffff;
+  --header-btn-border: var(--sidebar-border);
+  --header-btn-hover-bg: #f1f5f9;
+  --header-btn-filter: none;
+
+  /* Form/Inputs */
+  --label-color: #64748b; /* Slate 500 */
+  --input-focus-shadow: rgba(13, 148, 136, 0.15);
+
+  /* Quiz Controls */
+  --controls-bg: rgba(255, 255, 255, 0.95);
+  --controls-border: #e2e8f0;
+  
+  /* Control Buttons */
+  --controls-btn-bg: #ffffff;
+  --controls-btn-text: var(--content-text);
+  --controls-btn-border: #e2e8f0;
+  
+  --btn-disabled-bg: #f7fafc;
+  --btn-disabled-text: #cbd5e0;
+  --btn-disabled-border: #edf2f7;
+
+  /* Mistake Counter */
+  --mistake-bg: #f8fafc;
+  --mistake-border: #e2e8f0;
+  --mistake-text: inherit;
+  
+  --mistake-btn-bg: #ffffff;
+  --mistake-btn-border: #cbd5e0;
+  --mistake-btn-text: inherit;
+
+  /* Quiz Content */
+  --quran-text: #1a202c;
+
+  /* Dialogs */
+  --dialog-bg: #ffffff;
+  --dialog-text: inherit;
+  --close-icon-color: #718096;
+}
+
+/* ====================
+   DARK MODE PALETTE
+   ==================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Sidebar */
+    --sidebar-bg: #111827; /* Gray 900 */
+    --sidebar-text: #f3f4f6; /* Gray 100 */
+    --sidebar-input-bg: #1f2937; /* Gray 800 */
+    --sidebar-border: #374151; /* Gray 700 */
+
+    /* Content */
+    --content-bg: #030712; /* Gray 950 (Almost black) */
+    --content-text: #f9fafb;
+
+    /* Accent */
+    --accent-color: #14b8a6; /* Teal 500 */
+    --accent-hover: #0d9488;
+
+    --error-color: #ef4444; /* Red 500 */
+
+    /* Component Overrides */
+    
+    /* Header */
+    --header-bg: rgba(17, 24, 39, 0.8);
+    --header-btn-bg: transparent;
+    --header-btn-border: var(--sidebar-border);
+    --header-btn-hover-bg: rgba(255, 255, 255, 0.1);
+    --header-btn-filter: invert(1);
+
+    /* Form/Inputs */
+    --label-color: #9ca3af; /* Gray 400 */
+
+    /* Quiz Controls */
+    --controls-bg: rgba(3, 7, 18, 0.9);
+    --controls-border: #1f2937;
+
+    /* Control Buttons */
+    --controls-btn-bg: #1f2937;
+    --controls-btn-text: #e5e7eb;
+    --controls-btn-border: #374151;
+
+    --btn-disabled-bg: #111827;
+    --btn-disabled-text: #4b5563;
+    --btn-disabled-border: #374151;
+
+    /* Mistake Counter */
+    --mistake-bg: #1f2937;
+    --mistake-border: #374151;
+    --mistake-text: #f3f4f6;
+
+    --mistake-btn-bg: #111827;
+    --mistake-btn-border: #374151;
+    --mistake-btn-text: #e5e7eb;
+
+    /* Quiz Content */
+    --quran-text: #f9fafb;
+
+    /* Dialogs */
+    --dialog-bg: #1a202c;
+    --dialog-text: #ffffff;
+    --close-icon-color: #ffffff;
+  }
+}

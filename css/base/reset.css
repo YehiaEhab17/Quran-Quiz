@@ -1,0 +1,56 @@
+/* ==========================================================================
+   RESET & BASE STYLES
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%; /* Crucial for full screen layout */
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  background-color: var(--sidebar-bg); /* Prevents white flash */
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  text-align: left;
+}
+
+/* Custom Font Registration */
+@font-face {
+  font-family: "KFGQPC-Uthmanic";
+  src: url("../../fonts/KFGQPC Uthmanic Script HAFS Regular.otf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+/* Remove spinners from number inputs */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Helper Classes */
+.hidden {
+  display: none !important;
+}

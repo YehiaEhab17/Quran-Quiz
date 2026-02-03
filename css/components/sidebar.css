@@ -1,0 +1,194 @@
+/* ==========================================================================
+   SIDEBAR COMPONENT (Left Panel)
+   ========================================================================== */
+
+.card {
+  background-color: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  border-right: 1px solid var(--sidebar-border);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02); /* Softer shadow */
+  z-index: 20;
+  border-radius: 0;
+}
+
+/* Header */
+.card-header {
+  padding: 1rem;
+  background-color: var(--header-bg);
+  border-bottom: 1px solid var(--sidebar-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+/* Header Buttons */
+.header-btn {
+  background: var(--header-btn-bg);
+  border: 1px solid var(--header-btn-border);
+  border-radius: 6px;
+  padding: 0;
+  cursor: pointer;
+  filter: var(--header-btn-filter);
+  color: var(--sidebar-text);
+  width: 42px; /* Fixed square size */
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.header-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+.header-btn:hover {
+  background-color: var(--header-btn-hover-bg);
+  border-color: var(--accent-color);
+}
+
+/* Select Wrapper */
+.select-wrapper {
+  flex-grow: 1;
+}
+
+.select-wrapper select {
+  background-color: var(--sidebar-input-bg);
+  color: var(--sidebar-text);
+  border: 1px solid var(--sidebar-border);
+  padding: 0 1rem;
+  border-radius: 6px;
+  width: 100%;
+  height: 42px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* Form Styling */
+form#selection-form {
+  padding: 1.5rem;
+}
+
+.inputs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--label-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--sidebar-input-bg);
+  border: 1px solid var(--sidebar-border);
+  border-radius: 6px;
+  color: var(--sidebar-text);
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px var(--input-focus-shadow);
+}
+
+input:hover:not(:disabled) {
+  border-color: var(--accent-color);
+}
+
+input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Error Messages */
+.error-message {
+  color: var(--error-color);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  min-height: 1.2rem;
+  visibility: hidden;
+  display: block;
+}
+
+.error-message.visible {
+  visibility: visible;
+}
+
+/* Submit/Stop Buttons */
+button[type="submit"] {
+  background-color: var(--accent-color);
+  color: var(--accent-text);
+  border: none;
+  padding: 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 1rem;
+  transition: background var(--transition-speed);
+}
+
+button[type="submit"]:hover {
+  background-color: var(--accent-hover);
+}
+
+#stop-quiz {
+  background-color: var(--error-color);
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 1rem;
+  transition: background var(--transition-speed);
+}
+
+#stop-quiz:hover {
+  background-color: #dc2626; /* Darker red */
+}
+
+/* Mobile Overrides for Sidebar */
+@media (max-width: 768px) {
+  .card {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    border-right: none;
+    border-bottom: 1px solid var(--sidebar-border);
+  }
+
+  form#selection-form {
+    padding: 1rem;
+  }
+
+  .inputs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+}

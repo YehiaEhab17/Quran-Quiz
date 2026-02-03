@@ -110,12 +110,11 @@ export class QuizControls {
         showMore: this.getButton("show-more"),
         showLess: this.getButton("show-less"),
         nextQuiz: this.getButton("next-quiz"),
+        skipQuiz: this.getButton("skip-quiz"),
         copyAyah: this.getButton("copy-ayah"),
-        revealSurah: this.getButton("reveal-surah"),
-        revealAyah: this.getButton("reveal-ayah"),
+        hint: this.getButton("hint"),
     };
-    surahRevealed = false;
-    ayahRevealed = false;
+    hintRevealed = false;
     lastScrollTime = 0;
     constructor(display, report) {
         this.display = display;
@@ -126,10 +125,10 @@ export class QuizControls {
         this.disableAll(true);
         this.buttons.showMore.addEventListener("click", this.showMore);
         this.buttons.showLess.addEventListener("click", this.showLess);
-        this.buttons.nextQuiz.addEventListener("click", this.nextQuiz);
+        this.buttons.nextQuiz.addEventListener("click", () => this.nextQuiz());
+        this.buttons.skipQuiz.addEventListener("click", () => this.nextQuiz(true));
         this.buttons.copyAyah.addEventListener("click", this.copyAyah);
-        this.buttons.revealSurah.addEventListener("click", this.revealSurah);
-        this.buttons.revealAyah.addEventListener("click", this.revealAyah);
+        this.buttons.hint.addEventListener("click", this.hint);
         this.display.element.addEventListener("wheel", this.handleScroll.bind(this));
         window.addEventListener("quiz:started", () => {
             console.log("Quiz started.");
@@ -162,9 +161,7 @@ export class QuizControls {
         e.deltaY > 0 ? this.showMore() : this.showLess();
     };
     reset = () => {
-        this.buttons.revealSurah.textContent = getText("buttons.revealSurah");
-        this.buttons.revealAyah.textContent = getText("buttons.revealAyah");
-        this.buttons.copyAyah.textContent = getText("buttons.copyAyah");
+        this.buttons.hint.textContent = getText("buttons.hint");
     };
     showMore = () => {
         this.display.incrementIndex();
@@ -180,39 +177,42 @@ export class QuizControls {
             this.buttons.showLess.disabled = true;
         }
     };
-    nextQuiz = () => {
+    nextQuiz = (skip = false) => {
         if (!appState.Ruku)
             return;
         const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0];
-        this.report.addQuestion(surah, appState.Ruku, 2);
+        if (!skip)
+            this.report.addQuestion(surah, appState.Ruku, 2);
         this.reset();
         window.dispatchEvent(new CustomEvent("quiz:next"));
     };
     copyAyah = async () => {
-        if (this.display.text)
+        if (this.display.text) {
             await copyToClipboard(this.display.text);
-        this.buttons.copyAyah.textContent = getText("buttons.copied");
+            this.showToast(getText("buttons.copied"));
+        }
     };
-    revealSurah = () => {
-        this.surahRevealed = !this.surahRevealed;
+    showToast(message) {
+        const toast = document.createElement("div");
+        toast.className = "toast-notification";
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        toast.addEventListener("animationend", () => {
+            toast.remove();
+        });
+    }
+    hint = () => {
+        this.hintRevealed = !this.hintRevealed;
         if (!appState.Ruku)
             return;
-        if (this.surahRevealed) {
+        if (this.hintRevealed) {
             const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0];
-            let name = getCurrentLanguage() === "english" ? surah.english : surah.arabic;
-            this.buttons.revealSurah.textContent = `${name}`;
+            const name = getCurrentLanguage() === "english" ? surah.english : surah.arabic;
+            const ayahText = `${getText("dynamic.ayahPrefix")} ${appState.Ruku?.ayaat[0].ayah}`;
+            this.buttons.hint.textContent = `${name}, ${ayahText}`;
         }
         else {
-            this.buttons.revealSurah.textContent = getText("buttons.revealSurah");
-        }
-    };
-    revealAyah = () => {
-        this.ayahRevealed = !this.ayahRevealed;
-        if (this.ayahRevealed) {
-            this.buttons.revealAyah.textContent = `${getText("dynamic.ayahPrefix")} ${appState.Ruku?.ayaat[0].ayah}`;
-        }
-        else {
-            this.buttons.revealAyah.textContent = getText("buttons.revealAyah");
+            this.buttons.hint.textContent = getText("buttons.hint");
         }
     };
 }

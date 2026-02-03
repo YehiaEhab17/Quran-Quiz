@@ -616,3 +616,29 @@ input[type="number"]:focus {
     color: #fff;
   }
 }
+
+/* ============================================
+   11. TOAST NOTIFICATION
+   ============================================ */
+@keyframes fade-in-out {
+  0% { opacity: 0; transform: translate(-50%, 20px); }
+  10% { opacity: 1; transform: translate(-50%, 0); }
+  90% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -20px); }
+}
+
+.toast-notification {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  z-index: 2000;
+  font-weight: 600;
+  pointer-events: none;
+  animation: fade-in-out 2s ease forwards;
+}

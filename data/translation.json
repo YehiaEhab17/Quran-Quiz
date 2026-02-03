@@ -58,7 +58,7 @@
       "english": "Copy",
       "arabic": "نسخ"
     },
-    "revealSurah": {
+    "hint": {
       "english": "Hint (reveals surah and ayah)",
       "arabic": "مساعدة (يظهر اسم السورة ورقم الآية)"
     },

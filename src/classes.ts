@@ -134,13 +134,12 @@ export class QuizControls {
     showMore: this.getButton("show-more"),
     showLess: this.getButton("show-less"),
     nextQuiz: this.getButton("next-quiz"),
+    skipQuiz: this.getButton("skip-quiz"),
     copyAyah: this.getButton("copy-ayah"),
-    revealSurah: this.getButton("reveal-surah"),
-    revealAyah: this.getButton("reveal-ayah"),
+    hint: this.getButton("hint"),
   };
 
-  private surahRevealed: boolean = false;
-  private ayahRevealed: boolean = false;
+  private hintRevealed: boolean = false;
 
   private lastScrollTime: number = 0;
 
@@ -155,10 +154,10 @@ export class QuizControls {
     this.disableAll(true);
     this.buttons.showMore.addEventListener("click", this.showMore);
     this.buttons.showLess.addEventListener("click", this.showLess);
-    this.buttons.nextQuiz.addEventListener("click", this.nextQuiz);
+    this.buttons.nextQuiz.addEventListener("click", () => this.nextQuiz());
+    this.buttons.skipQuiz.addEventListener("click", () => this.nextQuiz(true));
     this.buttons.copyAyah.addEventListener("click", this.copyAyah);
-    this.buttons.revealSurah.addEventListener("click", this.revealSurah);
-    this.buttons.revealAyah.addEventListener("click", this.revealAyah);
+    this.buttons.hint.addEventListener("click", this.hint);
 
     this.display.element.addEventListener("wheel", this.handleScroll.bind(this));
     window.addEventListener("quiz:started", () => {
@@ -197,9 +196,7 @@ export class QuizControls {
   };
 
   private reset = () => {
-    this.buttons.revealSurah.textContent = getText("buttons.revealSurah");
-    this.buttons.revealAyah.textContent = getText("buttons.revealAyah");
-    this.buttons.copyAyah.textContent = getText("buttons.copyAyah");
+    this.buttons.hint.textContent = getText("buttons.hint");
   };
 
   private showMore = () => {
@@ -220,39 +217,44 @@ export class QuizControls {
     }
   };
 
-  private nextQuiz = () => {
+  private nextQuiz = (skip: boolean = false) => {
     if (!appState.Ruku) return;
 
     const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0];
-    this.report.addQuestion(surah, appState.Ruku, 2);
+    if (!skip) this.report.addQuestion(surah, appState.Ruku, 2);
     this.reset();
     window.dispatchEvent(new CustomEvent("quiz:next"));
   };
 
   private copyAyah = async () => {
-    if (this.display.text) await copyToClipboard(this.display.text);
-    this.buttons.copyAyah.textContent = getText("buttons.copied");
-  };
-
-  private revealSurah = () => {
-    this.surahRevealed = !this.surahRevealed;
-    if (!appState.Ruku) return;
-
-    if (this.surahRevealed) {
-      const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0];
-      let name = getCurrentLanguage() === "english" ? surah.english : surah.arabic;
-      this.buttons.revealSurah.textContent = `${name}`;
-    } else {
-      this.buttons.revealSurah.textContent = getText("buttons.revealSurah");
+    if (this.display.text) {
+      await copyToClipboard(this.display.text);
+      this.showToast(getText("buttons.copied"));
     }
   };
 
-  private revealAyah = () => {
-    this.ayahRevealed = !this.ayahRevealed;
-    if (this.ayahRevealed) {
-      this.buttons.revealAyah.textContent = `${getText("dynamic.ayahPrefix")} ${appState.Ruku?.ayaat[0].ayah}`;
+  private showToast(message: string) {
+    const toast = document.createElement("div");
+    toast.className = "toast-notification";
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    toast.addEventListener("animationend", () => {
+      toast.remove();
+    });
+  }
+
+  private hint = () => {
+    this.hintRevealed = !this.hintRevealed;
+    if (!appState.Ruku) return;
+
+    if (this.hintRevealed) {
+      const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0];
+      const name = getCurrentLanguage() === "english" ? surah.english : surah.arabic;
+      const ayahText = `${getText("dynamic.ayahPrefix")} ${appState.Ruku?.ayaat[0].ayah}`;
+      this.buttons.hint.textContent = `${name}, ${ayahText}`;
     } else {
-      this.buttons.revealAyah.textContent = getText("buttons.revealAyah");
+      this.buttons.hint.textContent = getText("buttons.hint");
     }
   };
 }

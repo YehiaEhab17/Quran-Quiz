@@ -257,7 +257,8 @@ export class AyahDisplay {
 
   setRuku(ruku: Ruku) {
     this.ruku = ruku;
-    this.currentAyahIndex = 0;
+    this.currentAyahIndex = this.ruku.startIndex || 0;
+
     this.updateDisplay();
   }
 
@@ -286,7 +287,6 @@ export class AyahDisplay {
   private updateDisplay() {
     if (!this.ruku) return;
     const ayaat = this.ruku.ayaat.slice(0, this.currentAyahIndex + 1);
-
     this.text = concatenateAyaat(ayaat);
     this.display.textContent = this.text;
   }

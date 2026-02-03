@@ -18,6 +18,7 @@ export interface Ayah {
 
 export interface Ruku {
   id: number;
+  startIndex?: number;
   ayaat: Ayah[];
 }
 

@@ -29,9 +29,13 @@ export function getRukuWithinRange(start, end) {
     const ruku = startRuku + Math.floor(Math.random() * (endRuku - startRuku + 1));
     return ruku;
 }
-export function getRuku(rukuNumber, ayaat) {
+export function getRuku(rukuNumber, ayaat, rukus) {
+    var _a;
     const ayaatInRuku = ayaat.filter((ayah) => ayah.ruku === rukuNumber);
-    return ayaatInRuku.length > 0 ? { id: rukuNumber, ayaat: ayaatInRuku } : undefined;
+    const startIndex = (_a = rukus[rukuNumber - 1]) === null || _a === void 0 ? void 0 : _a.startIndex;
+    return ayaatInRuku.length > 0
+        ? { id: rukuNumber, startIndex: startIndex, ayaat: ayaatInRuku }
+        : undefined;
 }
 const ARABIC_DIGITS = "٠١٢٣٤٥٦٧٨٩";
 const DIGIT_REGEX = /\d/g;

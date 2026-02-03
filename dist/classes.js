@@ -207,7 +207,7 @@ export class AyahDisplay {
     }
     setRuku(ruku) {
         this.ruku = ruku;
-        this.currentAyahIndex = 0;
+        this.currentAyahIndex = this.ruku.startIndex || 0;
         this.updateDisplay();
     }
     clear() {

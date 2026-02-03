@@ -50,9 +50,16 @@ export function getRukuWithinRange(start: Ayah, end: Ayah): number {
   return ruku;
 }
 
-export function getRuku(rukuNumber: number, ayaat: Ayah[]): Ruku | undefined {
+export function getRuku(
+  rukuNumber: number,
+  ayaat: Ayah[],
+  rukus: Ruku[],
+): Ruku | undefined {
   const ayaatInRuku = ayaat.filter((ayah) => ayah.ruku === rukuNumber);
-  return ayaatInRuku.length > 0 ? { id: rukuNumber, ayaat: ayaatInRuku } : undefined;
+  const startIndex = rukus[rukuNumber - 1]?.startIndex;
+  return ayaatInRuku.length > 0
+    ? { id: rukuNumber, startIndex: startIndex, ayaat: ayaatInRuku }
+    : undefined;
 }
 
 const ARABIC_DIGITS = "٠١٢٣٤٥٦٧٨٩";

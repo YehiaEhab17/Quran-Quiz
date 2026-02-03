@@ -1,5 +1,5 @@
 import { testGlobalIDMapping } from "./tests.js";
-import { Ayah, Surah } from "./types.js";
+import { Ayah, Surah, Ruku } from "./types.js";
 import { getRukuWithinRange, getRuku } from "./util.js";
 import { SurahAyahInputPair, QuizControls, AyahDisplay } from "./classes.js";
 import { setRuku, quizStarted, quizStopped } from "./state.js";
@@ -33,19 +33,22 @@ const closeDialog = document.getElementById("close-dialog") as HTMLButtonElement
 // --- DATA VARIABLES ---
 let suwar: Surah[] = [];
 let ayaat: Ayah[] = [];
+let rukus: Ruku[] = [];
 let display: AyahDisplay;
 
 // --- INITIALIZATION ---
 async function init() {
   await initTranslations();
 
-  const [suwarResp, ayaatResp] = await Promise.all([
+  const [suwarResp, ayaatResp, rukusResp] = await Promise.all([
     fetch("data/suwar.json"),
     fetch("data/ayaat.json"),
+    fetch("data/ruku_index.json"),
   ]);
 
   suwar = await suwarResp.json();
   ayaat = await ayaatResp.json();
+  rukus = await rukusResp.json();
 
   console.log("Data loaded successfully.");
 
@@ -150,7 +153,7 @@ function start(startPair: SurahAyahInputPair, endPair: SurahAyahInputPair) {
   }
 
   const rukuNumber = getRukuWithinRange(startAyah, endAyah);
-  const ruku = getRuku(rukuNumber, ayaat);
+  const ruku = getRuku(rukuNumber, ayaat, rukus);
   if (!ruku) {
     console.error(`No ruku found for number ${rukuNumber}.`);
     return;

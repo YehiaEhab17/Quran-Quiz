@@ -136,7 +136,7 @@
   color: var(--mistake-btn-text);
 }
 
-#mistake-counter-container button:hover {
+#mistake-counter-container button:hover:not(:disabled) {
   background-color: var(--sidebar-border); /* Subtle hover bg */
   border-color: var(--accent-color);
   color: var(--accent-color);

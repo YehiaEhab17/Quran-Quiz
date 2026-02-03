@@ -91,27 +91,48 @@
             </div>
           </div>
           <br />
-          <button data-i18n="buttons.startQuiz" type="submit" id="start-quiz">Start Quiz</button>
-          <button data-i18n="buttons.stopQuiz" type="button" id="stop-quiz" class="hidden">Stop Quiz</button>
+          <button data-i18n="buttons.startQuiz" type="submit" id="start-quiz">
+            Start Quiz
+          </button>
+          <button
+            data-i18n="buttons.stopQuiz"
+            type="button"
+            id="stop-quiz"
+            class="hidden"
+          >
+            Stop Quiz
+          </button>
           <div id="form-error" class="error-message"></div>
         </form>
       </div>
       <div id="quiz">
         <div id="quiz-controls">
-          <button data-i18n="buttons.showMore" disabled id="show-more">+</button>
-          <button data-i18n="buttons.showLess" disabled id="show-less">-</button>
-          <button data-i18n="buttons.nextQuiz" disabled id="next-quiz">
-            Next Question
-          </button>
-          <button data-i18n="buttons.copyAyah" disabled id="copy-ayah">
-            Copy Ayah
-          </button>
-          <button data-i18n="buttons.revealSurah" disabled id="reveal-surah">
-            Reveal Surah
-          </button>
-          <button data-i18n="buttons.revealAyah" disabled id="reveal-ayah">
-            Reveal Ayah
-          </button>
+          <div class="control-group left-group">
+            <button data-i18n="buttons.showMore" disabled id="show-more">+</button>
+            <button data-i18n="buttons.showLess" disabled id="show-less">-</button>
+            <button data-i18n="buttons.nextQuiz" disabled id="next-quiz">
+              Next Question
+            </button>
+            <button data-i18n="buttons.skipQuiz" disabled id="skip-quiz">Skip</button>
+          </div>
+
+          <div class="control-group center-group">
+            <div id="mistake-counter-container">
+              <button disabled id="add-mistake">+</button>
+              <span data-i18n="labels.mistakes">Mistakes:</span>
+              <span id="mistake-count">999</span>
+              <button disabled id="subtract-mistake">-</button>
+            </div>
+          </div>
+
+          <div class="control-group right-group">
+            <button data-i18n="buttons.revealSurah" disabled id="reveal-surah">
+              Hint
+            </button>
+            <button disabled id="copy-ayah" class="icon-btn">
+              <img src="images/copy.png" alt="Copy" />
+            </button>
+          </div>
         </div>
         <div id="quiz-output" class="quran"></div>
       </div>
@@ -132,6 +153,18 @@
       ></div>
       <button id="close-dialog">X</button>
     </dialog>
+
+    <dialog id="report-dialog"></dialog>
+
+    <template id="q-template">
+      <div class="q-block">
+        <h3 data-i18n="report.question" class="q-number"></h3>
+        <p data-i18n="report.surah" class="q-surah-number"></p>
+        <p data-i18n="report.fromAyah" class="q-ayah-range"></p>
+        <p data-i18n="report.mistakes" class="q-mistake-count"></p>
+        <hr />
+      </div>
+    </template>
 
     <script type="module" src="dist/script.js"></script>
   </body>

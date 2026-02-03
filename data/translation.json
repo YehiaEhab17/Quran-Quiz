@@ -23,6 +23,10 @@
     "endAyah": {
       "english": "End Ayah:",
       "arabic": "آية النهاية:"
+    },
+    "mistakes": {
+      "english": "Mistakes:",
+      "arabic": "الأخطاء:"
     }
   },
   "buttons": {
@@ -43,16 +47,20 @@
       "arabic": "-"
     },
     "nextQuiz": {
-      "english": "Next Question",
-      "arabic": "السؤال التالي"
+      "english": "Next",
+      "arabic": "التالي"
+    },
+    "skipQuiz": {
+      "english": "Skip",
+      "arabic": "تخطى"
     },
     "copyAyah": {
-      "english": "Copy Ayah",
-      "arabic": "نسخ الآية"
+      "english": "Copy",
+      "arabic": "نسخ"
     },
     "revealSurah": {
-      "english": "Reveal Surah",
-      "arabic": "إظهار السورة"
+      "english": "Hint (reveals surah and ayah)",
+      "arabic": "مساعدة (يظهر اسم السورة ورقم الآية)"
     },
     "revealAyah": {
       "english": "Reveal Ayah",
@@ -93,7 +101,7 @@
         "Click \"Start Quiz\" and you will be tested on this range",
         "Try to continue the Ayah from memory",
         "After you complete the second Ayah, press \"+\" to see the next one",
-        "When you have completed the test, press \"Next Question\" to see the next range"
+        "When you have completed the test, press \"Next\" to see the next range"
       ],
       "arabic": [
         "هذا اختبار يساعدك على مراجعة القرآن.",
@@ -101,7 +109,7 @@
         "اضغط على \"ابدأ الاختبار\" لبدء الاختبار على هذا النطاق.",
         "حاول إكمال الآية من حفظك.",
         "بعد إكمال الآية الثانية، اضغط على \"+\" لعرض الآية التالية.",
-        "عند الانتهاء من الاختبار، اضغط على \"السؤال التالي\" لعرض نطاق جديد."
+        "عند الانتهاء من الاختبار، اضغط على \"التالي\" لعرض نطاق جديد."
       ]
     },
     "warning": {
@@ -120,6 +128,10 @@
       "english": "Ayah",
       "arabic": "آية"
     },
+    "to": {
+      "english": "to",
+      "arabic": "إلى"
+    },
     "inputModes": {
       "ayah": {
         "english": "Ayah",
@@ -137,6 +149,33 @@
         "english": "Hizb",
         "arabic": "حزب"
       }
+    }
+  },
+  "report": {
+    "title": {
+      "english": "Quiz Report",
+      "arabic": "تقرير الاختبار"
+    },
+    "question": {
+      "english": "Question",
+      "arabic": "السؤال"
+    },
+    "surah": {
+      "english": "Surah:",
+      "arabic": "سورة:"
+    },
+    "fromAyah": {
+      "english": "From: ayah",
+      "arabic": "من: آية:"
+    },
+
+    "mistakes": {
+      "english": "Mistakes:",
+      "arabic": "الأخطاء:"
+    },
+    "totalMistakes": {
+      "english": "Total mistakes:",
+      "arabic": "مجموع الأخطاء:"
     }
   }
 }

@@ -2,16 +2,19 @@ import { populateDatalist, findSurah, findAyah, concatenateAyaat, clamp, copyToC
 import { appState } from "./state.js";
 import { getCurrentLanguage, getText } from "./translation.js";
 export class SurahAyahInputPair {
+    surahInput;
+    ayahInput;
+    suwar;
+    ayaat;
+    surahDatalist;
+    surahError;
+    ayahError;
     constructor(surahInput, ayahInput, suwar, ayaat, surahDatalist) {
         this.surahInput = surahInput;
         this.ayahInput = ayahInput;
         this.suwar = suwar;
         this.ayaat = ayaat;
         this.surahDatalist = surahDatalist;
-        this.disableAll = (state) => {
-            this.surahInput.disabled = state;
-            this.ayahInput.disabled = state;
-        };
         this.surahError = document.getElementById(`${this.surahInput.id}-error`);
         this.ayahError = document.getElementById(`${this.ayahInput.id}-error`);
         this.setupListeners();
@@ -88,94 +91,35 @@ export class SurahAyahInputPair {
         }
         return undefined;
     }
+    disableAll = (state) => {
+        this.surahInput.disabled = state;
+        this.ayahInput.disabled = state;
+    };
     verifyInputs() {
         this.validateSurah();
         this.validateAyah();
     }
 }
 export class QuizControls {
+    display;
+    report;
     getButton(id) {
         return document.getElementById(id);
     }
-    constructor(display) {
-        this.buttons = {
-            showMore: this.getButton("show-more"),
-            showLess: this.getButton("show-less"),
-            nextQuiz: this.getButton("next-quiz"),
-            copyAyah: this.getButton("copy-ayah"),
-            revealSurah: this.getButton("reveal-surah"),
-            revealAyah: this.getButton("reveal-ayah"),
-        };
-        this.surahRevealed = false;
-        this.ayahRevealed = false;
-        this.lastScrollTime = 0;
-        this.disableAll = (state) => {
-            Object.values(this.buttons).forEach((button) => {
-                button.disabled = state;
-            });
-        };
-        this.handleScroll = (e) => {
-            e.preventDefault();
-            if (!appState.Started)
-                return;
-            const now = Date.now();
-            if (now - this.lastScrollTime < 100)
-                return;
-            this.lastScrollTime = now;
-            e.deltaY > 0 ? this.showMore() : this.showLess();
-        };
-        this.reset = () => {
-            this.buttons.revealSurah.textContent = getText("buttons.revealSurah");
-            this.buttons.revealAyah.textContent = getText("buttons.revealAyah");
-            this.buttons.copyAyah.textContent = getText("buttons.copyAyah");
-        };
-        this.showMore = () => {
-            this.display.incrementIndex();
-            this.buttons.showLess.disabled = false;
-            if (this.display.index === this.display.maxAyaat - 1) {
-                this.buttons.showMore.disabled = true;
-            }
-        };
-        this.showLess = () => {
-            this.display.incrementIndex(true);
-            this.buttons.showMore.disabled = false;
-            if (this.display.index === 0) {
-                this.buttons.showLess.disabled = true;
-            }
-        };
-        this.nextQuiz = () => {
-            this.reset();
-            window.dispatchEvent(new CustomEvent("quiz:next"));
-        };
-        this.copyAyah = async () => {
-            if (this.display.text)
-                await copyToClipboard(this.display.text);
-            this.buttons.copyAyah.textContent = getText("buttons.copied");
-        };
-        this.revealSurah = () => {
-            this.surahRevealed = !this.surahRevealed;
-            if (!appState.Ruku)
-                return;
-            if (this.surahRevealed) {
-                const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0];
-                let name = getCurrentLanguage() === "english" ? surah.english : surah.arabic;
-                this.buttons.revealSurah.textContent = `${name}`;
-            }
-            else {
-                this.buttons.revealSurah.textContent = getText("buttons.revealSurah");
-            }
-        };
-        this.revealAyah = () => {
-            var _a;
-            this.ayahRevealed = !this.ayahRevealed;
-            if (this.ayahRevealed) {
-                this.buttons.revealAyah.textContent = `${getText("dynamic.ayahPrefix")} ${(_a = appState.Ruku) === null || _a === void 0 ? void 0 : _a.ayaat[0].ayah}`;
-            }
-            else {
-                this.buttons.revealAyah.textContent = getText("buttons.revealAyah");
-            }
-        };
+    buttons = {
+        showMore: this.getButton("show-more"),
+        showLess: this.getButton("show-less"),
+        nextQuiz: this.getButton("next-quiz"),
+        copyAyah: this.getButton("copy-ayah"),
+        revealSurah: this.getButton("reveal-surah"),
+        revealAyah: this.getButton("reveal-ayah"),
+    };
+    surahRevealed = false;
+    ayahRevealed = false;
+    lastScrollTime = 0;
+    constructor(display, report) {
         this.display = display;
+        this.report = report;
         this.setupListeners();
     }
     setupListeners() {
@@ -193,16 +137,92 @@ export class QuizControls {
             this.buttons.showLess.disabled = true;
         });
         window.addEventListener("quiz:stopped", () => {
+            if (!appState.Ruku)
+                return;
+            const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0];
+            this.report.addQuestion(surah, appState.Ruku, 2);
             this.disableAll(true);
             this.reset();
+            this.report.generateReport();
         });
     }
+    disableAll = (state) => {
+        Object.values(this.buttons).forEach((button) => {
+            button.disabled = state;
+        });
+    };
+    handleScroll = (e) => {
+        e.preventDefault();
+        if (!appState.Started)
+            return;
+        const now = Date.now();
+        if (now - this.lastScrollTime < 100)
+            return;
+        this.lastScrollTime = now;
+        e.deltaY > 0 ? this.showMore() : this.showLess();
+    };
+    reset = () => {
+        this.buttons.revealSurah.textContent = getText("buttons.revealSurah");
+        this.buttons.revealAyah.textContent = getText("buttons.revealAyah");
+        this.buttons.copyAyah.textContent = getText("buttons.copyAyah");
+    };
+    showMore = () => {
+        this.display.incrementIndex();
+        this.buttons.showLess.disabled = false;
+        if (this.display.index === this.display.maxAyaat) {
+            this.buttons.showMore.disabled = true;
+        }
+    };
+    showLess = () => {
+        this.display.incrementIndex(true);
+        this.buttons.showMore.disabled = false;
+        if (this.display.index === 0) {
+            this.buttons.showLess.disabled = true;
+        }
+    };
+    nextQuiz = () => {
+        if (!appState.Ruku)
+            return;
+        const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0];
+        this.report.addQuestion(surah, appState.Ruku, 2);
+        this.reset();
+        window.dispatchEvent(new CustomEvent("quiz:next"));
+    };
+    copyAyah = async () => {
+        if (this.display.text)
+            await copyToClipboard(this.display.text);
+        this.buttons.copyAyah.textContent = getText("buttons.copied");
+    };
+    revealSurah = () => {
+        this.surahRevealed = !this.surahRevealed;
+        if (!appState.Ruku)
+            return;
+        if (this.surahRevealed) {
+            const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0];
+            let name = getCurrentLanguage() === "english" ? surah.english : surah.arabic;
+            this.buttons.revealSurah.textContent = `${name}`;
+        }
+        else {
+            this.buttons.revealSurah.textContent = getText("buttons.revealSurah");
+        }
+    };
+    revealAyah = () => {
+        this.ayahRevealed = !this.ayahRevealed;
+        if (this.ayahRevealed) {
+            this.buttons.revealAyah.textContent = `${getText("dynamic.ayahPrefix")} ${appState.Ruku?.ayaat[0].ayah}`;
+        }
+        else {
+            this.buttons.revealAyah.textContent = getText("buttons.revealAyah");
+        }
+    };
 }
 export class AyahDisplay {
+    display;
+    ruku;
+    currentAyahIndex = 0;
+    text = "";
     constructor(display) {
         this.display = display;
-        this.currentAyahIndex = 0;
-        this.text = "";
         this.display = display;
     }
     setRuku(ruku) {
@@ -236,14 +256,15 @@ export class AyahDisplay {
         return this.display;
     }
     get maxAyaat() {
-        var _a, _b;
-        return ((_b = (_a = this.ruku) === null || _a === void 0 ? void 0 : _a.ayaat) === null || _b === void 0 ? void 0 : _b.length) ? this.ruku.ayaat.length - 1 : 0;
+        return this.ruku?.ayaat?.length ? this.ruku.ayaat.length - 1 : 0;
     }
     get index() {
         return this.currentAyahIndex;
     }
 }
 export class BasicInput {
+    input;
+    error;
     constructor(input) {
         this.input = input;
         this.error = document.getElementById(`${this.input.id}-error`);
@@ -271,6 +292,55 @@ export class BasicInput {
     get value() {
         const value = this.input.value;
         return parseInt(value);
+    }
+}
+export class QuizReport {
+    dialog;
+    questions;
+    constructor(dialog) {
+        this.dialog = dialog;
+        this.questions = [];
+    }
+    addQuestion(surah, ruku, mistakes) {
+        const question = { surah, ruku, mistakes };
+        this.questions.push(question);
+    }
+    generateReport() {
+        console.log(this.questions);
+        let report = new DocumentFragment();
+        const template = document.getElementById("q-template");
+        if (!template)
+            return;
+        let container = document.createElement("div");
+        container.classList.add("report-container");
+        report.appendChild(container);
+        const title = document.createElement("h1");
+        title.setAttribute("data-i18n", "report.title");
+        title.textContent = getText("report.title");
+        container.appendChild(title);
+        this.questions.forEach((question, i) => {
+            const clone = template.content.cloneNode(true);
+            const surahName = getCurrentLanguage() === "english"
+                ? question.surah.english
+                : question.surah.arabic;
+            const startAyah = question.ruku.ayaat[0].ayah;
+            const endAyah = question.ruku.ayaat.at(-1)?.ayah ?? 0;
+            clone.querySelector(".q-number").textContent =
+                `${getText("report.question")} ${i + 1}`;
+            clone.querySelector(".q-surah-number").textContent =
+                `${getText("report.surah")} ${surahName}`;
+            clone.querySelector(".q-ayah-range").textContent =
+                `${getText("report.fromAyah")} ${startAyah} ${getText("dynamic.to")} ${endAyah} `;
+            clone.querySelector(".q-mistake-count").textContent = `${getText("report.mistakes")} ${question.mistakes}`;
+            container.appendChild(clone);
+        });
+        this.dialog.innerHTML = "";
+        this.dialog.appendChild(report);
+        this.dialog.showModal();
+        this.clear();
+    }
+    clear() {
+        this.questions = [];
     }
 }
 //# sourceMappingURL=classes.js.map

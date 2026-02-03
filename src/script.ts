@@ -1,7 +1,12 @@
 import { testGlobalIDMapping } from "./tests.js";
 import { Ayah, Surah, Ruku } from "./types.js";
 import { getRukuWithinRange, getRuku } from "./util.js";
-import { SurahAyahInputPair, QuizControls, AyahDisplay } from "./classes.js";
+import {
+  SurahAyahInputPair,
+  QuizControls,
+  AyahDisplay,
+  QuizReport,
+} from "./classes.js";
 import { setRuku, quizStarted, quizStopped } from "./state.js";
 import {
   initTranslations,
@@ -30,11 +35,14 @@ const infoButton = document.getElementById("information") as HTMLButtonElement;
 const infoDialog = document.getElementById("info-dialog") as HTMLDialogElement;
 const closeDialog = document.getElementById("close-dialog") as HTMLButtonElement;
 
+const reportDialog = document.getElementById("report-dialog") as HTMLDialogElement;
+
 // --- DATA VARIABLES ---
 let suwar: Surah[] = [];
 let ayaat: Ayah[] = [];
 let rukus: Ruku[] = [];
 let display: AyahDisplay;
+let report: QuizReport;
 
 // --- INITIALIZATION ---
 async function init() {
@@ -59,7 +67,8 @@ async function init() {
 
   setUpEventListeners();
   display = new AyahDisplay(quizOutput);
-  new QuizControls(display);
+  report = new QuizReport(reportDialog);
+  new QuizControls(display, report);
 }
 
 function setUpEventListeners() {

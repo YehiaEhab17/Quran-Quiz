@@ -297,6 +297,7 @@ button[type="submit"]:hover {
 }
 
 /* Sticky Controls Bar */
+/* Sticky Controls Bar */
 #quiz-controls {
   position: sticky;
   top: 0;
@@ -304,20 +305,35 @@ button[type="submit"]:hover {
   backdrop-filter: blur(5px);
   border-bottom: 1px solid #e2e8f0;
   padding: 1rem;
-  display: flex; /* Changed from grid to flex */
-  flex-wrap: wrap; /* Allow wrapping only if absolutely necessary on mid-size */
-  gap: 1rem;
-  justify-content: space-between; /* Evenly distribute space */
-  align-items: center;
   z-index: 50;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  margin-bottom: 0;
-  min-height: 76px; /* 42px (buttons) + 32px (padding) + 2px (border) = 76px to match card-header */
+  min-height: 76px;
+
+  /* Single Grid Definition */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: stretch; /* This makes the middle counter fill the height */
+  gap: 1rem;
+  overflow: hidden;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.left-group,
+.right-group {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1;
+  /* Remove justify-content: flex-start/end */
 }
 
 #quiz-controls button {
-  padding: 0 1rem; /* Adjust horizontal padding, let height dictate vertical */
-  height: 42px; /* Fixed height to match sidebar inputs */
+  padding: 0 1rem;
+  height: 42px;
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 4px;
@@ -325,11 +341,83 @@ button[type="submit"]:hover {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
-  flex: 1; /* Grow to fill space evenly */
-  white-space: nowrap; /* Keep text on one line */
+
+  /* Clean flex logic */
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Left side items: Equal width */
+.left-group button {
+  flex: 1;
+  min-width: 0;
+  width: auto; /* Allow them to grow */
+}
+
+/* Right side items */
+#reveal-surah {
+  flex: 1; /* Equal space */
+  min-width: 0;
+  width: auto; /* Allow them to grow */
+}
+
+#copy-ayah {
+  flex: 0 0 42px !important; /* Fixed square */
+  padding: 0;
+  width: 42px !important;
+}
+
+#copy-ayah img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Mistake Counter */
+#mistake-counter-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+
+  /* Use a slightly different background to define the area */
+  background-color: #f8fafc;
+
+  /* Remove all borders except the ones separating it from the buttons */
+  border-left: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+  border-top: none;
+  border-bottom: none;
+  border-radius: 0;
+
+  /* The magic for full height */
+  height: calc(100% + 2rem); /* Offsets the 1rem top/bottom padding of parent */
+  margin: -1rem 0;
+  padding: 0 0.5rem;
+}
+
+#mistake-counter-container button {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  border: 1px solid #cbd5e0;
+  background: white;
+}
+
+#mistake-counter-container button:hover {
+  background-color: #e2e8f0;
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+#mistake-count {
+  font-weight: 600;
+  min-width: 1.5rem;
+  text-align: center;
 }
 
 #quiz-controls button:hover:not(:disabled) {
@@ -344,6 +432,8 @@ button[type="submit"]:hover {
   border-color: #edf2f7;
   cursor: not-allowed;
 }
+
+/* Remove duplicated Mistake Counter styles if any remain below... */
 
 /* Quiz Output Text */
 #quiz-output {
@@ -465,13 +555,14 @@ button[type="submit"]:hover {
     top: 0;
     padding: 0.75rem;
     display: grid; /* Switch back to grid for mobile buttons */
-    grid-template-columns: repeat(4, 1fr); /* Equal width buttons */
+    grid-template-columns: repeat(10, 1fr); /* 10 columns for granular control */
     justify-content: stretch;
     gap: 0.5rem;
     flex-shrink: 0;
     z-index: 10;
     background-color: var(--content-bg); /* Ensure opaque background */
     border-bottom: 1px solid #e2e8f0;
+    overflow: visible; /* Prevent clipping */
   }
 
   #quiz-controls button {
@@ -482,24 +573,70 @@ button[type="submit"]:hover {
     height: 42px;
   }
 
+  /* Flatten structure for mobile grid */
+  .control-group {
+    display: contents;
+  }
+
+  /* Reset left/right alignments from desktop */
+  .left-group,
+  .center-group,
+  .right-group {
+    justify-content: normal;
+  }
+
+  /* Specific override for copy button on mobile to fill grid cell */
+  #copy-ayah {
+    width: 100% !important;
+    margin: 0; /* Reset desktop auto margin */
+    flex: 0 0 42px !important; /* Reset flex */
+  }
+
   /* Grid placement for small screens */
   #show-more {
-    grid-column: 1;
+    grid-column: span 2;
+    order: 1;
   }
   #show-less {
-    grid-column: 2;
+    grid-column: span 2;
+    order: 2;
   }
   #next-quiz {
-    grid-column: 3;
+    grid-column: span 2;
+    order: 3;
+  }
+  #skip-quiz {
+    grid-column: span 2;
+    order: 4;
   }
   #copy-ayah {
-    grid-column: 4;
+    grid-column: span 2;
+    order: 5;
   }
   #reveal-surah {
-    grid-column: 1 / span 2;
+    grid-column: span 10; /* Full width */
+    order: 6;
   }
-  #reveal-ayah {
-    grid-column: 3 / span 2;
+  #mistake-counter-container {
+    grid-column: 1 / -1; /* Full width */
+    order: 8;
+    justify-content: center;
+    width: 100%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.25rem; /* Ensure it doesn't clip */
+    margin: 0; /* Reset desktop margin */
+    height: auto; /* Reset desktop height */
+    background: transparent; /* Remove desktop background if needed or keep it */
+    border: none; /* Remove border if needed */
+  }
+
+  /* Reset mistake buttons on mobile if specific override needed, 
+     but keeping them small (32px) from desktop rule is good. */
+  #mistake-counter-container button {
+    /* Ensure they don't stretch */
+    width: 32px !important;
+    height: 32px !important;
+    flex: 0 0 auto;
   }
 
   #quiz-output {
@@ -556,6 +693,23 @@ button[type="submit"]:hover {
   #quiz-controls {
     background-color: rgba(3, 7, 18, 0.9);
     border-bottom-color: #1f2937;
+  }
+
+  #mistake-counter-container {
+    background-color: #1f2937;
+    border-color: #374151;
+    color: #f3f4f6;
+  }
+
+  #mistake-counter-container button {
+    background-color: #111827;
+    border-color: #374151;
+    color: #e5e7eb;
+  }
+
+  #mistake-counter-container button:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
   }
 
   #quiz-controls button {

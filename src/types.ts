@@ -42,6 +42,7 @@ export interface TranslationData {
   };
   buttons: {
     startQuiz: TranslationItem;
+    stopQuiz: TranslationItem;
     showMore: TranslationItem;
     showLess: TranslationItem;
     nextQuiz: TranslationItem;
@@ -49,6 +50,7 @@ export interface TranslationData {
     revealSurah: TranslationItem;
     revealAyah: TranslationItem;
     copied: TranslationItem;
+    translate: TranslationItem;
   };
   errors: {
     invalidSurah: TranslationItem;
@@ -62,10 +64,27 @@ export interface TranslationData {
   };
   dynamic: {
     ayahPrefix: TranslationItem;
+    to: TranslationItem;
+
     inputModes: {
+      ayah: TranslationItem;
       surah: TranslationItem;
       juz: TranslationItem;
       hizb: TranslationItem;
     };
   };
+  report: {
+    title: TranslationItem;
+    question: TranslationItem;
+    surah: TranslationItem;
+    fromAyah: TranslationItem;
+    mistakes: TranslationItem;
+    totalMistakes: TranslationItem;
+  };
+}
+
+export interface QuestionReport {
+  surah: Surah;
+  ruku: Ruku;
+  mistakes: number;
 }

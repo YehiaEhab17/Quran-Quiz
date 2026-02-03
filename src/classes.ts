@@ -6,7 +6,7 @@ import {
   clamp,
   copyToClipboard,
 } from "./util.js";
-import { Ayah, Ruku, Surah } from "./types.js";
+import { Ayah, QuestionReport, Ruku, Surah } from "./types.js";
 import { appState } from "./state.js";
 import { getCurrentLanguage, getText } from "./translation.js";
 export class SurahAyahInputPair {
@@ -142,12 +142,12 @@ export class QuizControls {
   private surahRevealed: boolean = false;
   private ayahRevealed: boolean = false;
 
-  private display: AyahDisplay;
-
   private lastScrollTime: number = 0;
 
-  constructor(display: AyahDisplay) {
-    this.display = display;
+  constructor(
+    private display: AyahDisplay,
+    private report: QuizReport,
+  ) {
     this.setupListeners();
   }
 
@@ -168,8 +168,15 @@ export class QuizControls {
     });
 
     window.addEventListener("quiz:stopped", () => {
+      if (!appState.Ruku) return;
+
+      const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0];
+      this.report.addQuestion(surah, appState.Ruku, 2);
+
       this.disableAll(true);
       this.reset();
+
+      this.report.generateReport();
     });
   }
 
@@ -199,7 +206,7 @@ export class QuizControls {
     this.display.incrementIndex();
 
     this.buttons.showLess.disabled = false;
-    if (this.display.index === this.display.maxAyaat - 1) {
+    if (this.display.index === this.display.maxAyaat) {
       this.buttons.showMore.disabled = true;
     }
   };
@@ -214,6 +221,10 @@ export class QuizControls {
   };
 
   private nextQuiz = () => {
+    if (!appState.Ruku) return;
+
+    const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0];
+    this.report.addQuestion(surah, appState.Ruku, 2);
     this.reset();
     window.dispatchEvent(new CustomEvent("quiz:next"));
   };
@@ -339,5 +350,67 @@ export class BasicInput {
   get value(): number {
     const value = this.input.value;
     return parseInt(value);
+  }
+}
+
+export class QuizReport {
+  questions: QuestionReport[];
+
+  constructor(private dialog: HTMLDialogElement) {
+    this.questions = [];
+  }
+
+  addQuestion(surah: Surah, ruku: Ruku, mistakes: number) {
+    const question = { surah, ruku, mistakes };
+    this.questions.push(question);
+  }
+
+  generateReport() {
+    console.log(this.questions);
+
+    let report = new DocumentFragment();
+    const template = document.getElementById("q-template") as HTMLTemplateElement;
+    if (!template) return;
+
+    let container = document.createElement("div");
+    container.classList.add("report-container");
+    report.appendChild(container);
+
+    const title = document.createElement("h1");
+    title.setAttribute("data-i18n", "report.title");
+    title.textContent = getText("report.title");
+    container.appendChild(title);
+
+    this.questions.forEach((question, i) => {
+      const clone = template.content.cloneNode(true) as DocumentFragment;
+
+      const surahName =
+        getCurrentLanguage() === "english"
+          ? question.surah.english
+          : question.surah.arabic;
+      const startAyah = question.ruku.ayaat[0].ayah;
+      const endAyah = question.ruku.ayaat.at(-1)?.ayah ?? 0;
+
+      clone.querySelector(".q-number")!.textContent =
+        `${getText("report.question")} ${i + 1}`;
+      clone.querySelector(".q-surah-number")!.textContent =
+        `${getText("report.surah")} ${surahName}`;
+      clone.querySelector(".q-ayah-range")!.textContent =
+        `${getText("report.fromAyah")} ${startAyah} ${getText("dynamic.to")} ${endAyah} `;
+      clone.querySelector(".q-mistake-count")!.textContent = `${getText(
+        "report.mistakes",
+      )} ${question.mistakes}`;
+
+      container.appendChild(clone);
+    });
+
+    this.dialog.innerHTML = "";
+    this.dialog.appendChild(report);
+    this.dialog.showModal();
+
+    this.clear();
+  }
+  clear() {
+    this.questions = [];
   }
 }

@@ -30,9 +30,8 @@ export function getRukuWithinRange(start, end) {
     return ruku;
 }
 export function getRuku(rukuNumber, ayaat, rukus) {
-    var _a;
     const ayaatInRuku = ayaat.filter((ayah) => ayah.ruku === rukuNumber);
-    const startIndex = (_a = rukus[rukuNumber - 1]) === null || _a === void 0 ? void 0 : _a.startIndex;
+    const startIndex = rukus[rukuNumber - 1]?.startIndex;
     return ayaatInRuku.length > 0
         ? { id: rukuNumber, startIndex: startIndex, ayaat: ayaatInRuku }
         : undefined;

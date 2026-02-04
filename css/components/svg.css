@@ -1,0 +1,12 @@
+.svg-wrapper {
+  font-size: 1 0.5rem; /* Using rem or em here scales the '1em' SVG */
+  display: flex; /* Ensures the SVG behaves like a block inside the span */
+  align-items: center;
+  justify-content: center;
+  line-height: 0; /* Removes any extra vertical spacing from text alignment */
+}
+
+.svg-wrapper svg {
+  /* This ensures the icon doesn't shrink if the container gets tight */
+  flex-shrink: 0;
+}

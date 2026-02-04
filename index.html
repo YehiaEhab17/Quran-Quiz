@@ -40,7 +40,7 @@
         <!-- Header: Translate Button, Mode Select, Info Button -->
         <div class="card-header">
           <button id="translate" class="header-btn" aria-label="Translate">
-            <img src="images/globe.png" alt="Translate Icon" />
+            <span class="svg-wrapper" id="translate-icon"></span>
           </button>
 
           <div class="select-wrapper">
@@ -53,7 +53,7 @@
           </div>
 
           <button id="information" class="header-btn" aria-label="Information">
-            <img src="images/book-alert.png" alt="Info Icon" />
+            <span class="svg-wrapper" id="information-icon"></span>
           </button>
         </div>
 
@@ -207,7 +207,7 @@
               class="icon-btn"
               aria-label="Copy Ayah to Clipboard"
             >
-              <img src="images/copy.png" alt="Copy Icon" />
+              <span class="svg-wrapper" id="copy-icon"></span>
             </button>
           </div>
         </div>
@@ -253,6 +253,7 @@
     </template>
 
     <!-- Application Script -->
+    <script type="module" src="images/svg.js" defer></script>
     <script type="module" src="dist/script.js" defer></script>
   </body>
 </html>

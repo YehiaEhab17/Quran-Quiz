@@ -36,7 +36,7 @@ export class SurahAyahInputPair {
         populateDatalist(query, this.suwar, this.surahDatalist);
     }
     validateSurah() {
-        const results = findSurah(this.surahInput.value);
+        const results = findSurah(this.surahInput.value, this.suwar);
         if (results.length === 0) {
             this.surahInput.value = "";
             this.ayahInput.value = "";
@@ -103,6 +103,7 @@ export class SurahAyahInputPair {
 export class QuizControls {
     display;
     report;
+    suwar;
     getButton(id) {
         return document.getElementById(id);
     }
@@ -113,13 +114,18 @@ export class QuizControls {
         skipQuiz: this.getButton("skip-quiz"),
         copyAyah: this.getButton("copy-ayah"),
         hint: this.getButton("hint"),
+        addMistake: this.getButton("add-mistake"),
+        subtractMistake: this.getButton("subtract-mistake"),
     };
     hintRevealed = false;
     lastScrollTime = 0;
-    constructor(display, report) {
+    mistakeCounter;
+    constructor(display, report, suwar) {
         this.display = display;
         this.report = report;
+        this.suwar = suwar;
         this.setupListeners();
+        this.mistakeCounter = document.getElementById("mistake-count");
     }
     setupListeners() {
         this.disableAll(true);
@@ -129,6 +135,8 @@ export class QuizControls {
         this.buttons.skipQuiz.addEventListener("click", () => this.nextQuiz(true));
         this.buttons.copyAyah.addEventListener("click", this.copyAyah);
         this.buttons.hint.addEventListener("click", this.hint);
+        this.buttons.addMistake.addEventListener("click", () => this.incrementMistakes());
+        this.buttons.subtractMistake.addEventListener("click", () => this.incrementMistakes(true));
         this.display.element.addEventListener("wheel", this.handleScroll.bind(this));
         window.addEventListener("quiz:started", () => {
             console.log("Quiz started.");
@@ -138,13 +146,21 @@ export class QuizControls {
         window.addEventListener("quiz:stopped", () => {
             if (!appState.Ruku)
                 return;
-            const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0];
+            const surah = findSurah(appState.Ruku.ayaat[0].surah.toString(), this.suwar)[0];
             this.report.addQuestion(surah, appState.Ruku, 2);
             this.disableAll(true);
             this.reset();
             this.report.generateReport();
         });
     }
+    incrementMistakes = (decrement = false) => {
+        let val = parseInt(this.mistakeCounter.textContent);
+        val += decrement ? -1 : 1;
+        this.buttons.addMistake.disabled = val == 999;
+        this.buttons.subtractMistake.disabled = val === 0;
+        console.log(val);
+        this.mistakeCounter.textContent = clamp(0, val, 999).toString();
+    };
     disableAll = (state) => {
         Object.values(this.buttons).forEach((button) => {
             button.disabled = state;
@@ -162,30 +178,29 @@ export class QuizControls {
     };
     reset = () => {
         this.buttons.hint.textContent = getText("buttons.hint");
+        this.mistakeCounter.textContent = "0";
     };
     showMore = () => {
         this.display.incrementIndex();
-        this.buttons.showLess.disabled = false;
-        if (this.display.index === this.display.maxAyaat) {
-            this.buttons.showMore.disabled = true;
-        }
+        this.updateButtons();
     };
     showLess = () => {
         this.display.incrementIndex(true);
-        this.buttons.showMore.disabled = false;
-        if (this.display.index === 0) {
-            this.buttons.showLess.disabled = true;
-        }
+        this.updateButtons();
     };
     nextQuiz = (skip = false) => {
         if (!appState.Ruku)
             return;
-        const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0];
+        const surah = findSurah(appState.Ruku.ayaat[0].surah.toString(), this.suwar)[0];
         if (!skip)
             this.report.addQuestion(surah, appState.Ruku, 2);
         this.reset();
         window.dispatchEvent(new CustomEvent("quiz:next"));
     };
+    updateButtons() {
+        this.buttons.showMore.disabled = this.display.index === this.display.maxAyaat;
+        this.buttons.showLess.disabled = this.display.index === 0;
+    }
     copyAyah = async () => {
         if (this.display.text) {
             await copyToClipboard(this.display.text);
@@ -206,7 +221,7 @@ export class QuizControls {
         if (!appState.Ruku)
             return;
         if (this.hintRevealed) {
-            const surah = findSurah(appState.Ruku.ayaat[0].surah.toString())[0];
+            const surah = findSurah(appState.Ruku.ayaat[0].surah.toString(), this.suwar)[0];
             const name = getCurrentLanguage() === "english" ? surah.english : surah.arabic;
             const ayahText = `${getText("dynamic.ayahPrefix")} ${appState.Ruku?.ayaat[0].ayah}`;
             this.buttons.hint.textContent = `${name}, ${ayahText}`;

@@ -25,6 +25,7 @@ let ayaat = [];
 let rukus = [];
 let display;
 let report;
+let controls;
 // --- INITIALIZATION ---
 async function init() {
     await initTranslations();
@@ -44,7 +45,8 @@ async function init() {
     setUpEventListeners();
     display = new AyahDisplay(quizOutput);
     report = new QuizReport(reportDialog);
-    new QuizControls(display, report);
+    controls = new QuizControls(display, report, suwar);
+    console.log(display, controls, report);
 }
 function setUpEventListeners() {
     const startPair = new SurahAyahInputPair(startSurahInput, startAyahInput, suwar, ayaat, surahDatalist);

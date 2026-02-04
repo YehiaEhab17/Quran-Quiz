@@ -43,6 +43,7 @@ let ayaat: Ayah[] = [];
 let rukus: Ruku[] = [];
 let display: AyahDisplay;
 let report: QuizReport;
+let controls: QuizControls;
 
 // --- INITIALIZATION ---
 async function init() {
@@ -64,11 +65,11 @@ async function init() {
   if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
     test();
   }
-
   setUpEventListeners();
   display = new AyahDisplay(quizOutput);
   report = new QuizReport(reportDialog);
-  new QuizControls(display, report);
+  controls = new QuizControls(display, report, suwar);
+  console.log(display, controls, report);
 }
 
 function setUpEventListeners() {

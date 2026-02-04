@@ -120,6 +120,7 @@ export class QuizControls {
     hintRevealed = false;
     lastScrollTime = 0;
     mistakeCounter;
+    mistakeCount = 0;
     constructor(display, report, suwar) {
         this.display = display;
         this.report = report;
@@ -147,19 +148,17 @@ export class QuizControls {
             if (!appState.Ruku)
                 return;
             const surah = findSurah(appState.Ruku.ayaat[0].surah.toString(), this.suwar)[0];
-            this.report.addQuestion(surah, appState.Ruku, 2);
+            this.report.addQuestion(surah, appState.Ruku, this.mistakeCount);
             this.disableAll(true);
             this.reset();
             this.report.generateReport();
         });
     }
     incrementMistakes = (decrement = false) => {
-        let val = parseInt(this.mistakeCounter.textContent);
-        val += decrement ? -1 : 1;
-        this.buttons.addMistake.disabled = val == 999;
-        this.buttons.subtractMistake.disabled = val === 0;
-        console.log(val);
-        this.mistakeCounter.textContent = clamp(0, val, 999).toString();
+        this.mistakeCount = clamp(0, this.mistakeCount + (decrement ? -1 : 1), 999);
+        this.buttons.addMistake.disabled = this.mistakeCount == 999;
+        this.buttons.subtractMistake.disabled = this.mistakeCount === 0;
+        this.mistakeCounter.textContent = this.mistakeCount.toString();
     };
     disableAll = (state) => {
         Object.values(this.buttons).forEach((button) => {
@@ -179,6 +178,7 @@ export class QuizControls {
     reset = () => {
         this.buttons.hint.textContent = getText("buttons.hint");
         this.mistakeCounter.textContent = "0";
+        this.mistakeCount = 0;
     };
     showMore = () => {
         this.display.incrementIndex();
@@ -193,7 +193,7 @@ export class QuizControls {
             return;
         const surah = findSurah(appState.Ruku.ayaat[0].surah.toString(), this.suwar)[0];
         if (!skip)
-            this.report.addQuestion(surah, appState.Ruku, 2);
+            this.report.addQuestion(surah, appState.Ruku, this.mistakeCount);
         this.reset();
         window.dispatchEvent(new CustomEvent("quiz:next"));
     };
@@ -351,6 +351,12 @@ export class QuizReport {
         });
         this.dialog.innerHTML = "";
         this.dialog.appendChild(report);
+        const closeBtn = document.createElement("button");
+        closeBtn.id = "close-report-dialog";
+        closeBtn.textContent = "X";
+        closeBtn.setAttribute("aria-label", "Close Report");
+        closeBtn.addEventListener("click", () => this.dialog.close());
+        this.dialog.appendChild(closeBtn);
         this.dialog.showModal();
         this.clear();
     }

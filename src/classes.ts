@@ -146,6 +146,7 @@ export class QuizControls {
   private lastScrollTime: number = 0;
 
   private mistakeCounter: HTMLElement;
+  private mistakeCount: number = 0;
   constructor(
     private display: AyahDisplay,
     private report: QuizReport,
@@ -179,7 +180,7 @@ export class QuizControls {
       if (!appState.Ruku) return;
 
       const surah = findSurah(appState.Ruku.ayaat[0].surah.toString(), this.suwar)[0];
-      this.report.addQuestion(surah, appState.Ruku, 2);
+      this.report.addQuestion(surah, appState.Ruku, this.mistakeCount);
 
       this.disableAll(true);
       this.reset();
@@ -189,14 +190,12 @@ export class QuizControls {
   }
 
   private incrementMistakes = (decrement: boolean = false) => {
-    let val = parseInt(this.mistakeCounter.textContent);
+    this.mistakeCount = clamp(0, this.mistakeCount + (decrement ? -1 : 1), 999);
 
-    val += decrement ? -1 : 1;
+    this.buttons.addMistake.disabled = this.mistakeCount == 999;
+    this.buttons.subtractMistake.disabled = this.mistakeCount === 0;
 
-    this.buttons.addMistake.disabled = val == 999;
-    this.buttons.subtractMistake.disabled = val === 0;
-    console.log(val);
-    this.mistakeCounter.textContent = clamp(0, val, 999).toString();
+    this.mistakeCounter.textContent = this.mistakeCount.toString();
   };
 
   private disableAll = (state: boolean) => {
@@ -218,6 +217,7 @@ export class QuizControls {
   private reset = () => {
     this.buttons.hint.textContent = getText("buttons.hint");
     this.mistakeCounter.textContent = "0";
+    this.mistakeCount = 0;
   };
 
   private showMore = () => {
@@ -234,7 +234,7 @@ export class QuizControls {
     if (!appState.Ruku) return;
 
     const surah = findSurah(appState.Ruku.ayaat[0].surah.toString(), this.suwar)[0];
-    if (!skip) this.report.addQuestion(surah, appState.Ruku, 2);
+    if (!skip) this.report.addQuestion(surah, appState.Ruku, this.mistakeCount);
     this.reset();
     window.dispatchEvent(new CustomEvent("quiz:next"));
   };
@@ -425,6 +425,14 @@ export class QuizReport {
 
     this.dialog.innerHTML = "";
     this.dialog.appendChild(report);
+
+    const closeBtn = document.createElement("button");
+    closeBtn.id = "close-report-dialog";
+    closeBtn.textContent = "X";
+    closeBtn.setAttribute("aria-label", "Close Report");
+    closeBtn.addEventListener("click", () => this.dialog.close());
+    this.dialog.appendChild(closeBtn);
+
     this.dialog.showModal();
 
     this.clear();

@@ -31,7 +31,7 @@
 
 #close-dialog,
 #close-report-dialog {
-  position: absolute;
+  position: absolute; /* Kept absolute for #close-dialog */
   top: 1rem;
   inset-inline-end: 1rem;
   background: none;
@@ -40,6 +40,15 @@
   cursor: pointer;
   color: var(--close-icon-color);
   transition: color var(--transition-speed), text-shadow var(--transition-speed);
+}
+
+/* Make #close-report-dialog fixed relative to the viewport/dialog */
+#close-report-dialog {
+  position: sticky;
+  float: inline-end; /* Replaces float: right to be RTL aware */
+  top: 1rem;
+  margin-top: -1rem; /* Adjust for padding if needed */
+  z-index: 10;
 }
 
 #close-dialog:hover,
@@ -55,7 +64,7 @@
   box-shadow:
     0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  padding: 2rem;
+  padding: 0; /* Removed padding from dialog itself */
   max-width: 600px;
   width: 90%;
   max-height: 85vh;
@@ -63,6 +72,11 @@
   
   background-color: var(--dialog-bg);
   color: var(--dialog-text);
+}
+
+.report-content-wrapper {
+  padding: 2rem;
+  position: relative;
 }
 
 #report-dialog::backdrop {

@@ -170,8 +170,8 @@
     },
 
     "mistakes": {
-      "english": "Mistakes:",
-      "arabic": "الأخطاء:"
+      "english": "Mistakes: ",
+      "arabic": "الأخطاء: "
     },
     "totalMistakes": {
       "english": "Total mistakes:",

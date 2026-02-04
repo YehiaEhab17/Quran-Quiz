@@ -121,7 +121,6 @@
   border-radius: 0;
 
   height: calc(100% + 2rem); /* Offsets the 1rem top/bottom padding of parent */
-  margin: -1rem 0;
   padding: 0 0.5rem;
 }
 

@@ -1,6 +1,6 @@
 import { testGlobalIDMapping } from "./tests.js";
 import { Ayah, Surah, Ruku } from "./types.js";
-import { getRukuWithinRange, getRuku } from "./util.js";
+import { getRukuWithinRange, getRuku, addClickOutsideListener } from "./util.js";
 import {
   SurahAyahInputPair,
   QuizControls,
@@ -138,11 +138,7 @@ function setUpEventListeners() {
     infoDialog.close();
   });
 
-  infoDialog.addEventListener("click", (e) => {
-    if (e.target === infoDialog) {
-      infoDialog.close();
-    }
-  });
+  addClickOutsideListener(infoDialog);
 
   const inputModeSelect = document.getElementById("input-mode") as HTMLSelectElement;
   inputModeSelect.addEventListener("change", () => {

@@ -391,9 +391,21 @@ export class QuizReport {
     const template = document.getElementById("q-template") as HTMLTemplateElement;
     if (!template) return;
 
+    // Create a wrapper for content to manage padding and positioning relative to the sticky button
+    let wrapper = document.createElement("div");
+    wrapper.classList.add("report-content-wrapper");
+    report.appendChild(wrapper);
+
+    // Create Close Button (Sticky)
+    const closeBtn = document.createElement("button");
+    closeBtn.id = "close-report-dialog";
+    closeBtn.textContent = "X";
+    closeBtn.addEventListener("click", () => this.dialog.close());
+    wrapper.appendChild(closeBtn);
+
     let container = document.createElement("div");
     container.classList.add("report-container");
-    report.appendChild(container);
+    wrapper.appendChild(container);
 
     const title = document.createElement("h1");
     title.setAttribute("data-i18n", "report.title");
@@ -436,13 +448,6 @@ export class QuizReport {
 
     this.dialog.innerHTML = "";
     this.dialog.appendChild(report);
-
-    const closeBtn = document.createElement("button");
-    closeBtn.id = "close-report-dialog";
-    closeBtn.textContent = "X";
-    closeBtn.addEventListener("click", () => this.dialog.close());
-    this.dialog.appendChild(closeBtn);
-
     this.dialog.showModal();
 
     this.clear();

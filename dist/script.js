@@ -1,5 +1,5 @@
 import { testGlobalIDMapping } from "./tests.js";
-import { getRukuWithinRange, getRuku } from "./util.js";
+import { getRukuWithinRange, getRuku, addClickOutsideListener } from "./util.js";
 import { SurahAyahInputPair, QuizControls, AyahDisplay, QuizReport, } from "./classes.js";
 import { setRuku, quizStarted, quizStopped } from "./state.js";
 import { initTranslations, getText, getCurrentLanguage, setLanguage, } from "./translation.js";
@@ -89,11 +89,7 @@ function setUpEventListeners() {
     closeDialog.addEventListener("click", () => {
         infoDialog.close();
     });
-    infoDialog.addEventListener("click", (e) => {
-        if (e.target === infoDialog) {
-            infoDialog.close();
-        }
-    });
+    addClickOutsideListener(infoDialog);
     const inputModeSelect = document.getElementById("input-mode");
     inputModeSelect.addEventListener("change", () => {
         console.log(`Input mode changed to: ${inputModeSelect.value}`);

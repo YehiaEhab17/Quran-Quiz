@@ -1,5 +1,5 @@
 .svg-wrapper {
-  font-size: 1 0.5rem; /* Using rem or em here scales the '1em' SVG */
+  font-size: 1.5rem; /* Using rem or em here scales the '1em' SVG */
   display: flex; /* Ensures the SVG behaves like a block inside the span */
   align-items: center;
   justify-content: center;

@@ -26,6 +26,23 @@
   --error-color: #ef4444; /* Red */
   --error-color-dialog: #dc2626;
 
+  /* Card Status Colors */
+  --status-perfect-bg: #dcfce7;
+  --status-perfect-border: #86efac;
+  --status-perfect-text: #14532d;
+
+  --status-good-bg: #ecfccb;
+  --status-good-border: #bef264;
+  --status-good-text: #365314;
+
+  --status-okay-bg: #ffedd5;
+  --status-okay-border: #fdba74;
+  --status-okay-text: #7c2d12;
+
+  --status-bad-bg: #fee2e2;
+  --status-bad-border: #fca5a5;
+  --status-bad-text: #7f1d1d;
+
   /* Global Settings */
   --transition-speed: 0.2s;
 
@@ -93,6 +110,23 @@
     --accent-hover: #0d9488;
 
     --error-color: #ef4444; /* Red 500 */
+
+    /* Card Status Colors (Dark Mode) */
+    --status-perfect-bg: #064e3b;
+    --status-perfect-border: #065f46;
+    --status-perfect-text: #ecfdf5;
+
+    --status-good-bg: #365314;
+    --status-good-border: #3f6212;
+    --status-good-text: #ecfccb;
+
+    --status-okay-bg: #7c2d12;
+    --status-okay-border: #9a3412;
+    --status-okay-text: #ffedd5;
+
+    --status-bad-bg: #7f1d1d;
+    --status-bad-border: #991b1b;
+    --status-bad-text: #fee2e2;
 
     /* Component Overrides */
     

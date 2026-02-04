@@ -33,12 +33,19 @@
 #close-report-dialog {
   position: absolute;
   top: 1rem;
-  right: 1rem;
+  inset-inline-end: 1rem;
   background: none;
   border: none;
   font-size: 1.25rem;
   cursor: pointer;
   color: var(--close-icon-color);
+  transition: color var(--transition-speed), text-shadow var(--transition-speed);
+}
+
+#close-dialog:hover,
+#close-report-dialog:hover {
+  color: var(--error-color);
+  text-shadow: 0 0 8px var(--error-color);
 }
 
 /* Report Dialog Styles */
@@ -95,4 +102,45 @@
 
 .q-block hr {
   display: none;
+}
+
+/* Status variants for q-block */
+.q-block.perfect {
+  background-color: var(--status-perfect-bg);
+  border-color: var(--status-perfect-border);
+}
+
+.q-block.perfect h3,
+.q-block.perfect p {
+  color: var(--status-perfect-text);
+}
+
+.q-block.good {
+  background-color: var(--status-good-bg);
+  border-color: var(--status-good-border);
+}
+
+.q-block.good h3,
+.q-block.good p {
+  color: var(--status-good-text);
+}
+
+.q-block.okay {
+  background-color: var(--status-okay-bg);
+  border-color: var(--status-okay-border);
+}
+
+.q-block.okay h3,
+.q-block.okay p {
+  color: var(--status-okay-text);
+}
+
+.q-block.bad {
+  background-color: var(--status-bad-bg);
+  border-color: var(--status-bad-border);
+}
+
+.q-block.bad h3,
+.q-block.bad p {
+  color: var(--status-bad-text);
 }

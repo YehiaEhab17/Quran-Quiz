@@ -187,12 +187,14 @@
           <!-- Center: Mistake Counter -->
           <div class="control-group center-group">
             <div id="mistake-counter-container">
-              <button disabled id="add-mistake" aria-label="Add Mistake">+</button>
-              <span data-i18n="labels.mistakes">Mistakes:</span>
-              <span id="mistake-count">0</span>
               <button disabled id="subtract-mistake" aria-label="Subtract Mistake">
                 -
               </button>
+              <div class="mistake-text">
+                <span data-i18n="labels.mistakes">Mistakes:</span>
+                <span id="mistake-count">0</span>
+              </div>
+              <button disabled id="add-mistake" aria-label="Add Mistake">+</button>
             </div>
           </div>
 
@@ -248,7 +250,6 @@
         <p data-i18n="report.surah" class="q-surah-number"></p>
         <p data-i18n="report.fromAyah" class="q-ayah-range"></p>
         <p data-i18n="report.mistakes" class="q-mistake-count"></p>
-        <hr />
       </div>
     </template>
 

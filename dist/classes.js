@@ -335,6 +335,11 @@ export class QuizReport {
         container.appendChild(title);
         this.questions.forEach((question, i) => {
             const clone = template.content.cloneNode(true);
+            const thresholds = [
+                { limit: 0, style: "perfect" },
+                { limit: 0.5, style: "good" },
+                { limit: 1, style: "okay" },
+            ];
             const surahName = getCurrentLanguage() === "english"
                 ? question.surah.english
                 : question.surah.arabic;
@@ -347,6 +352,9 @@ export class QuizReport {
             clone.querySelector(".q-ayah-range").textContent =
                 `${getText("report.fromAyah")} ${startAyah} ${getText("dynamic.to")} ${endAyah} `;
             clone.querySelector(".q-mistake-count").textContent = `${getText("report.mistakes")} ${question.mistakes}`;
+            const score = question.mistakes / question.ruku.ayaat.length;
+            const style = thresholds.find((t) => score <= t.limit)?.style ?? "bad";
+            clone.querySelector(".q-block")?.classList.add(style);
             container.appendChild(clone);
         });
         this.dialog.innerHTML = "";
@@ -354,7 +362,6 @@ export class QuizReport {
         const closeBtn = document.createElement("button");
         closeBtn.id = "close-report-dialog";
         closeBtn.textContent = "X";
-        closeBtn.setAttribute("aria-label", "Close Report");
         closeBtn.addEventListener("click", () => this.dialog.close());
         this.dialog.appendChild(closeBtn);
         this.dialog.showModal();

@@ -1,12 +1,16 @@
 import { testGlobalIDMapping } from "./tests.js";
 import { getRukuWithinRange, getRuku, addClickOutsideListener } from "./util.js";
-import { SurahAyahInputPair, QuizControls, AyahDisplay, QuizReport, } from "./classes.js";
+import { QuizInputPair, QuizControls, AyahDisplay, QuizReport, } from "./classes.js";
 import { setRuku, quizStarted, quizStopped } from "./state.js";
-import { initTranslations, getText, getCurrentLanguage, setLanguage, } from "./translation.js";
+import { initTranslations, getText, getCurrentLanguage, setLanguage, updatePage, } from "./translation.js";
 // --- DOM ELEMENTS ---
-const startSurahInput = document.getElementById("start-surah");
+const inputMode = document.getElementById("input-mode");
+const ayahInputs = document.getElementById("ayah-inputs");
+const labelOne = document.getElementById("start-label");
+const labelTwo = document.getElementById("end-label");
+const startInput = document.getElementById("start-input");
 const startAyahInput = document.getElementById("start-ayah");
-const endSurahInput = document.getElementById("end-surah");
+const endInput = document.getElementById("end-input");
 const endAyahInput = document.getElementById("end-ayah");
 const userInput = document.getElementById("selection-form");
 const surahDatalist = document.getElementById("surah-names");
@@ -26,6 +30,9 @@ let rukus = [];
 let display;
 let report;
 let controls;
+let startPair;
+let endPair;
+let inputType = inputMode.value;
 // --- INITIALIZATION ---
 async function init() {
     await initTranslations();
@@ -42,19 +49,30 @@ async function init() {
     if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
         test();
     }
-    setUpEventListeners();
+    // Initialize Classes
     display = new AyahDisplay(quizOutput);
     report = new QuizReport(reportDialog);
     controls = new QuizControls(display, report, suwar);
+    startPair = new QuizInputPair(startInput, startAyahInput, suwar, ayaat, surahDatalist, "start");
+    endPair = new QuizInputPair(endInput, endAyahInput, suwar, ayaat, surahDatalist, "end");
+    setupFormListeners();
+    setupControlListeners();
+    setupGlobalListeners();
+    setupDialogListeners();
     console.log(display, controls, report);
 }
-function setUpEventListeners() {
-    const startPair = new SurahAyahInputPair(startSurahInput, startAyahInput, suwar, ayaat, surahDatalist);
-    const endPair = new SurahAyahInputPair(endSurahInput, endAyahInput, suwar, ayaat, surahDatalist);
+function setupFormListeners() {
     userInput.addEventListener("submit", (event) => {
         event.preventDefault();
-        start(startPair, endPair);
+        start();
     });
+    inputMode.addEventListener("change", () => {
+        inputType = inputMode.value;
+        updateInputs();
+    });
+    updateInputs();
+}
+function setupControlListeners() {
     stopQuizButton.addEventListener("click", () => {
         quizStopped();
         display.clear();
@@ -62,12 +80,15 @@ function setUpEventListeners() {
         formError.textContent = "";
         stopQuizButton.classList.add("hidden");
         startQuizButton.classList.remove("hidden");
+        inputMode.disabled = false;
     });
     translateButton.addEventListener("click", () => {
         getCurrentLanguage() === "english"
             ? setLanguage("arabic")
             : setLanguage("english");
     });
+}
+function setupGlobalListeners() {
     window.addEventListener("ruku:change", (e) => {
         const customEvent = e;
         const ruku = customEvent.detail;
@@ -75,7 +96,7 @@ function setUpEventListeners() {
         display.setRuku(ruku);
     });
     window.addEventListener("quiz:next", () => {
-        start(startPair, endPair);
+        start();
     });
     window.addEventListener("translated", () => {
         startPair.hideErrors();
@@ -83,6 +104,8 @@ function setUpEventListeners() {
         formError.classList.remove("visible");
         formError.textContent = "";
     });
+}
+function setupDialogListeners() {
     infoButton.addEventListener("click", () => {
         infoDialog.showModal();
     });
@@ -90,12 +113,30 @@ function setUpEventListeners() {
         infoDialog.close();
     });
     addClickOutsideListener(infoDialog);
-    const inputModeSelect = document.getElementById("input-mode");
-    inputModeSelect.addEventListener("change", () => {
-        console.log(`Input mode changed to: ${inputModeSelect.value}`);
-    });
 }
-function start(startPair, endPair) {
+function updateInputs() {
+    ayahInputs.classList.toggle("hide", inputType !== "ayah");
+    const mode = inputType;
+    startPair.setMode(mode);
+    endPair.setMode(mode);
+    switch (inputType) {
+        case "ayah":
+        case "surah":
+            labelOne.dataset.i18n = "labels.startSurah";
+            labelTwo.dataset.i18n = "labels.endSurah";
+            break;
+        case "juz":
+            labelOne.dataset.i18n = "labels.startJuz";
+            labelTwo.dataset.i18n = "labels.endJuz";
+            break;
+        case "hizb":
+            labelOne.dataset.i18n = "labels.startHizb";
+            labelTwo.dataset.i18n = "labels.endHizb";
+            break;
+    }
+    updatePage();
+}
+function start() {
     startPair.verifyInputs();
     endPair.verifyInputs();
     let startAyah = startPair.getAyah();
@@ -113,6 +154,7 @@ function start(startPair, endPair) {
     quizStarted();
     startQuizButton.classList.add("hidden");
     stopQuizButton.classList.remove("hidden");
+    inputMode.disabled = true;
     const ayah = ruku.ayaat[0];
     if (endAyah.id < startAyah.id) {
         [startAyah, endAyah] = [endAyah, startAyah];

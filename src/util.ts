@@ -23,6 +23,16 @@ export function findAyah(
   return ayaat.find((a) => a.surah === surahNumber && a.ayah === ayahNumber);
 }
 
+export function getBounds(
+  mode: "surah" | "juz" | "hizb",
+  val: number,
+  ayaat: Ayah[],
+): { start: Ayah; end: Ayah } | undefined {
+  const matches = ayaat.filter((a) => a[mode] === val);
+  if (matches.length === 0) return undefined;
+  return { start: matches[0], end: matches[matches.length - 1] };
+}
+
 export function populateDatalist(
   query: string,
   suwar: Surah[],

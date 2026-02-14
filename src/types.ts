@@ -37,8 +37,13 @@ export interface TranslationData {
   labels: {
     startSurah: TranslationItem;
     startAyah: TranslationItem;
+    startJuz: TranslationItem;
+    startHizb: TranslationItem;
     endSurah: TranslationItem;
     endAyah: TranslationItem;
+    endJuz: TranslationItem;
+    endHizb: TranslationItem;
+    mistakes: TranslationItem;
   };
   buttons: {
     startQuiz: TranslationItem;
@@ -46,14 +51,17 @@ export interface TranslationData {
     showMore: TranslationItem;
     showLess: TranslationItem;
     nextQuiz: TranslationItem;
+    skipQuiz: TranslationItem;
     copyAyah: TranslationItem;
-    revealSurah: TranslationItem;
+    hint: TranslationItem;
     revealAyah: TranslationItem;
     copied: TranslationItem;
     translate: TranslationItem;
   };
   errors: {
     invalidSurah: TranslationItem;
+    invalidJuz: TranslationItem;
+    invalidHizb: TranslationItem;
     invalidAyahRange: TranslationItem;
     swappedAyahs: TranslationItem;
   };
@@ -61,6 +69,7 @@ export interface TranslationData {
     title: TranslationItem;
     content: TranslationParagraph;
     warning: TranslationParagraph;
+    feedback: TranslationItem;
   };
   dynamic: {
     ayahPrefix: TranslationItem;

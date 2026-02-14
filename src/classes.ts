@@ -5,30 +5,34 @@ import {
   concatenateAyaat,
   clamp,
   copyToClipboard,
+  getBounds,
 } from "./util.js";
 import { Ayah, QuestionReport, Ruku, Surah } from "./types.js";
 import { appState } from "./state.js";
 import { getCurrentLanguage, getText } from "./translation.js";
-export class SurahAyahInputPair {
-  private surahError: HTMLElement;
+
+export class QuizInputPair {
+  private primaryError: HTMLElement;
   private ayahError: HTMLElement;
+  private mode: "ayah" | "surah" | "juz" | "hizb" = "ayah";
 
   constructor(
-    private surahInput: HTMLInputElement,
+    private primaryInput: HTMLInputElement,
     private ayahInput: HTMLInputElement,
     private suwar: Surah[],
     private ayaat: Ayah[],
-    private surahDatalist: HTMLDataListElement,
+    private datalist: HTMLDataListElement,
+    private type: "start" | "end",
   ) {
-    this.surahError = document.getElementById(`${this.surahInput.id}-error`)!;
+    this.primaryError = document.getElementById(`${this.primaryInput.id}-error`)!;
     this.ayahError = document.getElementById(`${this.ayahInput.id}-error`)!;
     this.setupListeners();
   }
 
   private setupListeners() {
-    this.surahInput.addEventListener("focus", this.handleFocus.bind(this));
-    this.surahInput.addEventListener("blur", this.validateSurah.bind(this));
-    this.surahInput.addEventListener("input", this.handleSurahInput.bind(this));
+    this.primaryInput.addEventListener("focus", this.handleFocus.bind(this));
+    this.primaryInput.addEventListener("blur", this.validateFirstInput.bind(this));
+    this.primaryInput.addEventListener("input", this.handlePrimaryInput.bind(this));
 
     this.ayahInput.addEventListener("input", this.validateAyah.bind(this));
 
@@ -36,37 +40,92 @@ export class SurahAyahInputPair {
     window.addEventListener("quiz:stopped", () => this.disableAll(false));
   }
 
+  setMode(mode: "ayah" | "surah" | "juz" | "hizb") {
+    this.mode = mode;
+    this.primaryInput.value = "";
+    this.ayahInput.value = "";
+    this.hideErrors();
+
+    if (this.mode === "juz" || this.mode === "hizb") {
+      this.primaryInput.type = "number";
+      this.primaryInput.removeAttribute("list");
+      this.primaryInput.min = "1";
+      this.primaryInput.max = this.mode === "juz" ? "30" : "240";
+    } else {
+      this.primaryInput.type = "text";
+      this.primaryInput.setAttribute("list", "surah-names");
+    }
+
+    if (this.mode === "ayah") {
+      this.ayahInput.setAttribute("required", "");
+    } else {
+      this.ayahInput.removeAttribute("required");
+    }
+  }
+
   private handleFocus() {
-    this.surahInput.select();
-    populateDatalist("", this.suwar, this.surahDatalist);
+    if (this.mode === "ayah" || this.mode === "surah") {
+      this.primaryInput.select();
+      populateDatalist("", this.suwar, this.datalist);
+    }
   }
 
-  private handleSurahInput() {
-    const query = this.surahInput.value.trim().toLowerCase();
-    populateDatalist(query, this.suwar, this.surahDatalist);
+  private handlePrimaryInput() {
+    if (this.mode === "ayah" || this.mode === "surah") {
+      const query = this.primaryInput.value.trim().toLowerCase();
+      populateDatalist(query, this.suwar, this.datalist);
+    } else {
+      this.validateNumber();
+    }
   }
 
-  private validateSurah() {
-    const results = findSurah(this.surahInput.value, this.suwar);
+  private validateFirstInput() {
+    if (this.mode === "ayah" || this.mode === "surah") {
+      this.validateSurah();
+    } else {
+      this.validateNumber();
+    }
+  }
 
-    if (results.length === 0) {
-      this.surahInput.value = "";
-      this.ayahInput.value = "";
-      this.ayahInput.disabled = true;
-      this.showError(this.surahError, getText("errors.invalidSurah"));
+  private validateNumber() {
+    const val = parseInt(this.primaryInput.value);
+    const max = this.mode === "juz" ? 30 : 240;
+
+    if (isNaN(val)) {
+      const msgKey = this.mode === "juz" ? "errors.invalidJuz" : "errors.invalidHizb";
+      this.showError(this.primaryError, getText(msgKey));
       return;
     }
 
-    this.surahInput.value = results[0].display;
-    this.surahInput.dataset.number = results[0].number.toString();
+    this.primaryInput.value = clamp(1, val, max).toString();
+    this.hideError(this.primaryError);
+  }
+
+  private validateSurah() {
+    const results = findSurah(this.primaryInput.value, this.suwar);
+
+    if (results.length === 0) {
+      this.primaryInput.value = "";
+      this.ayahInput.value = "";
+      this.ayahInput.disabled = true;
+      this.showError(this.primaryError, getText("errors.invalidSurah"));
+      return;
+    }
+
+    this.primaryInput.value = results[0].display;
+    this.primaryInput.dataset.number = results[0].number.toString();
     this.ayahInput.disabled = false;
     this.ayahInput.max = results[0].length.toString();
-    this.hideError(this.surahError);
+    this.hideError(this.primaryError);
 
-    this.validateAyah();
+    if (this.mode === "ayah") {
+      this.validateAyah();
+    }
   }
 
   private validateAyah() {
+    if (this.mode !== "ayah") return;
+
     const value = this.ayahInput.value;
     this.ayahInput.value = value.replace(/[^0-9]/g, "");
 
@@ -93,12 +152,12 @@ export class SurahAyahInputPair {
   }
 
   hideErrors() {
-    this.hideError(this.surahError);
+    this.hideError(this.primaryError);
     this.hideError(this.ayahError);
   }
 
   getSurahID(): number | null {
-    const value = this.surahInput.dataset.number;
+    const value = this.primaryInput.dataset.number;
     return value ? parseInt(value) : null;
   }
   getLocalAyahID(): number | null {
@@ -106,22 +165,39 @@ export class SurahAyahInputPair {
     return value ? parseInt(value) : null;
   }
   getAyah(): Ayah | undefined {
-    const surahID = this.getSurahID();
-    const localAyahID = this.getLocalAyahID();
-    if (surahID && localAyahID) {
-      return findAyah(surahID, localAyahID, this.ayaat);
+    if (this.mode === "ayah") {
+      const surahID = this.primaryInput.dataset.number
+        ? parseInt(this.primaryInput.dataset.number)
+        : null;
+      const localAyahID = this.ayahInput.value ? parseInt(this.ayahInput.value) : null;
+      if (surahID && localAyahID) {
+        return findAyah(surahID, localAyahID, this.ayaat);
+      }
+      return undefined;
     }
-    return undefined;
+
+    let val: number;
+    if (this.mode === "surah") {
+      val = this.primaryInput.dataset.number
+        ? parseInt(this.primaryInput.dataset.number)
+        : NaN;
+    } else {
+      val = parseInt(this.primaryInput.value);
+    }
+
+    if (isNaN(val)) return undefined;
+
+    const bounds = getBounds(this.mode, val, this.ayaat);
+    return bounds ? bounds[this.type] : undefined;
   }
 
   private disableAll = (state: boolean) => {
-    this.surahInput.disabled = state;
+    this.primaryInput.disabled = state;
     this.ayahInput.disabled = state;
   };
 
   verifyInputs(): void {
-    this.validateSurah();
-    this.validateAyah();
+    this.validateFirstInput();
   }
 }
 
@@ -403,8 +479,17 @@ export class QuizReport {
     closeBtn.addEventListener("click", () => this.dialog.close());
     wrapper.appendChild(closeBtn);
 
+    // Create Download Button (Sticky)
+    const downloadBtn = document.createElement("button");
+    downloadBtn.id = "download-report-btn";
+    downloadBtn.title = "Download Report";
+    downloadBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download-icon lucide-download"><path d="M12 15V3" data--h-bstatus="0OBSERVED"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" data--h-bstatus="0OBSERVED"/><path d="m7 10 5 5 5-5" data--h-bstatus="0OBSERVED"/></svg>`;
+    downloadBtn.addEventListener("click", () => this.downloadReport());
+    wrapper.appendChild(downloadBtn);
+
     let container = document.createElement("div");
     container.classList.add("report-container");
+    container.id = "quiz-report"; // ID for html2canvas
     wrapper.appendChild(container);
 
     const title = document.createElement("h1");
@@ -452,6 +537,31 @@ export class QuizReport {
 
     this.clear();
   }
+
+  async downloadReport() {
+    const reportElement = document.getElementById("quiz-report");
+
+    if (!reportElement) return;
+
+    try {
+      // @ts-ignore
+      const canvas = await window.html2canvas(reportElement, {
+        scale: 2,
+        backgroundColor:
+          getComputedStyle(document.body).getPropertyValue("--dialog-bg") || "#ffffff",
+      } as any);
+
+      const link = document.createElement("a");
+      link.download = `quran-quiz-report-${
+        new Date().toISOString().split("T")[0]
+      }.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch (error) {
+      console.error("Failed to generate report image:", error);
+    }
+  }
+
   clear() {
     this.questions = [];
   }

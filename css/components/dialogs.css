@@ -51,10 +51,30 @@
   z-index: 10;
 }
 
+#download-report-btn {
+  position: sticky;
+  float: inline-start;
+  top: 1rem;
+  margin-top: -1rem;
+  z-index: 10;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: var(--close-icon-color);
+  transition: color var(--transition-speed), text-shadow var(--transition-speed);
+}
+
 #close-dialog:hover,
-#close-report-dialog:hover {
+#close-report-dialog:hover,
+#download-report-btn:hover {
   color: var(--error-color);
   text-shadow: 0 0 8px var(--error-color);
+}
+
+#download-report-btn:hover {
+  color: var(--accent-color);
+  text-shadow: 0 0 8px var(--accent-color);
 }
 
 /* Report Dialog Styles */

@@ -13,16 +13,32 @@
       "arabic": "سورة البداية:"
     },
     "startAyah": {
-      "english": "Start Ayah:",
+      "english": "Starting Ayah:",
       "arabic": "آية البداية:"
+    },
+    "startJuz": {
+      "english": "Starting Juz:",
+      "arabic": "جزء البداية:"
+    },
+    "startHizb": {
+      "english": "Starting Hizb:",
+      "arabic": "حزب البداية:"
     },
     "endSurah": {
       "english": "Ending Surah:",
       "arabic": "سورة النهاية:"
     },
     "endAyah": {
-      "english": "End Ayah:",
+      "english": "Ending Ayah:",
       "arabic": "آية النهاية:"
+    },
+    "endJuz": {
+      "english": "Ending Juz:",
+      "arabic": "جزء النهاية:"
+    },
+    "endHizb": {
+      "english": "Ending Hizb:",
+      "arabic": "حزب النهاية:"
     },
     "mistakes": {
       "english": "Mistakes:",
@@ -80,6 +96,14 @@
       "english": "Enter a valid Surah",
       "arabic": "أدخل سورة صحيحة"
     },
+    "invalidJuz": {
+      "english": "Enter a valid Juz",
+      "arabic": "أدخل جزءًا صحيحًا"
+    },
+    "invalidHizb": {
+      "english": "Enter a valid Hizb",
+      "arabic": "أدخل حزبًا صحيحًا"
+    },
     "invalidAyahRange": {
       "english": "Enter an ayah between 1 and ",
       "arabic": "أدخل آية بين 1 و "
@@ -96,20 +120,26 @@
     },
     "content": {
       "english": [
-        "This is a quiz that will help you with your Quran Revision",
-        "Select a starting and ending Surah and Ayah range.",
-        "Click \"Start Quiz\" and you will be tested on this range",
-        "Try to continue the Ayah from memory",
-        "After you complete the second Ayah, press \"+\" to see the next one",
-        "When you have completed the test, press \"Next\" to see the next range"
+        "This is a quiz that will help you with your Quran Revision.",
+        "You can choose to test yourself by Surah, Juz, Hizb, or a specific Ayah range.",
+        "Select your desired mode from the dropdown menu at the top.",
+        "Enter the starting and ending points for your test.",
+        "Click \"Start Quiz\" to begin.",
+        "Try to recite the next Ayah from memory.",
+        "Press \"+\" to reveal the next Ayah and continue.",
+        "Use \"Next\" to skip to a new random question within your selected range.",
+        "Track your mistakes using the counter buttons."
       ],
       "arabic": [
         "هذا اختبار يساعدك على مراجعة القرآن.",
-        "اختر سورة وآية البداية والنهاية.",
-        "اضغط على \"ابدأ الاختبار\" لبدء الاختبار على هذا النطاق.",
-        "حاول إكمال الآية من حفظك.",
-        "بعد إكمال الآية الثانية، اضغط على \"+\" لعرض الآية التالية.",
-        "عند الانتهاء من الاختبار، اضغط على \"التالي\" لعرض نطاق جديد."
+        "يمكنك اختيار الاختبار حسب السورة، الجزء، الحزب، أو نطاق محدد من الآيات.",
+        "اختر الوضع المطلوب من القائمة المنسدلة في الأعلى.",
+        "أدخل نقطتي البداية والنهاية للاختبار.",
+        "اضغط على \"ابدأ الاختبار\" للبدء.",
+        "حاول تلاوة الآية التالية من ذاكرتك.",
+        "اضغط على \"+\" لإظهار الآية التالية والمتابعة.",
+        "استخدم \"التالي\" للانتقال إلى سؤال عشوائي جديد ضمن النطاق المحدد.",
+        "تتبع أخطاءك باستخدام أزرار العد."
       ]
     },
     "warning": {
@@ -120,6 +150,10 @@
       "arabic": [
         "تنبيه: هذا ليس بديلاً عن القراءة على شيخ أو المراجعة مع طلاب آخرين وإنما هو وسيلة مساعدة للمراجعة الفردية أو الاستعداد للمسابقات."
       ]
+    },
+    "feedback": {
+      "english": "If you would like to report any problems or feedback, send an email here",
+      "arabic": "إذا كنت ترغب في الإبلاغ عن أي مشاكل أو تقديم ملاحظات، أرسل بريدًا إلكترونيًا هنا"
     }
   },
 

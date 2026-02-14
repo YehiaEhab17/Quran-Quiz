@@ -1,20 +1,5 @@
 <!doctype html>
 <html lang="en">
-  <!-- 
-    ========================================================================
-    QURAN QUIZ - MAIN APPLICATION
-    ========================================================================
-    Structure:
-    1. Head: Meta tags, Styles, Title
-    2. Body:
-       - Container (Grid Layout)
-         - Left Panel: Sidebar / Settings Form
-         - Right Panel: Quiz Area / Controls
-       - Dialogs: Info, Report
-       - Templates: Question Report
-       - Scripts
-    ========================================================================
-  -->
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -22,20 +7,13 @@
       name="description"
       content="A tool to test your memorization of the Quran."
     />
-
-    <!-- Favicon -->
     <link rel="icon" href="images/favicon.png" type="image/png" />
-
-    <!-- Styles -->
     <link rel="stylesheet" href="css/main.css" />
     <title>Quran Quiz</title>
   </head>
   <body>
     <!-- Main Application Grid -->
     <div class="container">
-      <!-- ==================================================================
-           LEFT PANEL: SIDEBAR & SETTINGS
-           ================================================================== -->
       <div class="card">
         <!-- Header: Translate Button, Mode Select, Info Button -->
         <div class="card-header">
@@ -44,7 +22,7 @@
           </button>
 
           <div class="select-wrapper">
-            <select disabled id="input-mode" aria-label="Select Input Mode">
+            <select id="input-mode" aria-label="Select Input Mode">
               <option value="ayah" data-i18n="dynamic.inputModes.ayah">Ayah</option>
               <option value="surah" data-i18n="dynamic.inputModes.surah">Surah</option>
               <option value="juz" data-i18n="dynamic.inputModes.juz">Juz</option>
@@ -62,43 +40,45 @@
           <datalist id="surah-names"></datalist>
 
           <div class="inputs-grid">
-            <!-- Surah Selection Section -->
-            <div id="surah-inputs">
-              <label for="start-surah" data-i18n="labels.startSurah"
+            <!-- Primary Selection Section -->
+            <div id="primary-inputs">
+              <label id="start-label" for="start-input" data-i18n="labels.startSurah"
                 >Starting Surah:</label
               >
               <input
                 type="text"
-                id="start-surah"
-                name="start-surah"
+                id="start-input"
+                name="start-input"
                 list="surah-names"
                 autocomplete="off"
                 required
                 autofocus
               />
               <span
-                id="start-surah-error"
+                id="start-input-error"
                 class="error-message"
                 aria-live="polite"
               ></span>
 
-              <label for="end-surah" data-i18n="labels.endSurah">Ending Surah:</label>
+              <label id="end-label" for="end-input" data-i18n="labels.endSurah"
+                >Ending Surah:</label
+              >
               <input
                 type="text"
-                id="end-surah"
-                name="end-surah"
+                id="end-input"
+                name="end-input"
                 list="surah-names"
                 autocomplete="off"
                 required
               />
               <span
-                id="end-surah-error"
+                id="end-input-error"
                 class="error-message"
                 aria-live="polite"
               ></span>
             </div>
 
-            <!-- Ayah Selection Section (Dynamic) -->
+            <!-- Ayah Selection Section -->
             <div id="ayah-inputs">
               <label for="start-ayah" data-i18n="labels.startAyah">Start Ayah:</label>
               <input
@@ -156,9 +136,7 @@
         </form>
       </div>
 
-      <!-- ==================================================================
-           RIGHT PANEL: QUIZ INTERFACE
-           ================================================================== -->
+      <!-- quiz -->
       <div id="quiz">
         <!-- Sticky Control Bar -->
         <div id="quiz-controls">
@@ -219,10 +197,6 @@
       </div>
     </div>
 
-    <!-- ==================================================================
-         DIALOGS & TEMPLATES
-         ================================================================== -->
-
     <!-- Info Dialog -->
     <dialog id="info-dialog">
       <h2 data-i18n="information.title" id="dialog-title">Information</h2>
@@ -237,6 +211,14 @@
         data-i18n-paragraphs
         id="dialog-warning"
       ></div>
+      <br />
+      <p>
+        <a
+          id="dialog-feedback"
+          href="mailto:rk2x42mev@mozmail.com"
+          data-i18n="information.feedback"
+        ></a>
+      </p>
       <button id="close-dialog" aria-label="Close Dialog">X</button>
     </dialog>
 
@@ -254,6 +236,7 @@
     </template>
 
     <!-- Application Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script type="module" src="images/svg.js" defer></script>
     <script type="module" src="dist/script.js" defer></script>
   </body>

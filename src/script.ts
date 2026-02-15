@@ -1,12 +1,7 @@
 import { testGlobalIDMapping } from "./tests.js";
 import { Ayah, Surah, Ruku } from "./types.js";
 import { getRukuWithinRange, getRuku, addClickOutsideListener } from "./util.js";
-import {
-  QuizInputPair,
-  QuizControls,
-  AyahDisplay,
-  QuizReport,
-} from "./classes.js";
+import { QuizInputPair, QuizControls, AyahDisplay, QuizReport } from "./classes.js";
 import { setRuku, quizStarted, quizStopped } from "./state.js";
 import {
   initTranslations,

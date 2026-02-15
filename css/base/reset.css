@@ -56,6 +56,12 @@ input[type="number"] {
 }
 
 .hide * {
-  visibility: hidden;
+  visibility: hidden !important;
   transition: none !important;
+}
+
+@media (max-width: 768px) {
+  .hide {
+    display: none !important;
+  }
 }

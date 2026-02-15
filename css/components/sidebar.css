@@ -187,8 +187,13 @@ button[type="submit"]:hover {
   }
 
   .inputs-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: row;
     gap: 1rem;
+  }
+
+  .inputs-grid > * {
+    flex: 1;
+    min-width: 0;
   }
 }

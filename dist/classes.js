@@ -460,6 +460,12 @@ export class QuizReport {
             const canvas = await window.html2canvas(reportElement, {
                 scale: 2,
                 backgroundColor: getComputedStyle(document.body).getPropertyValue("--dialog-bg") || "#ffffff",
+                onclone: (clonedDoc) => {
+                    const element = clonedDoc.getElementById("quiz-report");
+                    if (element) {
+                        element.style.padding = "2rem";
+                    }
+                },
             });
             const link = document.createElement("a");
             link.download = `quran-quiz-report-${new Date().toISOString().split("T")[0]}.png`;

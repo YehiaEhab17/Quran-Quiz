@@ -549,6 +549,12 @@ export class QuizReport {
         scale: 2,
         backgroundColor:
           getComputedStyle(document.body).getPropertyValue("--dialog-bg") || "#ffffff",
+        onclone: (clonedDoc: any) => {
+          const element = clonedDoc.getElementById("quiz-report");
+          if (element) {
+            element.style.padding = "2rem";
+          }
+        },
       } as any);
 
       const link = document.createElement("a");

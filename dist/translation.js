@@ -1,5 +1,9 @@
 let translations = null;
-let currentLang = "english";
+function detectLanguage() {
+    const browserLang = navigator.language || "";
+    return browserLang.startsWith("ar") ? "arabic" : "english";
+}
+let currentLang = detectLanguage();
 export async function initTranslations() {
     const response = await fetch("data/translation.json");
     translations = await response.json();

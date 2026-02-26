@@ -33,7 +33,6 @@
   border-radius: 6px;
   padding: 0;
   cursor: pointer;
-  filter: var(--header-btn-filter);
   color: var(--sidebar-text);
   width: 42px; /* Fixed square size */
   height: 42px;

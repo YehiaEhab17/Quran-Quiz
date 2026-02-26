@@ -2,7 +2,13 @@ import { TranslationData } from "./types.js";
 
 type Language = "english" | "arabic";
 let translations: TranslationData | null = null;
-let currentLang: Language = "english";
+
+function detectLanguage(): Language {
+  const browserLang = navigator.language || "";
+  return browserLang.startsWith("ar") ? "arabic" : "english";
+}
+
+let currentLang: Language = detectLanguage();
 
 export async function initTranslations(): Promise<void> {
   const response = await fetch("data/translation.json");

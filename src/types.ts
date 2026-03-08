@@ -1,5 +1,4 @@
 export interface Surah {
-  display: string;
   arabic: string;
   english: string;
   number: number;

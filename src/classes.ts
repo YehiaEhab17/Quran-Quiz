@@ -6,10 +6,11 @@ import {
   clamp,
   copyToClipboard,
   getBounds,
+  getSurahDisplayName,
 } from "./util.js";
 import { Ayah, QuestionReport, Ruku, Surah } from "./types.js";
 import { appState } from "./state.js";
-import { getCurrentLanguage, getText } from "./translation.js";
+import { getText } from "./translation.js";
 
 export class QuizInputPair {
   private primaryError: HTMLElement;
@@ -112,7 +113,7 @@ export class QuizInputPair {
       return;
     }
 
-    this.primaryInput.value = results[0].display;
+    this.primaryInput.value = getSurahDisplayName(results[0]);
     this.primaryInput.dataset.number = results[0].number.toString();
     this.ayahInput.disabled = false;
     this.ayahInput.max = results[0].length.toString();
@@ -154,6 +155,16 @@ export class QuizInputPair {
   hideErrors() {
     this.hideError(this.primaryError);
     this.hideError(this.ayahError);
+  }
+
+  updateDisplayName() {
+    if (this.mode !== "ayah" && this.mode !== "surah") return;
+    const number = this.primaryInput.dataset.number;
+    if (!number) return;
+    const surah = this.suwar.find((s) => s.number === parseInt(number));
+    if (surah) {
+      this.primaryInput.value = getSurahDisplayName(surah);
+    }
   }
 
   getSurahID(): number | null {
@@ -343,7 +354,7 @@ export class QuizControls {
 
     if (this.hintRevealed) {
       const surah = findSurah(appState.Ruku.ayaat[0].surah.toString(), this.suwar)[0];
-      const name = getCurrentLanguage() === "english" ? surah.english : surah.arabic;
+      const name = getSurahDisplayName(surah);
       const ayahText = `${getText("dynamic.ayahPrefix")} ${appState.Ruku?.ayaat[0].ayah}`;
       this.buttons.hint.textContent = `${name}, ${ayahText}`;
     } else {
@@ -506,10 +517,7 @@ export class QuizReport {
         { limit: 1, style: "okay" },
       ];
 
-      const surahName =
-        getCurrentLanguage() === "english"
-          ? question.surah.english
-          : question.surah.arabic;
+      const surahName = getSurahDisplayName(question.surah);
       const startAyah = question.ruku.ayaat[0].ayah;
       const endAyah = question.ruku.ayaat.at(-1)?.ayah ?? 0;
 

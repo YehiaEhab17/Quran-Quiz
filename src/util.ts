@@ -1,4 +1,10 @@
 import { Surah, Ayah, Ruku } from "./types.js";
+import { getCurrentLanguage } from "./translation.js";
+
+export function getSurahDisplayName(surah: Surah): string {
+  const name = getCurrentLanguage() === "english" ? surah.english : surah.arabic;
+  return `${surah.number}. ${name}`;
+}
 
 export function findSurah(input: string, suwar: Surah[]): Surah[] {
   const query: string = input.trim().toLowerCase();
@@ -8,7 +14,7 @@ export function findSurah(input: string, suwar: Surah[]): Surah[] {
   }
   return suwar.filter(
     (s) =>
-      s.display.toLowerCase() === query ||
+      getSurahDisplayName(s).toLowerCase() === query ||
       s.number.toString().includes(query) ||
       s.english.toLowerCase().includes(query) ||
       s.arabic.includes(query),
@@ -45,7 +51,7 @@ export function populateDatalist(
 
   matches.forEach((s) => {
     const option = document.createElement("option");
-    option.value = `${s.number}. ${s.arabic} (${s.english})`;
+    option.value = getSurahDisplayName(s);
     fragment.appendChild(option);
   });
   surahDatalist.appendChild(fragment);

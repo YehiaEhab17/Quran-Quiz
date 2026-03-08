@@ -101,6 +101,8 @@ function setupGlobalListeners() {
     window.addEventListener("translated", () => {
         startPair.hideErrors();
         endPair.hideErrors();
+        startPair.updateDisplayName();
+        endPair.updateDisplayName();
         formError.classList.remove("visible");
         formError.textContent = "";
     });

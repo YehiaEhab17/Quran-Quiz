@@ -1,6 +1,6 @@
-import { populateDatalist, findSurah, findAyah, concatenateAyaat, clamp, copyToClipboard, getBounds, } from "./util.js";
+import { populateDatalist, findSurah, findAyah, concatenateAyaat, clamp, copyToClipboard, getBounds, getSurahDisplayName, } from "./util.js";
 import { appState } from "./state.js";
-import { getCurrentLanguage, getText } from "./translation.js";
+import { getText } from "./translation.js";
 export class QuizInputPair {
     primaryInput;
     ayahInput;
@@ -95,7 +95,7 @@ export class QuizInputPair {
             this.showError(this.primaryError, getText("errors.invalidSurah"));
             return;
         }
-        this.primaryInput.value = results[0].display;
+        this.primaryInput.value = getSurahDisplayName(results[0]);
         this.primaryInput.dataset.number = results[0].number.toString();
         this.ayahInput.disabled = false;
         this.ayahInput.max = results[0].length.toString();
@@ -129,6 +129,17 @@ export class QuizInputPair {
     hideErrors() {
         this.hideError(this.primaryError);
         this.hideError(this.ayahError);
+    }
+    updateDisplayName() {
+        if (this.mode !== "ayah" && this.mode !== "surah")
+            return;
+        const number = this.primaryInput.dataset.number;
+        if (!number)
+            return;
+        const surah = this.suwar.find((s) => s.number === parseInt(number));
+        if (surah) {
+            this.primaryInput.value = getSurahDisplayName(surah);
+        }
     }
     getSurahID() {
         const value = this.primaryInput.dataset.number;
@@ -293,7 +304,7 @@ export class QuizControls {
             return;
         if (this.hintRevealed) {
             const surah = findSurah(appState.Ruku.ayaat[0].surah.toString(), this.suwar)[0];
-            const name = getCurrentLanguage() === "english" ? surah.english : surah.arabic;
+            const name = getSurahDisplayName(surah);
             const ayahText = `${getText("dynamic.ayahPrefix")} ${appState.Ruku?.ayaat[0].ayah}`;
             this.buttons.hint.textContent = `${name}, ${ayahText}`;
         }
@@ -429,9 +440,7 @@ export class QuizReport {
                 { limit: 0.5, style: "good" },
                 { limit: 1, style: "okay" },
             ];
-            const surahName = getCurrentLanguage() === "english"
-                ? question.surah.english
-                : question.surah.arabic;
+            const surahName = getSurahDisplayName(question.surah);
             const startAyah = question.ruku.ayaat[0].ayah;
             const endAyah = question.ruku.ayaat.at(-1)?.ayah ?? 0;
             clone.querySelector(".q-number").textContent =

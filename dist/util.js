@@ -1,9 +1,14 @@
+import { getCurrentLanguage } from "./translation.js";
+export function getSurahDisplayName(surah) {
+    const name = getCurrentLanguage() === "english" ? surah.english : surah.arabic;
+    return `${surah.number}. ${name}`;
+}
 export function findSurah(input, suwar) {
     const query = input.trim().toLowerCase();
     if (!query) {
         return [];
     }
-    return suwar.filter((s) => s.display.toLowerCase() === query ||
+    return suwar.filter((s) => getSurahDisplayName(s).toLowerCase() === query ||
         s.number.toString().includes(query) ||
         s.english.toLowerCase().includes(query) ||
         s.arabic.includes(query));
@@ -23,7 +28,7 @@ export function populateDatalist(query, suwar, surahDatalist) {
     const fragment = document.createDocumentFragment();
     matches.forEach((s) => {
         const option = document.createElement("option");
-        option.value = `${s.number}. ${s.arabic} (${s.english})`;
+        option.value = getSurahDisplayName(s);
         fragment.appendChild(option);
     });
     surahDatalist.appendChild(fragment);
